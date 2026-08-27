@@ -118,6 +118,9 @@
       clone.setAttribute('alt', '');
       track.appendChild(clone);
     });
+    // Only start moving once the loop is seamless; at rest the band sits
+    // exactly where the comp puts it.
+    track.parentNode.classList.add('marquee--anim');
   }
 
   /* ---------- Footer clock, in Barcelona time ---------- */
