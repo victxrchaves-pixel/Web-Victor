@@ -64,7 +64,7 @@ static.
 ## Fidelity
 
 The desktop layout is a trace of the comp, not an interpretation. The frame is
-1728 x 4544; `--u` in `styles.css` is one frame pixel, and every element carries
+1728 x 4418; `--u` in `styles.css` is one frame pixel, and every element carries
 the comp's own numbers in its `style` attribute:
 
 ```html
@@ -76,10 +76,15 @@ correcting a position means editing the number the design gives you. The whole
 composition scales with the viewport, so it stays the comp at any width; below
 900px the same elements reflow into one column (the comp has no mobile frame).
 
-Measured against a 1728 x 4544 render of the Figma node, 0.59% of pixels differ
+Measured against a 1728 x 4418 render of the Figma node, 0.78% of pixels differ
 strongly, and that remainder is text antialiasing plus WebP recompression of the
 photography. Every text block, rule, thumbnail strip and button lands within one
 pixel of the comp.
+
+**Line height comes from the box, not from the export.** Figma's code export
+reports percentages that do not reproduce (the intro paragraph says 89.31%,
+which renders at 37.8px; the real pitch is 49px). Divide the text node's height
+by its number of lines instead — that is what `--lh` carries.
 
 Details worth knowing, because they are easy to get wrong:
 
@@ -88,6 +93,11 @@ Details worth knowing, because they are easy to get wrong:
   breaks the H: Geist draws that glyph from overlapping contours, so stroking it
   exposes the internal edges. The design's own SVG ships at
   `assets/icons/everything-stroke.svg`.
+- **The outlined word is a 2px stroke at 122.31px.** Derived by solving the
+  comp's own glyph boxes: only a 2px stroke makes the implied size agree from
+  both width and height, on every letter. `assets/icons/everything-fill.svg` is
+  the matching solid word, built from the font with each glyph placed at the x
+  the comp gives it, so the fill registers on the outline exactly.
 - **The hairlines are pure white at 1px**, and the comp rasterises them one row
   above the stated y. Both are reproduced.
 - **The right-aligned hero lines end with a space** in the comp, which sets the
@@ -119,9 +129,21 @@ large text needs). To fix it without touching any position, add to `styles.css`:
 
 ## Motion
 
-Scroll reveals, a clip-path wipe on the two display headings, the image band
-looping, and pointer-gated hover states. The band sits exactly where the comp
-puts it until the script has cloned the track, so a still page is still the
-comp. Everything honours `prefers-reduced-motion`, and the hidden-before-reveal
-states are armed by script only, so with JavaScript off the page renders
-complete and static.
+- **The word fills in.** Reaching the services section, "Everything" draws its
+  outline in and a solid twin then sweeps over it. This is the one thing that
+  changes a resting state the comp defines: after the sweep the word is filled,
+  where the comp leaves it outlined. It was asked for. To keep the comp's
+  resting state instead, delete the `.stroke-word__fill` span; under
+  `prefers-reduced-motion` that is already what happens.
+- The hero image settles from a 5% scale on load.
+- Section content reveals on scroll with a 60ms stagger; the two display
+  headings wipe in with `clip-path`.
+- Project rows tint, their `( + )` turns and greens, and the thumbnail strip
+  slides. Each row also has a full-width hit area, so the whole band is
+  clickable rather than just the text and images.
+- The image band loops, pausing on hover. It sits exactly where the comp puts
+  it until the script clones the track, so a still page is still the comp.
+
+Hover effects are gated to real pointers, everything honours
+`prefers-reduced-motion`, and the hidden-before-reveal states are armed by
+script only — with JavaScript off the page renders complete and static.

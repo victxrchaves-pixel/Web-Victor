@@ -90,7 +90,7 @@ hr { border: 0; margin: 0; }
 .frame {
   position: relative;
   width: calc(1728 * var(--u));
-  height: calc(4544 * var(--u));
+  height: calc(4418 * var(--u));
 }
 
 .pill, .pill__logo, .pill__current, .pill__menu,
@@ -206,8 +206,15 @@ hr { border: 0; margin: 0; }
 
 /* ---------- Hero ---------- */
 
-.hero__bg { object-fit: cover; z-index: -2; }
+.hero__bg {
+  object-fit: cover;
+  z-index: -2;
+  transform: scale(1.05);
+  animation: heroSettle 1400ms var(--ease-out) 80ms forwards;
+}
+@keyframes heroSettle { to { transform: scale(1); } }
 .label { text-transform: uppercase; }
+.intro { font-family: 'Geist', system-ui, sans-serif; font-weight: 400; }
 .hero__title { font-weight: 400; text-transform: uppercase; }
 .hero__sub { text-align: right; text-transform: uppercase; }
 .band { object-fit: cover; }
@@ -230,6 +237,15 @@ hr { border: 0; margin: 0; }
 /* ---------- Featured work ---------- */
 
 .row__link { display: block; }
+.row__hit {
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: calc(var(--h) * var(--u));
+  background: transparent;
+  transition: background var(--dur-ui) ease;
+}
 .row__name { font-family: 'Geist', system-ui, sans-serif; }
 .row__plus { text-transform: uppercase; transition: transform var(--dur-ui) var(--ease-out), color var(--dur-ui) ease; }
 .tag {
@@ -245,6 +261,7 @@ hr { border: 0; margin: 0; }
 .thumbs { transition: transform var(--dur-ui) var(--ease-out); }
 
 @media (hover: hover) and (pointer: fine) {
+  .row__link:hover .row__hit { background: rgba(255, 255, 255, 0.04); }
   .row__link:hover .row__plus { transform: rotate(90deg); color: var(--live); }
   .row__link:hover .thumbs { transform: translateX(calc(-18 * var(--u))); }
   .row__link:hover .row__name { text-decoration: underline; text-underline-offset: calc(5 * var(--u)); }
@@ -254,6 +271,7 @@ hr { border: 0; margin: 0; }
 
 .services__head { margin: 0; font-weight: 400; }
 .stroke-word { display: block; }
+.stroke-word__outline, .stroke-word__fill { position: absolute; inset: 0; display: block; }
 .stroke-word img { width: 100%; height: 100%; }
 .display {
   font-family: 'Geist', system-ui, sans-serif;
@@ -298,7 +316,18 @@ hr { border: 0; margin: 0; }
 
 /* The wipe clips the element itself, so it is never the observed target:
    a clipped element reports zero intersection area and would never reveal. */
-.js-anim [data-reveal="wipe"] { opacity: 1; transform: none; }
+.js-anim [data-reveal="wipe"], .js-anim [data-reveal="fill"] { opacity: 1; transform: none; }
+
+.js-anim [data-reveal="fill"] .stroke-word__outline,
+.js-anim [data-reveal="fill"] .stroke-word__fill { clip-path: inset(0 100% 0 0); }
+.js-anim [data-reveal="fill"].is-in .stroke-word__outline {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 900ms var(--ease-in-out);
+}
+.js-anim [data-reveal="fill"].is-in .stroke-word__fill {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 900ms var(--ease-in-out) 450ms;
+}
 .js-anim [data-reveal="wipe"] > * { display: block; clip-path: inset(0 100% 0 0); }
 .js-anim [data-reveal="wipe"].is-in > * {
   clip-path: inset(0 0 0 0);
@@ -352,7 +381,8 @@ hr { border: 0; margin: 0; }
   .work .rule, .services .rule, .footer .rule { display: none; }
   .row { border-top: 1px solid rgba(255, 255, 255, 0.28); }
   .row:last-of-type { border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
-  .row__link { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 16px 20px 18px; }
+  .row__link { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 16px 20px 18px; }
+  .row__hit { position: absolute; inset: 0; left: 0; top: 0; width: auto; height: auto; }
   .row__name { font-size: 17px; line-height: 1.3; }
   .row__plus { font-size: 11px; line-height: 1.3; justify-self: end; }
   .tags { display: flex; gap: 2px; grid-column: 1; }
@@ -369,7 +399,12 @@ hr { border: 0; margin: 0; }
 
   .services { display: block; padding: 46px 20px 0; }
   .services__head { display: grid; gap: 6px; }
-  .stroke-word { width: 100%; height: auto; }
+  /* The layered word needs a box of its own here: its two layers are absolute. */
+  .stroke-word { position: relative; left: auto; top: auto; width: 100%; height: auto; }
+  .stroke-word__outline { position: static; }
+  .stroke-word__fill { position: absolute; inset: 0; }
+  .stroke-word img { width: 100%; height: auto; }
+  .intro { font-size: clamp(22px, 6.2vw, 32px); line-height: 1.16; margin-bottom: 26px; }
   .display { font-size: clamp(38px, 12.4vw, 74px); line-height: 0.9; }
   .services .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: max-content; height: 42px; padding: 0 18px; margin-top: 22px; }
   .btn__label { font-size: 13px; line-height: 1; }
@@ -401,5 +436,8 @@ hr { border: 0; margin: 0; }
   .js-anim [data-reveal].is-in { animation: revealFade 300ms ease forwards; }
   @keyframes revealFade { to { opacity: 1; } }
   .js-anim [data-reveal="wipe"] > * { clip-path: none; }
+  .js-anim [data-reveal="fill"] .stroke-word__outline { clip-path: none; }
+  .js-anim [data-reveal="fill"] .stroke-word__fill { display: none; }
+  .hero__bg { animation: none; transform: none; }
   .row__link:hover .thumbs { transform: none; }
 }
