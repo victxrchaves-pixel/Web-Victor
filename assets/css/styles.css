@@ -90,14 +90,13 @@ hr { border: 0; margin: 0; }
 .frame {
   position: relative;
   width: calc(1728 * var(--u));
-  height: calc(4418 * var(--u));
+  height: calc(4484 * var(--u));
 }
 
 .pill, .pill__logo, .pill__current, .pill__menu,
 .btn, .btn__label, .btn__icon,
 .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
-.rule, .hero__bg, .band, .stroke-word, .services__grid, .services__col,
-.marquee, .footer__dot {
+.rule, .hero__bg, .band, .card, .marquee, .footer__dot {
   position: absolute;
   left: calc(var(--x, 0) * var(--u));
   top: calc(var(--y, 0) * var(--u));
@@ -319,28 +318,38 @@ hr { border: 0; margin: 0; }
 /* ---------- Everything I can do ---------- */
 
 .services__head { margin: 0; font-weight: 400; }
-.stroke-word { display: block; }
-.word { display: block; width: 100%; height: 100%; overflow: visible; }
-.word__stroke { fill: none; stroke: var(--fg); stroke-width: 2; }
-.word__fill { fill: var(--fg); }
-/* The fill is the same path as the stroke, wiped in from the left on hover. */
-.word__wipe {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 620ms var(--ease-in-out);
+/* The service lists, one block per discipline. */
+.card {
+  padding: calc(24 * var(--u)) calc(26.5 * var(--u));
+  height: auto;
 }
+.card__head {
+  margin: 0;
+  font-size: calc(var(--fs) * var(--u));
+  line-height: calc(var(--lh) * var(--u));
+  text-transform: uppercase;
+}
+.card__list {
+  margin-top: calc(33.75 * var(--u));   /* the comp's blank line */
+  font-size: calc(var(--fs) * var(--u));
+  line-height: calc(var(--lh) * var(--u));
+  text-transform: uppercase;
+  width: calc(266 * var(--u));
+}
+.card--nowrap .card__list { width: auto; white-space: nowrap; }
+.card__list li { transition: color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  .stroke-word:hover .word__wipe { transform: scaleX(1); }
+  .card__list li:hover { color: var(--live); transform: translateX(calc(4 * var(--u))); }
 }
+
+.ai-note { font-family: 'Geist', system-ui, sans-serif; }
 .display {
   font-family: 'Geist', system-ui, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   height: auto;
 }
-.services__col { --y: 0; height: auto; text-transform: uppercase; }
-.services__col li { white-space: nowrap; transition: color var(--dur-fast) ease; }
-@media (hover: hover) and (pointer: fine) { .services__col li:hover { color: var(--live); } }
+
 
 /* ---------- Full-bleed image band ---------- */
 
@@ -394,8 +403,7 @@ hr { border: 0; margin: 0; }
   .pill, .pill__logo, .pill__current, .pill__menu,
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
-  .rule, .band, .stroke-word, .services__grid, .services__col,
-  .marquee, .footer__dot {
+  .rule, .band, .card, .marquee, .footer__dot {
     position: static;
     width: auto;
     height: auto;
@@ -452,15 +460,15 @@ hr { border: 0; margin: 0; }
 
   .services { display: block; padding: 46px 20px 0; }
   .services__head { display: grid; gap: 6px; }
-  .stroke-word { position: static; width: 100%; height: auto; }
-  .word { width: 100%; height: auto; }
+  .card { position: static; width: auto; height: auto; padding: 0; margin-top: 30px; }
+  .card__head { font-size: 12px; line-height: 1.4; }
+  .card__list { width: auto; margin-top: 12px; font-size: 14px; line-height: 1.9; white-space: normal; }
+  .ai-note { font-size: 15px; line-height: 1.35; margin-top: 34px; }
   .intro { font-size: clamp(22px, 6.2vw, 32px); line-height: 1.16; margin-bottom: 26px; }
   .display { font-size: clamp(38px, 12.4vw, 74px); line-height: 0.9; }
   .services .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: max-content; height: 42px; padding: 0 18px; margin-top: 22px; }
   .btn__label { font-size: 13px; line-height: 1; }
   .btn__icon { width: 18px; height: 18px; }
-  .services__grid { display: grid; gap: 22px; margin-top: 34px; }
-  .services__col { font-size: 13px; line-height: 1.85; }
 
   .marquee { margin-top: 40px; overflow: hidden; }
   .marquee__track img { width: 62vw; height: 72vw; }
@@ -487,7 +495,6 @@ hr { border: 0; margin: 0; }
   @keyframes revealFade { to { opacity: 1; } }
   .js-anim [data-reveal="wipe"] > * { clip-path: none; }
   .chips--hero li { opacity: 1; transform: none; animation: none; }
-  .word__wipe { transition: none; }
   .hero__bg { animation: none; transform: none; }
   .row__link:hover .thumbs { transform: none; }
 }

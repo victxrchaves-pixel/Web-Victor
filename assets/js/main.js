@@ -110,9 +110,9 @@
     // Measured from real elements, not comp coordinates: the desktop canvas and
     // the mobile flow layout place these very differently.
     var SECTIONS = [
-      { el: null,                                        text: 'It\u2019s V\u00edctxr Ch\u00e1vez' },
+      { el: null,                                        text: 'It\u2019s V\u00edctxr Chaves' },
       { el: document.querySelector('.row__hit'),         text: 'Work' },
-      { el: document.querySelector('.stroke-word'),      text: 'What I Do' },
+      { el: document.querySelector('.services .display'), text: 'What I Do' },
       { el: document.querySelector('.contact .display'), text: 'Contact' }
     ];
     var current = -1;
