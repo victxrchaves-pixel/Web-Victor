@@ -39,27 +39,7 @@
     });
   }
 
-  /* ---------- Nav retracts on the way down, returns on the way up ---------- */
-
   var nav = document.getElementById('nav');
-  var lastY = window.scrollY;
-  var ticking = false;
-
-  function onScroll() {
-    var y = window.scrollY;
-    var goingDown = y > lastY;
-    if (Math.abs(y - lastY) > 6) {
-      nav.classList.toggle('is-hidden', goingDown && y > 240 && !menuOpen);
-      lastY = y;
-    }
-    ticking = false;
-  }
-
-  window.addEventListener('scroll', function () {
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(onScroll);
-  }, { passive: true });
 
   /* ---------- Overlay menu ---------- */
 
@@ -74,7 +54,6 @@
     requestAnimationFrame(function () { menuPanel.classList.add('is-open'); });
     menuBtn.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
-    nav.classList.remove('is-hidden');
     var first = menuPanel.querySelector('.menu__link');
     if (first) first.focus({ preventScroll: true });
   }
@@ -121,6 +100,54 @@
     // Only start moving once the loop is seamless; at rest the band sits
     // exactly where the comp puts it.
     track.parentNode.classList.add('marquee--anim');
+  }
+
+  /* ---------- The pill label names the section you are in ---------- */
+
+  var navLabel = document.getElementById('navLabel');
+
+  if (navLabel) {
+    // Measured from real elements, not comp coordinates: the desktop canvas and
+    // the mobile flow layout place these very differently.
+    var SECTIONS = [
+      { el: null,                                        text: 'It\u2019s V\u00edctxr Ch\u00e1vez' },
+      { el: document.querySelector('.row__hit'),         text: 'Work' },
+      { el: document.querySelector('.stroke-word'),      text: 'What I Do' },
+      { el: document.querySelector('.contact .display'), text: 'Contact' }
+    ];
+    var current = -1;
+
+    var applyLabel = function (index) {
+      if (index === current) return;
+      current = index;
+      var text = SECTIONS[index].text;
+      if (reduced) { navLabel.textContent = text; return; }
+      navLabel.classList.add('is-swapping');
+      window.setTimeout(function () {
+        navLabel.textContent = text;
+        navLabel.classList.remove('is-swapping');
+      }, 140);
+    };
+
+    var updateLabel = function () {
+      // A section takes over once its top passes three quarters down the
+      // viewport; at the very bottom the last one always wins, since a short
+      // page can never scroll its threshold past the probe.
+      var probe = window.innerHeight * 0.75;
+      var index = 0;
+      for (var i = 1; i < SECTIONS.length; i++) {
+        var el = SECTIONS[i].el;
+        if (el && el.getBoundingClientRect().top <= probe) index = i;
+      }
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 4) {
+        index = SECTIONS.length - 1;
+      }
+      applyLabel(index);
+    };
+
+    window.addEventListener('scroll', updateLabel, { passive: true });
+    window.addEventListener('resize', updateLabel);
+    updateLabel();
   }
 
   /* ---------- Footer clock, in Barcelona time ---------- */
