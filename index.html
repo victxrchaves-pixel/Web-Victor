@@ -42,7 +42,8 @@
 
   </header>
 
-    <a class="nav__cta" style="--x:1429; --y:32; --w:237.98; --h:47.94" href="#contact">
+    <a class="nav__cta" style="--x:1429; --y:32; --w:237.98; --h:47.94"
+     href="#contact" data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
       <span class="nav__cta-label" style="--fs:19.113; --lh:25">Work Together</span>
       <svg class="nav__cta-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M16.98 15.4813L16.98 7.08052L8.45802 7.08064M16.98 7.08052L7.08052 16.98"
@@ -251,7 +252,8 @@
         <span class="btn__label" style="--x:26.48; --y:12.47; --w:172; --fs:19.113; --lh:25">Start A Project</span>
         <img class="btn__icon" style="--x:212.5; --y:12.97; --w:24; --h:24" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
       </a>
-      <a class="btn btn--outline" style="--x:353; --y:4286; --w:251.98; --h:49.94" href="mailto:itsvictxrchaves@gmail.com?subject=Intro%20call">
+      <a class="btn btn--outline" style="--x:353; --y:4286; --w:251.98; --h:49.94"
+         href="mailto:itsvictxrchaves@gmail.com?subject=Intro%20call" data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
         <span class="btn__label" style="--x:26.48; --y:12.47; --w:161; --fs:19.113; --lh:25">Schedule A Call</span>
         <img class="btn__icon" style="--x:201.5; --y:12.97; --w:24; --h:24" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
       </a>
@@ -276,5 +278,16 @@
 </div>
 
 <script src="assets/js/main.js" defer></script>
+
+<!-- Cal element-click embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "30min", {origin:"https://app.cal.com"});
+Cal.config = Cal.config || {};
+Cal.config.forwardQueryParams = true;
+Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal element-click embed code ends -->
+
 </body>
 </html>
