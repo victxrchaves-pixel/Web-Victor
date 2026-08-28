@@ -143,7 +143,7 @@
     // the mobile flow layout place these very differently.
     var SECTIONS = [
       { el: null,                                        text: 'ItsVictorChaves' },
-      { el: document.querySelector('.row__hit'),         text: 'Work' },
+      { el: document.querySelector('.row__toggle'),      text: 'Work' },
       { el: document.querySelector('.services .display'), text: 'What I Do' },
       { el: document.querySelector('.contact .display'), text: 'Contact' }
     ];
@@ -186,6 +186,107 @@
     window.addEventListener('scroll', updateLabel, { passive: true });
     window.addEventListener('resize', updateLabel);
     updateLabel();
+  }
+
+  /* ---------- Featured work: one row open at a time ----------
+     The page is a traced canvas, so a row cannot simply grow: everything below
+     it has to move. One custom property carries that distance - the rows after
+     the open one translate by it, the blocks below the list ride the same
+     value, and the frame grows by exactly as much so the footer keeps its
+     ground. In the mobile flow layout none of that applies and the panel folds
+     on a height measured from its own content. */
+
+  var frame = document.querySelector('.frame');
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
+  var OPEN_PUSH = 536;            /* 734 open - 198 closed, in comp pixels */
+  var openRow = null;
+
+  var isFlow = function () { return window.matchMedia('(max-width: 899px)').matches; };
+  var unit = function () { return frame.getBoundingClientRect().width / 1728; };
+
+  /* The large shots stay out of the initial payload; a row fetches its own the
+     first time someone shows interest in it. */
+  var loadShots = function (row) {
+    Array.prototype.forEach.call(row.querySelectorAll('.row__track img[data-src]'), function (img) {
+      img.src = img.getAttribute('data-src');
+      img.removeAttribute('data-src');
+    });
+  };
+
+  var setPanelHeight = function (row, open) {
+    var panel = row.querySelector('.row__panel');
+    if (!panel) return;
+    panel.style.maxHeight = (open && isFlow()) ? panel.scrollHeight + 'px' : '';
+  };
+
+  var fold = function (row) {
+    row.classList.remove('is-open');
+    row.querySelector('.row__toggle').setAttribute('aria-expanded', 'false');
+    setPanelHeight(row, false);
+  };
+
+  var unfold = function (row) {
+    loadShots(row);
+    row.classList.add('is-open');
+    row.querySelector('.row__toggle').setAttribute('aria-expanded', 'true');
+    setPanelHeight(row, true);
+  };
+
+  /* Opening a row while another one is open pulls it up by the push it was
+     riding, so bring it back into a comfortable band instead of letting it
+     slide out from under the pointer. Its landing place is arithmetic, not a
+     measurement: an open row is never pushed by itself. */
+  var settle = function (row) {
+    if (isFlow()) return;
+    var toggle = row.querySelector('.row__toggle');
+    var u = unit();
+    var frameTop = window.scrollY + frame.getBoundingClientRect().top;
+    var finalTop = frameTop + parseFloat(toggle.style.getPropertyValue('--y')) * u;
+    var margin = 96 * u;
+    var seat = finalTop - window.scrollY;
+    if (seat >= margin && seat <= window.innerHeight * 0.45) return;
+    window.scrollTo({ top: Math.max(0, finalTop - margin), behavior: reduced ? 'auto' : 'smooth' });
+  };
+
+  var toggleRow = function (row) {
+    var closing = row === openRow;
+    if (openRow) fold(openRow);
+    openRow = closing ? null : row;
+    if (openRow) unfold(openRow);
+    frame.style.setProperty('--push', openRow ? OPEN_PUSH : 0);
+    if (openRow) settle(openRow);
+  };
+
+  rows.forEach(function (row) {
+    var toggle = row.querySelector('.row__toggle');
+    if (!toggle) return;
+    var warm;
+
+    toggle.addEventListener('click', function () { toggleRow(row); });
+
+    /* A hover that lasts long enough to be a decision, not a sweep. Opening a
+       row shifts the ones under it, which fires pointerenter on whichever now
+       sits beneath a still pointer - so wait for real movement instead. */
+    toggle.addEventListener('pointermove', function () {
+      if (warm) return;
+      warm = window.setTimeout(function () { loadShots(row); }, 120);
+    });
+    toggle.addEventListener('pointerleave', function () { window.clearTimeout(warm); warm = 0; });
+  });
+
+  if (rows.length) {
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !openRow) return;
+      var row = openRow;
+      toggleRow(row);
+      row.querySelector('.row__toggle').focus();
+    });
+
+    /* Crossing the breakpoint swaps which mechanism holds the row open. */
+    window.addEventListener('resize', function () {
+      if (!openRow) return;
+      setPanelHeight(openRow, true);
+    });
   }
 
   /* ---------- Cal.com: open the booking modal, never navigate ----------

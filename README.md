@@ -28,7 +28,8 @@ configuration.
 index.html              all the markup
 assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
-assets/img/*.webp       artwork exported from Figma (resized to 2× display size)
+assets/img/*.webp       row thumbnails, exported from Figma (2× display size)
+assets/img/large/*.webp the same shots at 705px tall, for an expanded row
 assets/icons/*.svg      logo, menu, arrow, status dot
 assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
 ```
@@ -38,20 +39,49 @@ assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
 Everything editable lives in `index.html`:
 
 - **Projects** — each one is an `<li class="row">` inside `.work__list`: the
-  name, its `<span class="tag">` labels and the thumbnails in `.row__thumbs`.
-  To add a project, copy a whole `<li>` and swap the text and images.
+  name, its `<span class="tag">` labels, the thumbnails in `.thumbs` and the
+  `.row__panel` the toggle opens. To add a project, copy a whole `<li>`, swap
+  the text and images, and shift every `--y` below it by 198.
 - **Thumbnails** — drop new files into `assets/img/` and point the `src` at
   them. Keep the `width`/`height` attributes matching the file so the page does
-  not jump while images load. Wide thumbnails carry `class="is-wide"`.
+  not jump while images load; a thumbnail's `--w` sets its width. Each one has a
+  705px-tall twin in `assets/img/large/` for the expanded strip, whose `--w` is
+  `470 x (thumbnail width / thumbnail height)`.
 - **Services** — the four `<ul class="services__col">` lists.
 - **Links** — the social chips point at generic profile URLs
   (`https://www.instagram.com/` and friends). Replace them with the real
   profiles. The email is already `itsvictxrchaves@gmail.com`.
-- **The project rows currently link to `#contact`.** When a case study exists,
-  point `.row__link` at its page.
+- **Row copy** — an open row shows a `.row__desc` paragraph. BareFolio's is the
+  designer's own; the other three are placeholders written from what their
+  images show, and should be replaced with real project copy.
+- **The View Project buttons currently link to `#contact`.** When a case study
+  exists, point each row's `.row__cta` at its page.
 
 Colours, type sizes and spacing are custom properties at the top of
 `styles.css`, all derived from the Figma frame.
+
+## The work rows
+
+Clicking a row expands it: a description, a View Project button and a strip of
+large shots you can scroll sideways. Only one row is ever open, and the design
+gives an open row 734 comp pixels against a closed row's 198.
+
+On a traced canvas a row cannot simply grow — everything under it has to move.
+One custom property carries that distance:
+
+- `.frame` sets `--push` (536, the difference between the two heights);
+- `.row.is-open ~ .row` translates by it, so the rows after the open one drop;
+- `.shift` puts the same translation on the blocks below the list, and
+  `.shift-layer` first flattens a section into a zero-height layer whose origin
+  sits on the frame's, so its absolutely positioned children keep the comp's
+  coordinates while the section itself moves;
+- the frame's own height adds `--push`, so the footer keeps its ground.
+
+Below 900px the rows are in normal flow and none of that applies: the panel
+folds on a height `main.js` measures from its own content.
+
+The large shots are not in the initial payload. A row fetches its own the first
+time the pointer settles on it, or when it opens.
 
 ## Motion
 

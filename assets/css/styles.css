@@ -36,6 +36,7 @@
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --dur-fold: 620ms;
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --dur-fast: 160ms;
   --dur-ui: 220ms;
@@ -91,12 +92,14 @@ hr { border: 0; margin: 0; }
 .frame {
   position: relative;
   width: calc(1728 * var(--u));
-  height: calc(4484 * var(--u));
+  height: calc((4484 + var(--push, 0)) * var(--u));
+  transition: height var(--dur-fold) var(--ease-drawer);
 }
 
 .pill, .pill__logo, .pill__current,
 .btn, .btn__label, .btn__icon,
 .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
+.row__toggle, .row__shots,
 .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
   position: absolute;
   left: calc(var(--x, 0) * var(--u));
@@ -372,18 +375,57 @@ hr { border: 0; margin: 0; }
 
 /* ---------- Featured work ---------- */
 
-.row__link { display: block; }
-.row__hit {
+/* Each row is a zero-height layer whose origin sits on the frame's, so its
+   children keep the comp's absolute coordinates. Because the layer coincides
+   with the frame, a transform on it moves the whole row without disturbing
+   where its absolutely positioned children resolve. */
+.row {
   position: absolute;
-  left: calc(var(--x) * var(--u));
-  top: calc(var(--y) * var(--u));
-  width: calc(var(--w) * var(--u));
-  height: calc(var(--h) * var(--u));
+  left: 0; top: 0;
+  width: calc(1728 * var(--u));
+  height: 0;
+  transition: transform var(--dur-fold) var(--ease-drawer);
+}
+.row.is-open ~ .row { transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
+
+/* Everything that lives below the list rides the same push. */
+.shift { transition: transform var(--dur-fold) var(--ease-drawer); transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
+.shift-layer { position: absolute; left: 0; top: 0; width: calc(1728 * var(--u)); height: 0; }
+
+.row__name { font-family: 'Geist', system-ui, sans-serif; }
+/* The header parts are decorative; the toggle underneath them takes the click. */
+.row__name, .tags, .thumbs { pointer-events: none; }
+
+.row__toggle {
+  z-index: 2;
+  margin: 0; padding: 0;
   background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: background var(--dur-ui) ease;
 }
-.row__name { font-family: 'Geist', system-ui, sans-serif; }
-.row__plus { text-transform: uppercase; transition: transform var(--dur-ui) var(--ease-out), color var(--dur-ui) ease; }
+.row__toggle:hover { background: rgba(255, 255, 255, 0.04); }
+.row__toggle:focus-visible { outline: 2px solid var(--live); outline-offset: calc(-4 * var(--u)); }
+
+.row__plus { text-transform: uppercase; white-space: nowrap; transition: color var(--dur-ui) ease; }
+
+/* "( + )" grows into "( VIEW + )" on hover. Both strings are monospace, so the
+   word occupies exactly five characters and the brackets never move. */
+.row__view {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 340ms var(--ease-out), opacity 200ms ease;
+}
+.row__sign { position: relative; display: inline-block; }
+.row__sign span { display: block; transition: opacity 200ms ease, transform 360ms var(--ease-out); }
+.row__sign span + span { position: absolute; left: 0; top: 0; opacity: 0; transform: rotate(-90deg); }
+
 .tag {
   --y: 0;
   display: flex; align-items: center; justify-content: center;
@@ -394,13 +436,65 @@ hr { border: 0; margin: 0; }
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
-.thumbs { transition: transform var(--dur-ui) var(--ease-out); }
+.thumbs { transition: transform var(--dur-ui) var(--ease-out), opacity 260ms ease; }
+
+/* ---------- A row, expanded ---------- */
+
+/* The panel sits above the toggle so its button and its scroller stay
+   reachable, but only those two take pointer events - a click on the
+   description still folds the row. */
+.row__panel { z-index: 3; pointer-events: none; visibility: hidden; }
+.row__cta, .row__shots { pointer-events: auto; }
+.row__desc { font-family: 'Geist', system-ui, sans-serif; }
+
+.row__desc, .row__cta {
+  opacity: 0;
+  transform: translateY(calc(14 * var(--u)));
+  transition: opacity 260ms ease, transform 460ms var(--ease-drawer);
+}
+
+.row__shots {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.row__shots::-webkit-scrollbar { display: none; }
+.row__track {
+  display: flex;
+  align-items: center;
+  gap: calc(33.571 * var(--u));
+  width: max-content;
+  height: 100%;
+  margin: 0;
+  padding: 0 calc(40 * var(--u)) 0 0;
+  list-style: none;
+}
+.row__track li {
+  flex: none;
+  width: calc(var(--w) * var(--u));
+  height: 100%;
+  /* Each shot swells into the slot it already occupies. */
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 300ms ease, transform var(--dur-fold) var(--ease-drawer);
+}
+.row__track img { display: block; width: 100%; height: 100%; object-fit: cover; background: #d9d9d9; }
+
+.row.is-open .row__panel { visibility: visible; }
+.row.is-open .row__desc,
+.row.is-open .row__cta { opacity: 1; transform: none; transition-delay: 120ms; }
+.row.is-open .row__track li { opacity: 1; transform: none; transition-delay: calc(160ms + var(--i) * 70ms); }
+.row.is-open .thumbs { opacity: 0; transform: scale(1.08); }
+.row.is-open .row__sign span:first-child { opacity: 0; transform: rotate(90deg); }
+.row.is-open .row__sign span + span { opacity: 1; transform: none; }
 
 @media (hover: hover) and (pointer: fine) {
-  .row__link:hover .row__hit { background: rgba(255, 255, 255, 0.04); }
-  .row__link:hover .row__plus { transform: rotate(90deg); color: var(--live); }
-  .row__link:hover .thumbs { transform: translateX(calc(-18 * var(--u))); }
-  .row__link:hover .row__name { text-decoration: underline; text-underline-offset: calc(5 * var(--u)); }
+  .row:not(.is-open):has(.row__toggle:hover) .row__view { max-width: 5ch; opacity: 1; }
+  .row:has(.row__toggle:hover) .row__plus { color: var(--live); }
+  .row:not(.is-open):has(.row__toggle:hover) .thumbs { transform: translateX(calc(-18 * var(--u))); }
+  .row:has(.row__toggle:hover) .row__name { text-decoration: underline; text-underline-offset: calc(5 * var(--u)); }
 }
 
 /* ---------- Everything I can do ---------- */
@@ -491,6 +585,7 @@ hr { border: 0; margin: 0; }
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
+  .row, .row__toggle, .row__shots,
   .rule, .band, .card, .marquee, .footer__dot {
     position: static;
     width: auto;
@@ -538,21 +633,56 @@ hr { border: 0; margin: 0; }
   .work { display: block; padding-top: 34px; }
   .work > .label { font-size: 12px; text-align: right; padding: 0 20px 14px; }
   .work .rule, .services .rule, .footer .rule { display: none; }
-  .row { border-top: 1px solid rgba(255, 255, 255, 0.28); }
+  .row {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: start; column-gap: 10px; padding: 16px 20px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    transform: none;
+  }
   .row:last-of-type { border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
-  .row__link { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 16px 20px 18px; }
-  .row__hit { position: absolute; inset: 0; left: 0; top: 0; width: auto; height: auto; }
-  .row__name { font-size: 17px; line-height: 1.3; }
-  .row__plus { font-size: 11px; line-height: 1.3; justify-self: end; }
-  .tags { display: flex; gap: 2px; grid-column: 1; }
+  .row.is-open ~ .row, .shift { transform: none; }
+  .shift-layer { position: static; width: auto; height: auto; }
+  /* The toggle covers the header rows; the parts underneath it stay inert. */
+  /* position:relative would re-arm the comp's left/top, so both are cleared;
+     align-self keeps the overlay as tall as the header rows it covers. */
+  .row__toggle {
+    grid-column: 1 / -1; grid-row: 1 / 4; align-self: stretch;
+    position: relative; left: auto; top: auto; width: auto; height: auto;
+  }
+  .row__name { grid-column: 1; grid-row: 1; font-size: 17px; line-height: 1.3; }
+  .row__plus { position: absolute; left: auto; right: 0; top: 2px; font-size: 11px; line-height: 1.3; }
+  .tags { display: flex; gap: 2px; grid-column: 1; grid-row: 2; margin-top: 9px; }
   .tag { height: 24px; padding: 0 9px; font-size: 9.5px; line-height: 1; }
   .thumbs {
-    grid-column: 1 / -1; display: flex; gap: 6px;
+    grid-column: 1 / -1; grid-row: 3; display: flex; gap: 6px; margin-top: 12px;
     overflow-x: auto; scrollbar-width: none; margin-right: -20px; padding-bottom: 2px;
+    max-height: 120px;
+    transition: max-height var(--dur-fold) var(--ease-drawer),
+                margin-top var(--dur-fold) var(--ease-drawer), opacity 200ms ease;
   }
+  /* In flow the small strip has to give its space back, not just fade. */
+  .row.is-open .thumbs { max-height: 0; margin-top: 0; padding-bottom: 0; opacity: 0; transform: none; }
   .thumbs::-webkit-scrollbar { display: none; }
   .thumbs img { height: 104px; width: auto; aspect-ratio: 112 / 140; flex: none; }
   .thumbs img[style*="--w:210"], .thumbs img[style*="--w:211"], .thumbs img[style*="--w:209"] { aspect-ratio: 210 / 140; }
+  /* The panel folds on a height JS measures, since the canvas push does not
+     apply once the rows are in flow. */
+  .row__panel {
+    grid-column: 1 / -1; grid-row: 4;
+    max-height: 0; overflow: hidden;
+    transition: max-height var(--dur-fold) var(--ease-drawer);
+  }
+  .row__desc { font-size: 15px; line-height: 1.42; padding-top: 16px; }
+  .row__cta {
+    display: flex; align-items: center; gap: 8px;
+    width: max-content; height: 40px; padding: 0 16px; margin-top: 14px;
+  }
+  .row__cta .btn__label { font-size: 13px; line-height: 1; }
+  .row__cta .btn__icon { width: 18px; height: 18px; }
+  .row__shots { width: auto; height: auto; margin: 14px -20px 4px 0; }
+  .row__track { gap: 8px; height: auto; padding-right: 20px; }
+  .row__track li { height: 260px; width: auto; aspect-ratio: var(--w) / 470; }
+
   .work .btn--glass { display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; height: 40px; padding: 0 18px; margin: 30px auto 0; }
   .work .btn__label { font-size: 14px; line-height: 1; }
 
@@ -597,5 +727,11 @@ hr { border: 0; margin: 0; }
   .pill__links li, .pill__actions { transform: none; transition: opacity 160ms ease; }
   .burger line { transition: opacity 160ms ease; }
   .hero__bg { animation: none; transform: none; }
-  .row__link:hover .thumbs { transform: none; }
+  .row:has(.row__toggle:hover) .thumbs { transform: none; }
+  .row, .shift, .frame, .row__panel { transition: none; }
+  .row__desc, .row__cta, .row__track li { transition: opacity 200ms ease; transform: none; }
+  .row.is-open .row__desc, .row.is-open .row__cta, .row.is-open .row__track li { transition-delay: 0s; }
+  .row__view { transition: opacity 160ms ease; }
+  .row__sign span { transition: opacity 160ms ease; transform: none; }
+  .row.is-open .row__sign span:first-child { transform: none; }
 }
