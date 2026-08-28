@@ -29,37 +29,55 @@
 <div class="frame">
 
   <header class="nav" id="nav">
-    <nav class="pill" style="--y:30; --h:51" aria-label="Main">
-      <a class="pill__logo" style="--w:21; --h:21.84" href="#top" aria-label="Victor Chaves — home">
-        <img src="assets/icons/logo.svg" alt="" width="21" height="22">
-      </a>
-      <span class="pill__current" style="--fs:20; --lh:26" id="navLabel" aria-live="polite">It’s Víctxr Chaves</span>
-      <button class="pill__menu" style="--w:24; --h:24" type="button" id="menuBtn" aria-expanded="false" aria-controls="menuPanel">
-        <span class="u-sr-only">Open menu</span>
-        <img src="assets/icons/menu.svg" alt="" width="24" height="24">
-      </button>
-    </nav>
+    <div class="nav__scrim" id="navScrim" hidden></div>
 
+    <nav class="pill" id="navPanel" style="--y:26" aria-label="Main">
+      <div class="pill__row">
+        <a class="pill__logo" style="--w:21; --h:21.84" href="#top" aria-label="Victor Chaves — home">
+          <img src="assets/icons/logo.svg" alt="" width="21" height="22">
+        </a>
+        <span class="pill__current" style="--fs:15; --lh:20" id="navLabel" aria-live="polite">ItsVictorChaves</span>
+        <button class="pill__toggle" type="button" id="menuBtn" aria-expanded="false" aria-controls="navPanel">
+          <span class="u-sr-only">Menu</span>
+          <!-- Three strokes that converge into the comp's single dash when open. -->
+          <svg class="burger" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <line class="burger__top" x1="4" y1="6" x2="20" y2="6"/>
+            <line class="burger__mid" x1="4" y1="12" x2="20" y2="12"/>
+            <line class="burger__bot" x1="4" y1="18" x2="20" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <ul class="pill__links" inert>
+        <li><a href="#top">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="pill__actions" inert>
+        <a class="pill__btn" href="mailto:itsvictxrchaves@gmail.com?subject=Project%20enquiry">
+          <span>Start A Project</span>
+          <img src="assets/icons/arrow-up-right-dark.svg" alt="" width="24" height="24">
+        </a>
+        <a class="pill__btn" href="https://cal.com/itsvictxrchaves/30min" target="_blank" rel="noopener noreferrer"
+           data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
+           data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+          <span>Schedule A Call</span>
+          <img src="assets/icons/arrow-up-right-dark.svg" alt="" width="24" height="24">
+        </a>
+      </div>
+    </nav>
   </header>
 
-    <a class="nav__cta" style="--x:1429; --y:32; --w:237.98; --h:47.94"
-     href="#contact" data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
-      <span class="nav__cta-label" style="--fs:19.113; --lh:25">Work Together</span>
-      <svg class="nav__cta-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M16.98 15.4813L16.98 7.08052L8.45802 7.08064M16.98 7.08052L7.08052 16.98"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-
-
-  <div class="menu" id="menuPanel" hidden>
-    <nav class="menu__inner" aria-label="Sections">
-      <a class="menu__link" href="#top">Home</a>
-      <a class="menu__link" href="#work">Featured work</a>
-      <a class="menu__link" href="#services">Everything I can do</a>
-      <a class="menu__link" href="#contact">Get in touch</a>
-    </nav>
-  </div>
+  <a class="nav__cta" style="--x:1429; --y:28; --w:237.98; --h:47.94"
+     href="#contact" data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
+     data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+    <span class="nav__cta-label" style="--fs:19.113; --lh:25">Work Together</span>
+    <svg class="nav__cta-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M16.98 15.4813L16.98 7.08052L8.45802 7.08064M16.98 7.08052L7.08052 16.98"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
 
   <main id="top">
 

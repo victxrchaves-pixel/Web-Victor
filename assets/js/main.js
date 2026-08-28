@@ -5,6 +5,8 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var setLabel = function () {};
+  var updateLabel = function () {};
 
   /* ---------- Scroll reveal (fires once per element) ---------- */
 
@@ -41,49 +43,79 @@
 
   var nav = document.getElementById('nav');
 
-  /* ---------- Overlay menu ---------- */
+  /* ---------- The bar unfolds into the menu ---------- */
 
   var menuBtn = document.getElementById('menuBtn');
-  var menuPanel = document.getElementById('menuPanel');
+  var panel = document.getElementById('navPanel');
+  var scrim = document.getElementById('navScrim');
   var menuOpen = false;
+  var folded = panel ? panel.querySelectorAll('.pill__links, .pill__actions') : [];
+
+  // Clipped content stays out of the tab order until the panel is open.
+  var setFolded = function (isInert) {
+    Array.prototype.forEach.call(folded, function (el) {
+      if (isInert) el.setAttribute('inert', ''); else el.removeAttribute('inert');
+    });
+  };
+
+  // The panel's open height is measured rather than hard-coded, so it fits its
+  // content exactly at any scale and on the mobile layout too.
+  var panelHeight = function () {
+    var previous = panel.style.height;
+    panel.style.height = 'auto';
+    var natural = panel.getBoundingClientRect().height;
+    panel.style.height = previous;
+    return natural;
+  };
 
   function openMenu() {
+    if (menuOpen) return;
     menuOpen = true;
-    menuPanel.hidden = false;
-    // Let the browser paint the hidden state before transitioning opacity in.
-    requestAnimationFrame(function () { menuPanel.classList.add('is-open'); });
+    setFolded(false);
+    panel.classList.add('is-open');
+    panel.style.height = panelHeight() + 'px';
     menuBtn.setAttribute('aria-expanded', 'true');
+    scrim.hidden = false;
+    requestAnimationFrame(function () { scrim.classList.add('is-visible'); });
     document.body.style.overflow = 'hidden';
-    var first = menuPanel.querySelector('.menu__link');
+    setLabel('Menu');
+    var first = panel.querySelector('.pill__links a');
     if (first) first.focus({ preventScroll: true });
   }
 
-  function closeMenu() {
+  function closeMenu(returnFocus) {
+    if (!menuOpen) return;
     menuOpen = false;
-    menuPanel.classList.remove('is-open');
+    panel.classList.remove('is-open');
+    panel.style.height = '';
+    setFolded(true);
     menuBtn.setAttribute('aria-expanded', 'false');
+    scrim.classList.remove('is-visible');
     document.body.style.overflow = '';
-    var done = function () { if (!menuOpen) menuPanel.hidden = true; };
-    if (reduced) { done(); } else { window.setTimeout(done, 220); }
+    updateLabel();
+    var hide = function () { if (!menuOpen) scrim.hidden = true; };
+    if (reduced) hide(); else window.setTimeout(hide, 320);
+    if (returnFocus) menuBtn.focus({ preventScroll: true });
   }
 
-  if (menuBtn && menuPanel) {
+  if (menuBtn && panel && scrim) {
     menuBtn.addEventListener('click', function () {
-      menuOpen ? closeMenu() : openMenu();
+      menuOpen ? closeMenu(false) : openMenu();
     });
 
-    menuPanel.addEventListener('click', function (event) {
-      if (event.target === menuPanel || event.target.classList.contains('menu__link')) {
-        closeMenu();
-        if (event.target.classList.contains('menu__link')) menuBtn.focus({ preventScroll: true });
-      }
+    scrim.addEventListener('click', function () { closeMenu(true); });
+
+    panel.addEventListener('click', function (event) {
+      if (event.target.closest('.pill__links a, .pill__btn')) closeMenu(false);
     });
 
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && menuOpen) {
-        closeMenu();
-        menuBtn.focus({ preventScroll: true });
-      }
+      if (event.key === 'Escape' && menuOpen) closeMenu(true);
+    });
+
+    // Keep the open panel fitted when the viewport changes under it.
+    window.addEventListener('resize', function () {
+      if (menuOpen) panel.style.height = panelHeight() + 'px';
     });
   }
 
@@ -110,17 +142,17 @@
     // Measured from real elements, not comp coordinates: the desktop canvas and
     // the mobile flow layout place these very differently.
     var SECTIONS = [
-      { el: null,                                        text: 'It\u2019s V\u00edctxr Chaves' },
+      { el: null,                                        text: 'ItsVictorChaves' },
       { el: document.querySelector('.row__hit'),         text: 'Work' },
       { el: document.querySelector('.services .display'), text: 'What I Do' },
       { el: document.querySelector('.contact .display'), text: 'Contact' }
     ];
     var current = -1;
 
-    var applyLabel = function (index) {
-      if (index === current) return;
-      current = index;
-      var text = SECTIONS[index].text;
+    var labelTarget = navLabel.textContent;
+    setLabel = function (text) {
+      if (labelTarget === text) return;
+      labelTarget = text;
       if (reduced) { navLabel.textContent = text; return; }
       navLabel.classList.add('is-swapping');
       window.setTimeout(function () {
@@ -129,7 +161,13 @@
       }, 140);
     };
 
-    var updateLabel = function () {
+    var applyLabel = function (index) {
+      current = index;
+      setLabel(SECTIONS[index].text);
+    };
+
+    updateLabel = function () {
+      if (menuOpen) return;
       // A section takes over once its top passes three quarters down the
       // viewport; at the very bottom the last one always wins, since a short
       // page can never scroll its threshold past the probe.

@@ -36,6 +36,7 @@
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --dur-fast: 160ms;
   --dur-ui: 220ms;
 }
@@ -93,7 +94,7 @@ hr { border: 0; margin: 0; }
   height: calc(4484 * var(--u));
 }
 
-.pill, .pill__logo, .pill__current, .pill__menu,
+.pill, .pill__logo, .pill__current,
 .btn, .btn__label, .btn__icon,
 .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
 .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
@@ -125,8 +126,20 @@ hr { border: 0; margin: 0; }
   left: 0; top: 0;
   width: calc(1728 * var(--u));
   height: 0;
-  z-index: 50;
+  z-index: 60;
 }
+
+.nav__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(2.65px);
+  backdrop-filter: blur(2.65px);
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out);
+}
+.nav__scrim[hidden] { display: none; }
+.nav__scrim.is-visible { opacity: 1; }
 
 /* White type in difference blending reads black on light ground and white on
    dark, so the CTA stays legible over the sky and over the page below it. */
@@ -159,27 +172,40 @@ hr { border: 0; margin: 0; }
 
 .pill {
   left: 50%;
+  top: calc(var(--y) * var(--u));
   transform: translateX(-50%);
-  width: auto;
+  width: calc(354 * var(--u));
+  height: calc(46 * var(--u));
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: calc(55 * var(--u));            /* the comp's own gap */
-  padding: 0 calc(18 * var(--u));
+  gap: calc(26 * var(--u));
+  padding: calc(11 * var(--u)) calc(18 * var(--u));
   border-radius: calc(5 * var(--u));
   background: var(--glass);
   -webkit-backdrop-filter: blur(calc(3.3 * var(--u)));
   backdrop-filter: blur(calc(3.3 * var(--u)));
+  overflow: hidden;
+  /* Width is the comp's; height is measured and set by the script, so the
+     panel unfolds to exactly its content at any scale. */
+  transition: width 460ms var(--ease-drawer), height 460ms var(--ease-drawer);
 }
-.pill__logo, .pill__menu { position: static; flex: none; }
-.pill__logo img, .pill__menu img { width: 100%; height: 100%; }
-.pill__menu { padding: 0; border: 0; background: none; cursor: pointer; transition: opacity var(--dur-fast) ease; }
+.pill.is-open { width: calc(521 * var(--u)); }
 
-/* The label names the section you are in. Its width is fixed to the longest
-   label so the pill never jumps as the text swaps. */
+.pill__row {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: calc(24 * var(--u));
+  flex: none;
+}
+.pill__logo, .pill__toggle { position: static; flex: none; }
+.pill__logo img { width: 100%; height: 100%; }
+
 .pill__current {
   position: static;
+  flex: 1;
   height: auto;
-  min-width: calc(220 * var(--u));
   text-align: center;
   white-space: nowrap;
   font-size: calc(var(--fs) * var(--u));
@@ -187,6 +213,93 @@ hr { border: 0; margin: 0; }
   transition: opacity 140ms ease;
 }
 .pill__current.is-swapping { opacity: 0; }
+
+/* The toggle: three strokes that converge into one. */
+.pill__toggle {
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.burger { display: block; width: 100%; height: 100%; }
+.burger line {
+  stroke: var(--fg);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 340ms var(--ease-out), opacity 220ms ease;
+}
+.pill.is-open .burger__top { transform: translateY(6px) scaleX(0.55); opacity: 0; }
+.pill.is-open .burger__bot { transform: translateY(-6px) scaleX(0.55); opacity: 0; }
+.pill.is-open .burger__mid { transform: scaleX(0.9); }
+
+/* Links: full width of the panel, so their rules bleed past its padding. */
+.pill__links {
+  width: calc(100% + 36 * var(--u));
+  margin-inline: calc(-18 * var(--u));
+  flex: none;
+}
+.pill__links li { padding: calc(10 * var(--u)) calc(18 * var(--u)); }
+.pill__links li:not(:last-child) {
+  padding-bottom: calc(16 * var(--u));   /* the 1px rule completes the comp's 50 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+}
+.pill__links li + li { margin-top: calc(10 * var(--u)); }
+.pill__links a {
+  display: block;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: calc(18 * var(--u));
+  line-height: calc(23 * var(--u));
+  text-align: center;
+  transition: color var(--dur-fast) ease;
+}
+
+.pill__actions {
+  display: flex;
+  gap: calc(10 * var(--u));
+  width: 100%;
+  flex: none;
+}
+.pill__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(14.016 * var(--u));
+  padding: calc(11.468 * var(--u)) calc(25.484 * var(--u));
+  border-radius: calc(6.371 * var(--u));
+  background: #fff;
+  color: #000;
+  font-size: calc(15 * var(--u));
+  line-height: calc(20 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--dur-ui) ease, transform var(--dur-fast) var(--ease-out);
+}
+.pill__btn img { width: calc(24 * var(--u)); height: calc(24 * var(--u)); flex: none; }
+.pill__btn:active { transform: scale(0.98); }
+
+/* The contents arrive as the panel opens, and leave at once when it closes. */
+.pill__links li, .pill__actions {
+  opacity: 0;
+  transform: translateY(calc(10 * var(--u)));
+  transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
+}
+.pill.is-open .pill__links li,
+.pill.is-open .pill__actions { opacity: 1; transform: none; }
+.pill.is-open .pill__links li:nth-child(1) { transition-delay: 130ms; }
+.pill.is-open .pill__links li:nth-child(2) { transition-delay: 175ms; }
+.pill.is-open .pill__links li:nth-child(3) { transition-delay: 220ms; }
+.pill.is-open .pill__actions { transition-delay: 265ms; }
+
+@media (hover: hover) and (pointer: fine) {
+  .pill__links a:hover { color: var(--live); }
+  .pill__btn:hover { background: rgba(255, 255, 255, 0.82); }
+}
 
 /* Buttons keep the comp's box and the comp's inner coordinates. */
 .btn {
@@ -213,35 +326,10 @@ hr { border: 0; margin: 0; }
 .btn:active { transform: scale(0.98); }
 
 @media (hover: hover) and (pointer: fine) {
-  .pill__menu:hover { opacity: 0.6; }
+  .pill__toggle:hover .burger line { stroke: var(--live); }
   .btn--glass:hover { background: rgba(234, 234, 234, 0.44); }
   .btn--outline:hover, .btn--outline-soft:hover { background: rgba(255, 255, 255, 0.12); }
 }
-
-/* Overlay menu (outside the traced frame — it is behaviour, not comp) */
-.menu {
-  position: fixed; inset: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(10, 10, 10, 0.92);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  opacity: 0;
-  transition: opacity var(--dur-ui) var(--ease-out);
-}
-.menu[hidden] { display: none; }
-.menu.is-open { opacity: 1; }
-.menu__inner { display: grid; gap: clamp(1rem, 2.2vw, 2rem); text-align: center; }
-.menu__link {
-  font-family: 'Geist', system-ui, sans-serif; font-weight: 700;
-  font-size: clamp(1.75rem, 5vw, 3.5rem); text-transform: uppercase; line-height: 1;
-  opacity: 0; transform: translateY(10px);
-  transition: color var(--dur-fast) ease;
-}
-.menu.is-open .menu__link { animation: menuIn 320ms var(--ease-out) forwards; }
-.menu.is-open .menu__link:nth-child(2) { animation-delay: 50ms; }
-.menu.is-open .menu__link:nth-child(3) { animation-delay: 100ms; }
-.menu.is-open .menu__link:nth-child(4) { animation-delay: 150ms; }
-@keyframes menuIn { to { opacity: 1; transform: translateY(0); } }
-@media (hover: hover) and (pointer: fine) { .menu__link:hover { color: var(--live); } }
 
 /* ---------- Hero ---------- */
 
@@ -400,7 +488,7 @@ hr { border: 0; margin: 0; }
 
   .frame { width: 100%; height: auto; padding-bottom: 2rem; }
 
-  .pill, .pill__logo, .pill__current, .pill__menu,
+  .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
   .rule, .band, .card, .marquee, .footer__dot {
@@ -412,12 +500,22 @@ hr { border: 0; margin: 0; }
   .nav { width: 100%; padding: 10px 16px; display: flex; align-items: center; }
   .pill {
     left: auto; transform: none; width: 100%; height: 46px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; padding: 0 14px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 18px; padding: 11px 14px;
   }
+  .pill.is-open { width: 100%; }
+  .pill__row { height: 24px; }
   .pill__logo { width: 21px; height: 22px; }
-  .pill__current { min-width: 0; font-size: 14px; line-height: 1; overflow: hidden; text-overflow: ellipsis; }
-  .pill__menu { width: 24px; height: 24px; }
+  .pill__current { min-width: 0; font-size: 13px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; }
+  .pill__links { width: calc(100% + 28px); margin-inline: -14px; }
+  .pill__links li { padding: 9px 14px; }
+  .pill__links li:not(:last-child) { padding-bottom: 14px; }
+  .pill__links li + li { margin-top: 8px; }
+  .pill__links a { font-size: 17px; line-height: 1.3; }
+  .pill__actions { flex-direction: column; gap: 8px; }
+  .pill__btn { padding: 11px 18px; font-size: 13px; line-height: 1.4; }
+  .pill__btn img { width: 20px; height: 20px; }
+  .pill__toggle { width: 24px; height: 24px; }
   .nav__cta { display: none; }
 
   .hero {
@@ -495,6 +593,9 @@ hr { border: 0; margin: 0; }
   @keyframes revealFade { to { opacity: 1; } }
   .js-anim [data-reveal="wipe"] > * { clip-path: none; }
   .chips--hero li { opacity: 1; transform: none; animation: none; }
+  .pill { transition: none; }
+  .pill__links li, .pill__actions { transform: none; transition: opacity 160ms ease; }
+  .burger line { transition: opacity 160ms ease; }
   .hero__bg { animation: none; transform: none; }
   .row__link:hover .thumbs { transform: none; }
 }
