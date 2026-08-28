@@ -188,6 +188,39 @@
     updateLabel();
   }
 
+  /* ---------- Cal.com: open the booking modal, never navigate ----------
+     Cal's own click handler opens the modal but does not prevent the link's
+     default action, so an <a> would navigate away underneath it. These
+     triggers keep their href purely as the no-JS fallback: with the script
+     present we stop the navigation, stop the event reaching Cal's delegated
+     handler (so only one modal opens) and call the API ourselves. The inline
+     snippet queues that call, so it also works if the embed is still loading. */
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cal-link]'), function (el) {
+    el.addEventListener('click', function (event) {
+      if (typeof window.Cal !== 'function') return;   // no snippet: follow the href
+      event.preventDefault();
+      event.stopPropagation();
+
+      var ns = el.getAttribute('data-cal-namespace');
+      var api = (ns && window.Cal.ns && window.Cal.ns[ns]) ? window.Cal.ns[ns] : window.Cal;
+      var config = {};
+      try { config = JSON.parse(el.getAttribute('data-cal-config') || '{}'); } catch (err) {}
+      api('modal', { calLink: el.getAttribute('data-cal-link'), config: config });
+
+      // Stopping propagation also stops the panel's own close handler.
+      if (el.closest('#navPanel')) closeMenu(false);
+
+      // If the embed never arrives (blocked, offline), fall back to the page.
+      var tries = 0;
+      (function waitForModal() {
+        if (document.querySelector('cal-modal-box')) return;
+        if (++tries > 15) { window.location.href = el.href; return; }
+        window.setTimeout(waitForModal, 200);
+      })();
+    });
+  });
+
   /* ---------- Footer clock, in Barcelona time ---------- */
 
   var clock = document.getElementById('clock');
