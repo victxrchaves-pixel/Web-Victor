@@ -392,7 +392,7 @@ hr { border: 0; margin: 0; }
 .shift { transition: transform var(--dur-fold) var(--ease-drawer); transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
 .shift-layer { position: absolute; left: 0; top: 0; width: calc(1728 * var(--u)); height: 0; }
 
-.row__name { font-family: 'Geist', system-ui, sans-serif; }
+.row__name { font-family: 'Geist', system-ui, sans-serif; transition: color var(--dur-ui) ease; }
 /* The header parts are decorative; the toggle underneath them takes the click. */
 .row__name, .tags, .thumbs { pointer-events: none; }
 
@@ -407,7 +407,6 @@ hr { border: 0; margin: 0; }
   cursor: pointer;
   transition: background var(--dur-ui) ease;
 }
-.row__toggle:hover { background: rgba(255, 255, 255, 0.04); }
 .row__toggle:focus-visible { outline: 2px solid var(--live); outline-offset: calc(-4 * var(--u)); }
 
 .row__plus { text-transform: uppercase; white-space: nowrap; transition: color var(--dur-ui) ease; }
@@ -436,14 +435,14 @@ hr { border: 0; margin: 0; }
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
-.thumbs { transition: transform var(--dur-ui) var(--ease-out), opacity 260ms ease; }
+.thumbs { transition: transform var(--dur-ui) var(--ease-out), opacity 120ms ease 480ms; }
 
 /* ---------- A row, expanded ---------- */
 
 /* The panel sits above the toggle so its button and its scroller stay
    reachable, but only those two take pointer events - a click on the
    description still folds the row. */
-.row__panel { z-index: 3; pointer-events: none; visibility: hidden; }
+.row__panel { z-index: 3; pointer-events: none; visibility: hidden; transition: visibility 0s linear var(--dur-fold); }
 .row__cta, .row__shots { pointer-events: auto; }
 .row__desc { font-family: 'Geist', system-ui, sans-serif; }
 
@@ -453,40 +452,60 @@ hr { border: 0; margin: 0; }
   transition: opacity 260ms ease, transform 460ms var(--ease-drawer);
 }
 
+/* The scroller reaches 206px above the strip, up to the thumbnail row, so a
+   shot can start on top of its own thumbnail without being clipped. That band
+   sits over the row header, so the scroller itself takes no pointer events -
+   only the track does, which is enough to scroll it and leaves the header
+   clickable. */
 .row__shots {
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  pointer-events: none;
 }
 .row__shots::-webkit-scrollbar { display: none; }
 .row__track {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: calc(33.571 * var(--u));
   width: max-content;
   height: 100%;
   margin: 0;
   padding: 0 calc(40 * var(--u)) 0 0;
   list-style: none;
+  pointer-events: auto;
 }
+/* Each shot begins as its own thumbnail - --dx/--dy carry the distance between
+   the two boxes and --s the ratio of their heights, both from the comp - and
+   travels down into the strip as it grows. The thumbnail fades under it over
+   the same instant, so what you see is one picture moving, not two swapping. */
 .row__track li {
   flex: none;
   width: calc(var(--w) * var(--u));
-  height: 100%;
-  /* Each shot swells into the slot it already occupies. */
+  height: calc(470 * var(--u));
   opacity: 0;
-  transform: scale(0.86);
-  transition: opacity 300ms ease, transform var(--dur-fold) var(--ease-drawer);
+  transform-origin: 0 0;
+  transform: translate3d(calc(var(--dx) * var(--u)), calc(var(--dy) * var(--u)), 0) scale(var(--s));
+  transition: opacity 120ms ease 500ms, transform var(--dur-fold) var(--ease-drawer);
 }
-.row__track img { display: block; width: 100%; height: 100%; object-fit: cover; background: #d9d9d9; }
+/* No placeholder colour: a shot begins exactly over its own thumbnail, so
+   until its bytes arrive the thumbnail underneath is what shows through. */
+.row__track img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-.row.is-open .row__panel { visibility: visible; }
+.row.is-open .row__panel { visibility: visible; transition-delay: 0s; }
 .row.is-open .row__desc,
 .row.is-open .row__cta { opacity: 1; transform: none; transition-delay: 120ms; }
-.row.is-open .row__track li { opacity: 1; transform: none; transition-delay: calc(160ms + var(--i) * 70ms); }
-.row.is-open .thumbs { opacity: 0; transform: scale(1.08); }
+.row.is-open .row__track li {
+  transform: none;
+  transition: opacity 120ms ease calc(var(--i) * 55ms),
+              transform var(--dur-fold) var(--ease-drawer) calc(var(--i) * 55ms);
+}
+/* Opacity is the one thing that waits for the images: on a cold click the
+   thumbnails simply stay until the shots can take over. */
+.row.is-open.is-handed .row__track li { opacity: 1; }
+.row.is-open.is-handed .thumbs { opacity: 0; transition: opacity 120ms ease 120ms; }
 .row.is-open .row__sign span:first-child { opacity: 0; transform: rotate(90deg); }
 .row.is-open .row__sign span + span { opacity: 1; transform: none; }
 
@@ -494,7 +513,7 @@ hr { border: 0; margin: 0; }
   .row:not(.is-open):has(.row__toggle:hover) .row__view { max-width: 5ch; opacity: 1; }
   .row:has(.row__toggle:hover) .row__plus { color: var(--live); }
   .row:not(.is-open):has(.row__toggle:hover) .thumbs { transform: translateX(calc(-18 * var(--u))); }
-  .row:has(.row__toggle:hover) .row__name { text-decoration: underline; text-underline-offset: calc(5 * var(--u)); }
+  .row:has(.row__toggle:hover) .row__name { color: var(--live); }
 }
 
 /* ---------- Everything I can do ---------- */
@@ -681,7 +700,11 @@ hr { border: 0; margin: 0; }
   .row__cta .btn__icon { width: 18px; height: 18px; }
   .row__shots { width: auto; height: auto; margin: 14px -20px 4px 0; }
   .row__track { gap: 8px; height: auto; padding-right: 20px; }
-  .row__track li { height: 260px; width: auto; aspect-ratio: var(--w) / 470; }
+  .row__track li {
+    height: 260px; width: auto; aspect-ratio: var(--w) / 470;
+    transform: translateY(18px) scale(0.96);
+  }
+  .row.is-open .row__track li { transform: none; }
 
   .work .btn--glass { display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; height: 40px; padding: 0 18px; margin: 30px auto 0; }
   .work .btn__label { font-size: 14px; line-height: 1; }

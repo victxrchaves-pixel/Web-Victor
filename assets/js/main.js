@@ -219,15 +219,43 @@
     panel.style.maxHeight = (open && isFlow()) ? panel.scrollHeight + 'px' : '';
   };
 
+  /* The shots start life on top of their own thumbnails, so the thumbnails are
+     what covers for them until their bytes arrive: the swap only happens once
+     every shot in the row can actually be drawn. */
+  var handOver = function (row) {
+    var shots = row.querySelectorAll('.row__track img');
+    var pending = shots.length;
+    var ready = function () {
+      if (--pending > 0) return;
+      if (row.classList.contains('is-open')) row.classList.add('is-handed');
+    };
+    Array.prototype.forEach.call(shots, function (img) {
+      if (img.complete && img.naturalWidth) { ready(); return; }
+      img.addEventListener('load', ready, { once: true });
+      img.addEventListener('error', ready, { once: true });
+    });
+  };
+
   var fold = function (row) {
     row.classList.remove('is-open');
+    row.classList.remove('is-handed');
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'false');
     setPanelHeight(row, false);
+    /* Rewind the strip as it folds, so the shots land back on the thumbnails
+       they came from rather than wherever the reader left them. */
+    var shots = row.querySelector('.row__shots');
+    if (shots && shots.scrollLeft) {
+      if (reduced) shots.scrollLeft = 0;
+      else shots.scrollTo({ left: 0, behavior: 'smooth' });
+    }
   };
 
   var unfold = function (row) {
     loadShots(row);
+    var shots = row.querySelector('.row__shots');
+    if (shots) shots.scrollLeft = 0;   /* the flight is measured from the strip's start */
     row.classList.add('is-open');
+    handOver(row);
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'true');
     setPanelHeight(row, true);
   };

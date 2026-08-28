@@ -80,6 +80,18 @@ One custom property carries that distance:
 Below 900px the rows are in normal flow and none of that applies: the panel
 folds on a height `main.js` measures from its own content.
 
+Opening a row does not swap one set of pictures for another: each shot begins
+life as its own thumbnail. `--dx`, `--dy` and `--s` on every `<li>` carry the
+distance between the two boxes and the ratio of their heights, all measured
+from the comp, so the shot starts exactly on top of the thumbnail and travels
+down into the strip as it grows. The scroller reaches 206px above the strip so
+that starting position is not clipped; it takes no pointer events itself, only
+its track does, which leaves the row header clickable through it.
+
+The thumbnail only lets go once the shot covering it can be drawn — `is-handed`
+lands when every image in the row has loaded — so a cold click never shows a
+gap.
+
 The large shots are not in the initial payload. A row fetches its own the first
 time the pointer settles on it, or when it opens.
 
