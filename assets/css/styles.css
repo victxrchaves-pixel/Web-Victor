@@ -428,10 +428,10 @@ hr { border: 0; margin: 0; }
 .tag {
   --y: 0;
   display: flex; align-items: center; justify-content: center;
-  padding-top: calc(2 * var(--u));
+  padding-top: calc(2.5 * var(--u));
   background: var(--tag-bg);
-  font-size: calc(10.341 * var(--u));
-  line-height: calc(13 * var(--u));
+  font-size: calc(12.926 * var(--u));
+  line-height: calc(16.25 * var(--u));
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
@@ -442,11 +442,29 @@ hr { border: 0; margin: 0; }
 /* The panel sits above the toggle so its button and its scroller stay
    reachable, but only those two take pointer events - a click on the
    description still folds the row. */
-.row__panel { z-index: 3; pointer-events: none; visibility: hidden; transition: visibility 0s linear var(--dur-fold); }
+/* Positioned, or its z-index would be inert and the toggle underneath would
+   keep taking the clicks meant for the button. The panel carries no offsets,
+   so its origin still coincides with the frame's and its absolutely
+   positioned children keep the comp's coordinates. */
+.row__panel {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear var(--dur-fold);
+}
 .row__cta, .row__shots { pointer-events: auto; }
 .row__desc { font-family: 'Geist', system-ui, sans-serif; }
-/* The button runs at 0.625 of the comp, so its corner does too. */
-.row__cta { border-radius: calc(3.982 * var(--u)); }
+/* The button runs at 0.70 of the comp, so its corner does too. It is the one
+   thing in an open row you can actually press, so it inverts on hover rather
+   than taking the outline buttons' faint wash. */
+.row__cta {
+  border-radius: calc(4.46 * var(--u));
+  transition: background var(--dur-ui) ease, color var(--dur-ui) ease,
+              border-color var(--dur-ui) ease, transform var(--dur-fast) var(--ease-out);
+}
+.row__cta .btn__icon { transition: filter var(--dur-ui) ease; }
+.row__cta:focus-visible { outline: 2px solid var(--live); outline-offset: calc(3 * var(--u)); }
 
 .row__desc, .row__cta {
   opacity: 0;
@@ -466,14 +484,19 @@ hr { border: 0; margin: 0; }
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   pointer-events: none;
+  /* The track is laid on the scroller's floor rather than stretched over it:
+     stretched, its empty upper band would sit on top of the button. */
+  display: flex;
+  align-items: flex-end;
 }
 .row__shots::-webkit-scrollbar { display: none; }
 .row__track {
   display: flex;
   align-items: flex-end;
+  flex: none;
   gap: calc(33.571 * var(--u));
   width: max-content;
-  height: 100%;
+  height: calc(470 * var(--u));
   margin: 0;
   padding: 0 calc(40 * var(--u)) 0 0;
   list-style: none;
@@ -516,6 +539,9 @@ hr { border: 0; margin: 0; }
   .row:has(.row__toggle:hover) .row__plus { color: var(--live); }
   .row:not(.is-open):has(.row__toggle:hover) .thumbs { transform: translateX(calc(-18 * var(--u))); }
   .row:has(.row__toggle:hover) .row__name { color: var(--live); }
+  /* Wins over .btn--outline:hover, which sits earlier in this file. */
+  .row__cta:hover { background: var(--fg); color: #000; border-color: var(--fg); }
+  .row__cta:hover .btn__icon { filter: invert(1); }
 }
 
 /* ---------- Everything I can do ---------- */
@@ -673,7 +699,7 @@ hr { border: 0; margin: 0; }
   .row__name { grid-column: 1; grid-row: 1; font-size: 17px; line-height: 1.3; }
   .row__plus { position: absolute; left: auto; right: 0; top: 2px; font-size: 11px; line-height: 1.3; }
   .tags { display: flex; gap: 2px; grid-column: 1; grid-row: 2; margin-top: 9px; }
-  .tag { height: 24px; padding: 0 9px; font-size: 9.5px; line-height: 1; }
+  .tag { height: 30px; padding: 0 11px; font-size: 11.9px; line-height: 1; }
   .thumbs {
     grid-column: 1 / -1; grid-row: 3; display: flex; gap: 6px; margin-top: 12px;
     overflow-x: auto; scrollbar-width: none; margin-right: -20px; padding-bottom: 2px;

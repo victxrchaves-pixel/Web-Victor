@@ -88,6 +88,10 @@ down into the strip as it grows. The scroller reaches 206px above the strip so
 that starting position is not clipped; it takes no pointer events itself, only
 its track does, which leaves the row header clickable through it.
 
+The panel that holds the description, the button and the strip is positioned
+so its `z-index` actually applies — static, its stacking order is inert and the
+row's toggle underneath swallows every click meant for the button.
+
 The thumbnail only lets go once the shot covering it can be drawn — `is-handed`
 lands when every image in the row has loaded — so a cold click never shows a
 gap.
