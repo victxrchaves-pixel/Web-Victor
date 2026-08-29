@@ -218,7 +218,7 @@
   var PHONE_PUSH = 400;           /* 690 open - 290 closed */
   var openRow = null;
 
-  var isPhone = function () { return window.matchMedia('(max-width: 1023px)').matches; };
+  var isPhone = function () { return window.matchMedia('(max-width: 1279px)').matches; };
   var push = function () { return isPhone() ? PHONE_PUSH : DESKTOP_PUSH; };
   var unit = function () { return frame.getBoundingClientRect().width / (isPhone() ? 402 : 1728); };
 

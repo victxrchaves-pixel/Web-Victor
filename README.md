@@ -81,11 +81,21 @@ Two things that technique will bite you with:
   Anything sized outside the shared rule — the nav pill — has to restate its
   box inside the mobile block.
 
-The unit is `100vw / 402` up to 460px and then stops, so the phone column
-centres on a tablet rather than being blown up to fill it. 460 puts the type
-at the cap where the desktop comp puts it at full size. At 1024px the desktop
-canvas takes over; the two comps scale type so differently that the switch is
-a step, not a blend, and that is the honest cost of tracing two designs.
+The unit is `100vw / 402` up to 430px and then stops, so the phone column
+centres on a tablet rather than being blown up to fill it, and the desktop
+canvas takes over at 1280.
+
+The two canvases cannot meet seamlessly. A phone comp pixel is 1/402 of the
+viewport and a desktop one 1/1728, so the phone canvas is always the larger of
+the two per viewport pixel; solving `cap/402 = W/1728` for a cap no narrower
+than the comp itself puts the crossover at 1728px, which is no use. All that
+is left is to make the step small: holding the column at 430 and handing over
+at 1280, where the desktop unit is 0.741, takes the jump from 1.93x to 1.28x.
+
+A third trap, on top of the two above: `.tag` is deliberately left out of the
+`--m*` reset so it can inherit its height from `.tags`, the way it inherits
+`--h` on the desktop canvas — which means it inherits the container's left and
+width too unless those are cleared on it by name.
 
 ## The work rows
 

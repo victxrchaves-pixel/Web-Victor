@@ -195,9 +195,12 @@ hr { border: 0; margin: 0; }
 }
 .pill.is-open { width: calc(521 * var(--u)); }
 
+/* Breaks and rules that belong to one canvas only. */
+.u-mob, .rule--mob { display: none; }
+
 .pill__row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   height: calc(24 * var(--u));
   flex: none;
@@ -626,17 +629,21 @@ hr { border: 0; margin: 0; }
 /* ---------- Mobile: the comp has no small frame, so the same
               elements reflow into one column ---------- */
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   /* The phone comp is a canvas of its own: 402 wide, 4622 tall. Every element
      carries a second set of coordinates under --m*, and each declaration falls
      back to the desktop value where the two comps agree - so nothing can end up
-     with an invalid declaration and an auto size. Past 460px the unit stops
-     growing and the column centres: a tablet gets a phone-shaped column rather
-     than a phone layout blown up to fill it. 460 is chosen so the type at the
-     cap lands where the desktop comp puts it at full size - a 20px project
-     name - which makes the switch at 1024px as small a step as two comps this
-     different allow. */
-  :root { --u: calc(min(100vw, 460px) / 402); }
+     with an invalid declaration and an auto size. Past 430px the unit stops
+     growing and the column centres, so a tablet gets the phone layout at its
+     own size rather than blown up to fill the glass.
+
+     The two comps cannot meet seamlessly: a phone pixel is 1/402 of the width
+     and a desktop one 1/1728, so the phone canvas is always the larger of the
+     two per viewport pixel and they only draw level at a 1728px breakpoint.
+     What is left is to make the step small - holding the column at 430 and
+     handing over at 1280, where the desktop unit is 0.741, takes it from the
+     1.93x it was to 1.28x. */
+  :root { --u: calc(min(100vw, 430px) / 402); }
 
   .stage { display: flex; justify-content: center; }
   .frame {
@@ -658,7 +665,9 @@ hr { border: 0; margin: 0; }
     --mx: initial; --my: initial; --mw: initial; --mh: initial;
     --mfs: initial; --mlh: initial;
   }
-  .tag { --my: 0; }
+  /* .tag keeps inheriting --mh from .tags, the way it inherits --h on the
+     desktop canvas, but must not inherit its left or width with it. */
+  .tag { --my: 0; --mx: initial; --mw: initial; }
 
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
@@ -679,7 +688,15 @@ hr { border: 0; margin: 0; }
   .btn__label, .card { height: auto; }
   /* Figma measured these boxes with its own metrics; the names are one line. */
   .row__name { white-space: nowrap; }
-  .rule { top: calc((var(--my, var(--y)) - 1) * var(--u)); width: calc(402 * var(--u)); }
+  /* An <hr> carries no --h, so the shared rule resolves to height:auto - which
+     on an empty element is nothing at all. It has to restate its own line. */
+  .rule {
+    top: calc((var(--my, var(--y)) - 1) * var(--u));
+    width: calc(402 * var(--u));
+    height: max(1px, calc(1 * var(--u)));
+  }
+  .u-mob { display: inline; }
+  .rule--mob { display: block; }
   .shift-layer { width: calc(402 * var(--u)); }
 
   /* The nav is fixed to the viewport, not to the frame, so it needs the
@@ -693,10 +710,18 @@ hr { border: 0; margin: 0; }
   .u-desk { display: none; }
   .nav__cta { display: none; }
   .pill.is-open { width: calc(372 * var(--u)); }
+  /* One above the other, each spanning the panel inside its padding. */
+  .pill__actions { flex-direction: column; gap: calc(10 * var(--u)); }
+  .pill__btn { flex: none; width: 100%; }
   .pill__links li:not(:last-child) { padding-bottom: calc(12 * var(--u)); }
 
-  /* Not in the phone comp: the hero photo runs straight into the dark. */
+  /* Not in the phone comp: the hero photo runs straight into the dark, so it
+     is masked away over its last third rather than stopping on an edge. */
   .band { display: none; }
+  .hero__bg {
+    -webkit-mask-image: linear-gradient(to bottom, #000 56%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, #000 56%, rgba(0, 0, 0, 0) 100%);
+  }
 
   .hero__title, .hero__sub { text-align: left; }
   .display { letter-spacing: calc(-2 * var(--u)); }
@@ -734,10 +759,12 @@ hr { border: 0; margin: 0; }
      tags under them and the thumbnails on a rail; ( VIEW + ) is the resting
      state here, since a finger has no hover to reveal it with. */
   .row { position: absolute; left: 0; top: 0; width: calc(402 * var(--u)); height: 0; }
+  /* The desktop's 2px top nudge traces a Figma baseline; on the phone box it
+     just leaves more air above the text than below. */
   .tag {
-    padding-top: calc(2 * var(--u));
-    font-size: calc(10.341 * var(--u));
-    line-height: calc(13 * var(--u));
+    padding-top: 0;
+    font-size: calc(12.926 * var(--u));
+    line-height: calc(16.25 * var(--u));
   }
   .thumbs, .row__shots { overflow-x: auto; scrollbar-width: none; }
   .thumbs::-webkit-scrollbar, .row__shots::-webkit-scrollbar { display: none; }
