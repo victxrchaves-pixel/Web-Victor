@@ -445,8 +445,8 @@ hr { border: 0; margin: 0; }
 .row__panel { z-index: 3; pointer-events: none; visibility: hidden; transition: visibility 0s linear var(--dur-fold); }
 .row__cta, .row__shots { pointer-events: auto; }
 .row__desc { font-family: 'Geist', system-ui, sans-serif; }
-/* Half-size button, so half the corner too. */
-.row__cta { border-radius: calc(3.186 * var(--u)); }
+/* The button runs at 0.625 of the comp, so its corner does too. */
+.row__cta { border-radius: calc(3.982 * var(--u)); }
 
 .row__desc, .row__cta {
   opacity: 0;
