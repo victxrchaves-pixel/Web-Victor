@@ -122,6 +122,21 @@
   /* ---------- Marquee: clone the track so the loop is seamless ---------- */
 
   var track = document.getElementById('marqueeTrack');
+
+  /* The band starts off the left edge of the phone canvas, so its first frames
+     never enter the viewport and lazy loading never fires for them. Hand them
+     over the moment the band itself comes near. */
+  if (track && 'IntersectionObserver' in window) {
+    var bandWatch = new IntersectionObserver(function (entries, obs) {
+      if (!entries[0].isIntersecting) return;
+      Array.prototype.forEach.call(track.querySelectorAll('img[loading="lazy"]'), function (img) {
+        img.loading = 'eager';
+      });
+      obs.disconnect();
+    }, { rootMargin: '400px 0px' });
+    bandWatch.observe(track.parentNode);
+  }
+
   if (track && !reduced) {
     Array.prototype.slice.call(track.children).forEach(function (node) {
       var clone = node.cloneNode(true);
@@ -139,8 +154,8 @@
   var navLabel = document.getElementById('navLabel');
 
   if (navLabel) {
-    // Measured from real elements, not comp coordinates: the desktop canvas and
-    // the mobile flow layout place these very differently.
+    // Measured from real elements, not comp coordinates: the two canvases put
+    // these in very different places.
     var SECTIONS = [
       { el: null,                                        text: 'ItsVictorChaves' },
       { el: document.querySelector('.row__toggle'),      text: 'Work' },
@@ -198,11 +213,14 @@
 
   var frame = document.querySelector('.frame');
   var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
-  var OPEN_PUSH = 536;            /* 734 open - 198 closed, in comp pixels */
+  /* Each comp has its own idea of how much taller an open row is. */
+  var DESKTOP_PUSH = 536;         /* 734 open - 198 closed */
+  var PHONE_PUSH = 400;           /* 690 open - 290 closed */
   var openRow = null;
 
-  var isFlow = function () { return window.matchMedia('(max-width: 899px)').matches; };
-  var unit = function () { return frame.getBoundingClientRect().width / 1728; };
+  var isPhone = function () { return window.matchMedia('(max-width: 1023px)').matches; };
+  var push = function () { return isPhone() ? PHONE_PUSH : DESKTOP_PUSH; };
+  var unit = function () { return frame.getBoundingClientRect().width / (isPhone() ? 402 : 1728); };
 
   /* The large shots stay out of the initial payload; a row fetches its own the
      first time someone shows interest in it. */
@@ -211,12 +229,6 @@
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
     });
-  };
-
-  var setPanelHeight = function (row, open) {
-    var panel = row.querySelector('.row__panel');
-    if (!panel) return;
-    panel.style.maxHeight = (open && isFlow()) ? panel.scrollHeight + 'px' : '';
   };
 
   /* The shots start life on top of their own thumbnails, so the thumbnails are
@@ -240,7 +252,6 @@
     row.classList.remove('is-open');
     row.classList.remove('is-handed');
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'false');
-    setPanelHeight(row, false);
     /* Rewind the strip as it folds, so the shots land back on the thumbnails
        they came from rather than wherever the reader left them. */
     var shots = row.querySelector('.row__shots');
@@ -257,7 +268,6 @@
     row.classList.add('is-open');
     handOver(row);
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'true');
-    setPanelHeight(row, true);
   };
 
   /* Opening a row while another one is open pulls it up by the push it was
@@ -265,7 +275,6 @@
      slide out from under the pointer. Its landing place is arithmetic, not a
      measurement: an open row is never pushed by itself. */
   var settle = function (row) {
-    if (isFlow()) return;
     var toggle = row.querySelector('.row__toggle');
     var u = unit();
     var frameTop = window.scrollY + frame.getBoundingClientRect().top;
@@ -281,7 +290,7 @@
     if (openRow) fold(openRow);
     openRow = closing ? null : row;
     if (openRow) unfold(openRow);
-    frame.style.setProperty('--push', openRow ? OPEN_PUSH : 0);
+    frame.style.setProperty('--push', openRow ? push() : 0);
     if (openRow) settle(openRow);
   };
 
@@ -310,10 +319,9 @@
       row.querySelector('.row__toggle').focus();
     });
 
-    /* Crossing the breakpoint swaps which mechanism holds the row open. */
+    /* Crossing the breakpoint swaps which comp the push is measured in. */
     window.addEventListener('resize', function () {
-      if (!openRow) return;
-      setPanelHeight(openRow, true);
+      if (openRow) frame.style.setProperty('--push', push());
     });
   }
 

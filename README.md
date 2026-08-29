@@ -60,6 +60,33 @@ Everything editable lives in `index.html`:
 Colours, type sizes and spacing are custom properties at the top of
 `styles.css`, all derived from the Figma frame.
 
+## Two canvases
+
+There are two comps, not one design that stretches: 1728 wide for the desktop
+and 402 for the phone. Both are traced the same way, so every element carries
+two sets of coordinates — `--x/--y/--w/--h` for the wide comp and `--m*` for the
+narrow one — and the mobile rule reads `var(--mx, var(--x))`, falling back to
+the desktop number wherever the two comps agree.
+
+Two things that technique will bite you with:
+
+- **Custom properties inherit.** `var(--mw, var(--w))` happily picks up an
+  ancestor's `--mw` instead of falling back to the element's own `--w`. The
+  mobile block clears the whole `--m*` set on the same selector list first;
+  an inline value still wins over a stylesheet one, so only the elements that
+  were never given mobile coordinates fall through.
+- **A `var()` that cannot resolve computes to the property's initial value**,
+  not to the declaration above it. An element with neither `--mw` nor `--w`
+  ends up `width: auto`, not at the width its own rule set two lines earlier.
+  Anything sized outside the shared rule — the nav pill — has to restate its
+  box inside the mobile block.
+
+The unit is `100vw / 402` up to 460px and then stops, so the phone column
+centres on a tablet rather than being blown up to fill it. 460 puts the type
+at the cap where the desktop comp puts it at full size. At 1024px the desktop
+canvas takes over; the two comps scale type so differently that the switch is
+a step, not a blend, and that is the honest cost of tracing two designs.
+
 ## The work rows
 
 Clicking a row expands it: a description, a View Project button and a strip of
@@ -77,8 +104,11 @@ One custom property carries that distance:
   coordinates while the section itself moves;
 - the frame's own height adds `--push`, so the footer keeps its ground.
 
-Below 900px the rows are in normal flow and none of that applies: the panel
-folds on a height `main.js` measures from its own content.
+The phone canvas works the same way, on its own numbers: an open row there is
+690 comp pixels against a closed row's 290, so `--push` is 400 instead of 536,
+and `main.js` picks the one that matches the breakpoint. The phone comp shows
+`( VIEW + )` at rest on every row, since a finger has no hover to reveal it
+with.
 
 Opening a row does not swap one set of pictures for another: each shot begins
 life as its own thumbnail. `--dx`, `--dy` and `--s` on every `<li>` carry the
@@ -95,6 +125,11 @@ row's toggle underneath swallows every click meant for the button.
 The thumbnail only lets go once the shot covering it can be drawn — `is-handed`
 lands when every image in the row has loaded — so a cold click never shows a
 gap.
+
+The band that runs between the services and the contact block starts off the
+left edge of the phone canvas, so its first frames never enter the viewport and
+lazy loading never fires for them — they would stay grey for good. An observer
+on the band hands them over as it comes near.
 
 The large shots are not in the initial payload. A row fetches its own the first
 time the pointer settles on it, or when it opens.

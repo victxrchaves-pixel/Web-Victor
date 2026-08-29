@@ -548,6 +548,8 @@ hr { border: 0; margin: 0; }
 
 .services__head { margin: 0; font-weight: 400; }
 /* The service lists, one block per discipline. */
+/* A zero-height layer on the desktop canvas, a sideways rail on the phone. */
+.cards { position: absolute; left: 0; top: 0; width: calc(1728 * var(--u)); height: 0; }
 .card {
   padding: calc(24 * var(--u)) calc(26.5 * var(--u));
   height: auto;
@@ -624,145 +626,143 @@ hr { border: 0; margin: 0; }
 /* ---------- Mobile: the comp has no small frame, so the same
               elements reflow into one column ---------- */
 
-@media (max-width: 899px) {
-  :root { --u: 1px; }
+@media (max-width: 1023px) {
+  /* The phone comp is a canvas of its own: 402 wide, 4622 tall. Every element
+     carries a second set of coordinates under --m*, and each declaration falls
+     back to the desktop value where the two comps agree - so nothing can end up
+     with an invalid declaration and an auto size. Past 460px the unit stops
+     growing and the column centres: a tablet gets a phone-shaped column rather
+     than a phone layout blown up to fill it. 460 is chosen so the type at the
+     cap lands where the desktop comp puts it at full size - a 20px project
+     name - which makes the switch at 1024px as small a step as two comps this
+     different allow. */
+  :root { --u: calc(min(100vw, 460px) / 402); }
 
-  .frame { width: 100%; height: auto; padding-bottom: 2rem; }
+  .stage { display: flex; justify-content: center; }
+  .frame {
+    width: calc(402 * var(--u));
+    height: calc((4622 + var(--push, 0)) * var(--u));
+  }
+
+  /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
+     ancestor's --mw instead of falling back to the element's own --w. Clearing
+     them here breaks that chain: an inline value still wins over a stylesheet
+     one, so only the elements that were never given mobile coordinates fall
+     through to their desktop ones. .tag is the exception - it takes its height
+     from .tags by inheritance, the same way it does on the desktop canvas. */
+  .pill, .pill__logo, .pill__current,
+  .btn, .btn__label, .btn__icon,
+  .t, .chips, .chips li, .tags, .thumbs, .thumbs img,
+  .row__toggle, .row__shots,
+  .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
+    --mx: initial; --my: initial; --mw: initial; --mh: initial;
+    --mfs: initial; --mlh: initial;
+  }
+  .tag { --my: 0; }
 
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
-  .row, .row__toggle, .row__shots,
-  .rule, .band, .card, .marquee, .footer__dot {
-    position: static;
-    width: auto;
-    height: auto;
+  .row__toggle, .row__shots,
+  .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
+    left: calc(var(--mx, var(--x, 0)) * var(--u));
+    top: calc(var(--my, var(--y, 0)) * var(--u));
+    width: calc(var(--mw, var(--w)) * var(--u));
+    height: calc(var(--mh, var(--h)) * var(--u));
   }
+  /* Every rule that sizes type off --fs needs the mobile pair too, or it keeps
+     the desktop comp's numbers on the phone canvas. */
+  .t, .btn__label, .pill__current, .card__head, .card__list {
+    font-size: calc(var(--mfs, var(--fs)) * var(--u));
+    line-height: calc(var(--mlh, var(--lh)) * var(--u));
+  }
+  .btn__label, .card { height: auto; }
+  /* Figma measured these boxes with its own metrics; the names are one line. */
+  .row__name { white-space: nowrap; }
+  .rule { top: calc((var(--my, var(--y)) - 1) * var(--u)); width: calc(402 * var(--u)); }
+  .shift-layer { width: calc(402 * var(--u)); }
 
-  .nav { width: 100%; padding: 10px 16px; display: flex; align-items: center; }
-  .pill {
-    left: auto; transform: none; width: 100%; height: 46px;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 18px; padding: 11px 14px;
-  }
-  .pill.is-open { width: 100%; }
-  .pill__row { height: 24px; }
-  .pill__logo { width: 21px; height: 22px; }
-  .pill__current { min-width: 0; font-size: 13px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; }
-  .pill__links { width: calc(100% + 28px); margin-inline: -14px; }
-  .pill__links li { padding: 9px 14px; }
-  .pill__links li:not(:last-child) { padding-bottom: 14px; }
-  .pill__links li + li { margin-top: 8px; }
-  .pill__links a { font-size: 17px; line-height: 1.3; }
-  .pill__actions { flex-direction: column; gap: 8px; }
-  .pill__btn { padding: 11px 18px; font-size: 13px; line-height: 1.4; }
-  .pill__btn img { width: 20px; height: 20px; }
-  .pill__toggle { width: 24px; height: 24px; }
+  /* The nav is fixed to the viewport, not to the frame, so it needs the
+     column's own width to stay centred over it. The pill centres itself inside
+     that, so it has to keep its own left against the canvas rule. */
+  .nav { width: calc(402 * var(--u)); left: 50%; transform: translateX(-50%); }
+  /* A var() that cannot resolve computes to the property's initial value, not
+     to the declaration above it - so the pill has to restate its whole box. */
+  .pill { left: 50%; width: calc(354 * var(--u)); height: calc(46 * var(--u)); }
+  /* Line breaks the wide comp needs and the narrow one does not. */
+  .u-desk { display: none; }
   .nav__cta { display: none; }
+  .pill.is-open { width: calc(372 * var(--u)); }
+  .pill__links li:not(:last-child) { padding-bottom: calc(12 * var(--u)); }
 
-  .hero {
-    position: relative;
-    display: flex; flex-direction: column; justify-content: flex-end;
-    min-height: 100svh;
-    padding: 0 20px 28px;
-    overflow: hidden;
-  }
-  .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 58%; }
-  .hero .label { font-size: 12px; line-height: 1.4; }
-  .hero__title, .hero__sub { font-size: clamp(17px, 4.7vw, 24px); line-height: 1.3; text-align: left; margin-top: 8px; }
-  .hero__sub { margin-top: 18px; }
-  .hero__social-label { margin: 44px auto 12px; }
-  .chips { display: flex; gap: 10px; justify-content: center; margin: 0 auto; }
-  .chips li { height: 30px; }
-  .chip { padding: 0 12px; font-size: 11px; line-height: 1; }
-  .band { width: 100%; height: auto; margin-top: 0; }
+  /* Not in the phone comp: the hero photo runs straight into the dark. */
+  .band { display: none; }
 
-  .work { display: block; padding-top: 34px; }
-  .work > .label { font-size: 12px; text-align: right; padding: 0 20px 14px; }
-  .work .rule, .services .rule, .footer .rule { display: none; }
-  .row {
-    display: grid; grid-template-columns: 1fr auto;
-    align-items: start; column-gap: 10px; padding: 16px 20px 18px;
-    border-top: 1px solid rgba(255, 255, 255, 0.28);
-    transform: none;
+  .hero__title, .hero__sub { text-align: left; }
+  .display { letter-spacing: calc(-2 * var(--u)); }
+
+  /* Three discipline cards on a rail you push sideways. */
+  .cards {
+    position: absolute;
+    left: 0;
+    top: calc(2437 * var(--u));
+    width: calc(402 * var(--u));
+    height: calc(371 * var(--u));
+    display: flex;
+    align-items: flex-start;
+    gap: calc(32 * var(--u));
+    padding-left: calc(49 * var(--u));
+    padding-right: calc(15 * var(--u));
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
   }
-  .row:last-of-type { border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
-  .row.is-open ~ .row, .shift { transform: none; }
-  .shift-layer { position: static; width: auto; height: auto; }
-  /* The toggle covers the header rows; the parts underneath it stay inert. */
-  /* position:relative would re-arm the comp's left/top, so both are cleared;
-     align-self keeps the overlay as tall as the header rows it covers. */
-  .row__toggle {
-    grid-column: 1 / -1; grid-row: 1 / 4; align-self: stretch;
-    position: relative; left: auto; top: auto; width: auto; height: auto;
+  .cards::-webkit-scrollbar { display: none; }
+  /* On the rail the cards need edges to read as separate cards; the desktop
+     comp, where they sit in open space, has none. */
+  .card {
+    position: relative; left: auto; top: auto; flex: none;
+    padding: calc(20.14 * var(--u)) calc(21.5 * var(--u));
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: calc(12 * var(--u));
   }
-  .row__name { grid-column: 1; grid-row: 1; font-size: 17px; line-height: 1.3; }
-  .row__plus { position: absolute; left: auto; right: 0; top: 2px; font-size: 11px; line-height: 1.3; }
-  .tags { display: flex; gap: 2px; grid-column: 1; grid-row: 2; margin-top: 9px; }
-  .tag { height: 30px; padding: 0 11px; font-size: 11.9px; line-height: 1; }
+
+  .card__list { width: calc(219.9 * var(--u)); margin-top: calc(27.9 * var(--u)); }
+  .marquee__track img { width: calc(var(--mw) * var(--u)); height: calc(var(--mh) * var(--u)); }
+
+  /* Work rows. The phone comp puts the name and the toggle on one line, the
+     tags under them and the thumbnails on a rail; ( VIEW + ) is the resting
+     state here, since a finger has no hover to reveal it with. */
+  .row { position: absolute; left: 0; top: 0; width: calc(402 * var(--u)); height: 0; }
+  .tag {
+    padding-top: calc(2 * var(--u));
+    font-size: calc(10.341 * var(--u));
+    line-height: calc(13 * var(--u));
+  }
+  .thumbs, .row__shots { overflow-x: auto; scrollbar-width: none; }
+  .thumbs::-webkit-scrollbar, .row__shots::-webkit-scrollbar { display: none; }
   .thumbs {
-    grid-column: 1 / -1; grid-row: 3; display: flex; gap: 6px; margin-top: 12px;
-    overflow-x: auto; scrollbar-width: none; margin-right: -20px; padding-bottom: 2px;
-    max-height: 120px;
-    transition: max-height var(--dur-fold) var(--ease-drawer),
-                margin-top var(--dur-fold) var(--ease-drawer), opacity 200ms ease;
+    display: block;
+    overscroll-behavior-x: contain;
+    pointer-events: auto;
   }
-  /* In flow the small strip has to give its space back, not just fade. */
-  .row.is-open .thumbs { max-height: 0; margin-top: 0; padding-bottom: 0; opacity: 0; transform: none; }
-  .thumbs::-webkit-scrollbar { display: none; }
-  .thumbs img { height: 104px; width: auto; aspect-ratio: 112 / 140; flex: none; }
-  .thumbs img[style*="--w:210"], .thumbs img[style*="--w:211"], .thumbs img[style*="--w:209"] { aspect-ratio: 210 / 140; }
-  /* The panel folds on a height JS measures, since the canvas push does not
-     apply once the rows are in flow. */
-  .row__panel {
-    grid-column: 1 / -1; grid-row: 4;
-    max-height: 0; overflow: hidden;
-    transition: max-height var(--dur-fold) var(--ease-drawer);
-  }
-  .row__desc { font-size: 15px; line-height: 1.42; padding-top: 16px; }
-  .row__cta {
-    display: flex; align-items: center; gap: 8px;
-    width: max-content; height: 40px; padding: 0 16px; margin-top: 14px;
-  }
-  .row__cta .btn__label { font-size: 13px; line-height: 1; }
-  .row__cta .btn__icon { width: 18px; height: 18px; }
-  .row__shots { width: auto; height: auto; margin: 14px -20px 4px 0; }
-  .row__track { gap: 8px; height: auto; padding-right: 20px; }
+  .thumbs img { position: absolute; }
+  .row__view { max-width: 5ch; opacity: 1; }
+  .row.is-open .row__view { max-width: 0; opacity: 0; }
+  .row__cta { border-radius: calc(4.46 * var(--u)); }
+  .row__track { gap: calc(22.857 * var(--u)); height: calc(320 * var(--u)); }
   .row__track li {
-    height: 260px; width: auto; aspect-ratio: var(--w) / 470;
-    transform: translateY(18px) scale(0.96);
+    width: calc(var(--mw) * var(--u));
+    height: calc(320 * var(--u));
+    transform: translate3d(calc(var(--mdx) * var(--u)), calc(var(--mdy) * var(--u)), 0) scale(var(--ms));
   }
-  .row.is-open .row__track li { transform: none; }
 
-  .work .btn--glass { display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; height: 40px; padding: 0 18px; margin: 30px auto 0; }
-  .work .btn__label { font-size: 14px; line-height: 1; }
-
-  .services { display: block; padding: 46px 20px 0; }
-  .services__head { display: grid; gap: 6px; }
-  .card { position: static; width: auto; height: auto; padding: 0; margin-top: 30px; }
-  .card__head { font-size: 12px; line-height: 1.4; }
-  .card__list { width: auto; margin-top: 12px; font-size: 14px; line-height: 1.9; white-space: normal; }
-  .ai-note { font-size: 15px; line-height: 1.35; margin-top: 34px; }
-  .intro { font-size: clamp(22px, 6.2vw, 32px); line-height: 1.16; margin-bottom: 26px; }
-  .display { font-size: clamp(38px, 12.4vw, 74px); line-height: 0.9; }
-  .services .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: max-content; height: 42px; padding: 0 18px; margin-top: 22px; }
-  .btn__label { font-size: 13px; line-height: 1; }
-  .btn__icon { width: 18px; height: 18px; }
-
-  .marquee { margin-top: 40px; overflow: hidden; }
-  .marquee__track img { width: 62vw; height: 72vw; }
-
-  .contact { display: block; padding: 46px 20px 34px; }
-  .contact__email { display: block; font-size: 12px; line-height: 1.4; margin-top: 22px; width: auto; }
-  .contact .label { font-size: 12px; line-height: 1.4; margin-top: 20px; }
-  .contact__copy { font-size: 15px; line-height: 1.4; margin-top: 10px; }
-  .contact .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 46px; margin-top: 12px; }
-
-  .footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.28); }
-  .footer__item { font-size: 11px; line-height: 1.4; }
-  .footer__dot { width: 4px; height: 4px; }
-  .footer .chips { width: 100%; justify-content: flex-start; margin-top: 4px; }
+  .footer .chips { display: block; }
 }
+
+/* Between the phone column and the desktop canvas there is nothing to
+   interpolate: the two comps are different layouts, so they simply swap. */
+
 
 /* ---------- Reduced motion ---------- */
 
