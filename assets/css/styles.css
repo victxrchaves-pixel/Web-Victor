@@ -195,8 +195,8 @@ hr { border: 0; margin: 0; }
 }
 .pill.is-open { width: calc(521 * var(--u)); }
 
-/* Breaks and rules that belong to one canvas only. */
-.u-mob, .rule--mob { display: none; }
+/* Line breaks that belong to one canvas only. */
+.u-mob { display: none; }
 
 .pill__row {
   display: flex;
@@ -696,7 +696,6 @@ hr { border: 0; margin: 0; }
     height: max(1px, calc(1 * var(--u)));
   }
   .u-mob { display: inline; }
-  .rule--mob { display: block; }
   .shift-layer { width: calc(402 * var(--u)); }
 
   /* The nav is fixed to the viewport, not to the frame, so it needs the
