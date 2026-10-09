@@ -485,22 +485,36 @@ hr { border: 0; margin: 0; }
   transition: opacity 260ms ease, transform var(--dur-fold) var(--ease-fold);
 }
 
-/* The scroller reaches 206px above the strip, up to the thumbnail row, so a
-   shot can start on top of its own thumbnail without being clipped. That band
-   sits over the row header, so the scroller itself takes no pointer events -
-   only the track does, which is enough to scroll it and leaves the header
-   clickable. */
+/* While a shot is in flight the scroller has to reach --lead pixels above the
+   strip, up to the thumbnail row, so the shot can start on its own thumbnail
+   without being clipped. That band lies over the row header, so until the
+   fold lands the scroller takes no pointer events at all.
+
+   Once it lands the scroller shrinks onto the strip - its floor does not move,
+   since the track is bottom-aligned - and takes them back. It has to: a pan is
+   given to the scroll container under the finger, and WebKit will not hand it
+   to one that is pointer-events:none, however reachable its contents are. That
+   is why this only ever worked in Chromium. */
 .row__shots {
+  --lead: 206;
+  --strip: 470;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
   pointer-events: none;
   /* The track is laid on the scroller's floor rather than stretched over it:
      stretched, its empty upper band would sit on top of the button. */
   display: flex;
   align-items: flex-end;
+}
+.row.is-settled .row__shots {
+  top: calc((var(--y) + var(--lead)) * var(--u));
+  height: calc(var(--strip) * var(--u));
+  pointer-events: auto;
 }
 .row__shots::-webkit-scrollbar { display: none; }
 .row__track {
@@ -513,7 +527,6 @@ hr { border: 0; margin: 0; }
   margin: 0;
   padding: 0 calc(40 * var(--u)) 0 0;
   list-style: none;
-  pointer-events: auto;
 }
 /* Each shot begins as its own thumbnail - --dx/--dy carry the distance between
    the two boxes and --s the ratio of their heights, both from the comp - and
@@ -808,11 +821,12 @@ hr { border: 0; margin: 0; }
   /* Open, the thumbnails are invisible but still a layer: without this they
      sit on the big strip and swallow the swipe meant for it. */
   .row.is-open .thumbs { pointer-events: none; }
-  .row__track { touch-action: pan-x pan-y; }
 
   .row__view { max-width: 5ch; opacity: 1; }
   .row.is-open .row__view { max-width: 0; opacity: 0; }
   .row__cta { border-radius: calc(4.46 * var(--u)); }
+  .row__shots { --lead: 242; --strip: 320; }
+  .row.is-settled .row__shots { top: calc((var(--my) + var(--lead)) * var(--u)); }
   .row__track { gap: calc(22.857 * var(--u)); height: calc(320 * var(--u)); }
   .row__track li {
     width: calc(var(--mw) * var(--u));

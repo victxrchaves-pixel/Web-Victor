@@ -143,6 +143,14 @@ The panel that holds the description, the button and the strip is positioned
 so its `z-index` actually applies — static, its stacking order is inert and the
 row's toggle underneath swallows every click meant for the button.
 
+A pan is handed to the scroll container under the finger, and WebKit will not
+hand it to one that is `pointer-events: none` however reachable its contents
+are — Chromium will, which is why the expanded strip only ever scrolled there.
+So the scroller only wears that while a shot is in flight and needs the band
+above the strip: once the fold lands, `is-settled` shrinks it onto the strip,
+whose floor does not move because the track is bottom-aligned, and it takes
+its pointer events back. Test touch behaviour in WebKit, not only in Chromium.
+
 The thumbnail only lets go once the shot covering it can be drawn — `is-handed`
 lands when every image in the row has loaded — so a cold click never shows a
 gap.

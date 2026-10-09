@@ -252,6 +252,7 @@
   var fold = function (row) {
     row.classList.remove('is-open');
     row.classList.remove('is-handed');
+    row.classList.remove('is-settled');
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'false');
     /* Rewind the strip as it folds, so the shots land back on the thumbnails
        they came from rather than wherever the reader left them. */
@@ -285,7 +286,12 @@
 
     frame.classList.add('is-folding');
     window.clearTimeout(folding);
-    folding = window.setTimeout(function () { frame.classList.remove('is-folding'); }, FOLD_MS);
+    folding = window.setTimeout(function () {
+      frame.classList.remove('is-folding');
+      /* The flight is over: the scroller can give up the band it needed above
+         the strip and start taking the gestures meant for it. */
+      if (openRow) openRow.classList.add('is-settled');
+    }, FOLD_MS);
   };
 
   rows.forEach(function (row) {
