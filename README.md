@@ -121,6 +121,10 @@ rather than being transitioned, which would relay out the whole canvas on every
 frame. Nothing scrolls the page: the row you clicked stays where it is and the
 panel grows from it.
 
+A fold promotes the layers it moves only while they are moving: `is-folding`
+goes on the frame for the length of the transition and comes off again, so the
+marquee and the row layers are not held in compositor memory for nothing.
+
 The phone canvas works the same way, on its own numbers: an open row there is
 690 comp pixels against a closed row's 290, so `--push` is 400 instead of 536,
 and `main.js` picks the one that matches the breakpoint. The phone comp shows
@@ -142,6 +146,11 @@ row's toggle underneath swallows every click meant for the button.
 The thumbnail only lets go once the shot covering it can be drawn — `is-handed`
 lands when every image in the row has loaded — so a cold click never shows a
 gap.
+
+The phone canvas has no intro paragraph — the comp drops it — and since this
+is a canvas of absolute coordinates, hiding it is not enough: everything below
+carries its own `--my`, so the whole page under it closes the 186px it used to
+occupy.
 
 The band that runs between the services and the contact block starts off the
 left edge of the phone canvas, so its first frames never enter the viewport and

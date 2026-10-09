@@ -217,6 +217,8 @@
   var DESKTOP_PUSH = 536;         /* 734 open - 198 closed */
   var PHONE_PUSH = 400;           /* 690 open - 290 closed */
   var openRow = null;
+  var folding = 0;
+  var FOLD_MS = 700;              /* --dur-fold plus the longest stagger */
 
   var isPhone = function () { return window.matchMedia('(max-width: 1279px)').matches; };
   var push = function () { return isPhone() ? PHONE_PUSH : DESKTOP_PUSH; };
@@ -280,6 +282,10 @@
        finished on the way closed. */
     frame.style.setProperty('--push', openRow ? push() : 0);
     frame.classList.toggle('has-open', !!openRow);
+
+    frame.classList.add('is-folding');
+    window.clearTimeout(folding);
+    folding = window.setTimeout(function () { frame.classList.remove('is-folding'); }, FOLD_MS);
   };
 
   rows.forEach(function (row) {
