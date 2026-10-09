@@ -114,6 +114,13 @@ One custom property carries that distance:
   coordinates while the section itself moves;
 - the frame's own height adds `--push`, so the footer keeps its ground.
 
+The fold animates transforms only. The frame owns the page's scroll height, so
+it takes its new height in one step — at once on the way open, and after the
+fold on the way closed, so the ground is never missing from under the footer —
+rather than being transitioned, which would relay out the whole canvas on every
+frame. Nothing scrolls the page: the row you clicked stays where it is and the
+panel grows from it.
+
 The phone canvas works the same way, on its own numbers: an open row there is
 690 comp pixels against a closed row's 290, so `--push` is 400 instead of 536,
 and `main.js` picks the one that matches the breakpoint. The phone comp shows

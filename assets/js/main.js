@@ -220,7 +220,6 @@
 
   var isPhone = function () { return window.matchMedia('(max-width: 1279px)').matches; };
   var push = function () { return isPhone() ? PHONE_PUSH : DESKTOP_PUSH; };
-  var unit = function () { return frame.getBoundingClientRect().width / (isPhone() ? 402 : 1728); };
 
   /* The large shots stay out of the initial payload; a row fetches its own the
      first time someone shows interest in it. */
@@ -270,28 +269,17 @@
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'true');
   };
 
-  /* Opening a row while another one is open pulls it up by the push it was
-     riding, so bring it back into a comfortable band instead of letting it
-     slide out from under the pointer. Its landing place is arithmetic, not a
-     measurement: an open row is never pushed by itself. */
-  var settle = function (row) {
-    var toggle = row.querySelector('.row__toggle');
-    var u = unit();
-    var frameTop = window.scrollY + frame.getBoundingClientRect().top;
-    var finalTop = frameTop + parseFloat(toggle.style.getPropertyValue('--y')) * u;
-    var margin = 96 * u;
-    var seat = finalTop - window.scrollY;
-    if (seat >= margin && seat <= window.innerHeight * 0.45) return;
-    window.scrollTo({ top: Math.max(0, finalTop - margin), behavior: reduced ? 'auto' : 'smooth' });
-  };
-
   var toggleRow = function (row) {
     var closing = row === openRow;
     if (openRow) fold(openRow);
     openRow = closing ? null : row;
     if (openRow) unfold(openRow);
+    /* The page never moves under the reader: the row they clicked stays put and
+       the panel grows from it. has-open lets the frame take its new scroll
+       height at once on the way open, and give it back only once the fold has
+       finished on the way closed. */
     frame.style.setProperty('--push', openRow ? push() : 0);
-    if (openRow) settle(openRow);
+    frame.classList.toggle('has-open', !!openRow);
   };
 
   rows.forEach(function (row) {
@@ -300,6 +288,22 @@
     var warm;
 
     toggle.addEventListener('click', function () { toggleRow(row); });
+
+    /* The strip sits above the toggle on the phone so it can be swiped, which
+       would otherwise cost the row its tap. Anything that moved the strip is a
+       scroll, not a tap. */
+    var strip = row.querySelector('.thumbs');
+    if (strip) {
+      var startX = 0, startLeft = 0;
+      strip.addEventListener('pointerdown', function (event) {
+        startX = event.clientX;
+        startLeft = strip.scrollLeft;
+      });
+      strip.addEventListener('click', function (event) {
+        if (Math.abs(event.clientX - startX) > 6 || strip.scrollLeft !== startLeft) return;
+        toggleRow(row);
+      });
+    }
 
     /* A hover that lasts long enough to be a decision, not a sweep. Opening a
        row shifts the ones under it, which fires pointerenter on whichever now

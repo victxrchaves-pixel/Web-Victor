@@ -38,6 +38,7 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --dur-fold: 620ms;
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-fold: cubic-bezier(0.65, 0, 0.35, 1);   /* ease-in-out, both ends */
   --dur-fast: 160ms;
   --dur-ui: 220ms;
 }
@@ -93,8 +94,13 @@ hr { border: 0; margin: 0; }
   position: relative;
   width: calc(1728 * var(--u));
   height: calc((4484 + var(--push, 0)) * var(--u));
-  transition: height var(--dur-fold) var(--ease-drawer);
+  /* The canvas is laid out once per fold, not once per frame: everything that
+     moves is transformed, so the frame only has to own the scroll height. It
+     grows at once and shrinks after the fold, so the ground is never missing
+     from under the footer. */
+  transition: height 0s linear var(--dur-fold);
 }
+.frame.has-open { transition-delay: 0s; }
 
 .pill, .pill__logo, .pill__current,
 .btn, .btn__label, .btn__icon,
@@ -387,12 +393,12 @@ hr { border: 0; margin: 0; }
   left: 0; top: 0;
   width: calc(1728 * var(--u));
   height: 0;
-  transition: transform var(--dur-fold) var(--ease-drawer);
+  transition: transform var(--dur-fold) var(--ease-fold);
 }
 .row.is-open ~ .row { transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
 
 /* Everything that lives below the list rides the same push. */
-.shift { transition: transform var(--dur-fold) var(--ease-drawer); transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
+.shift { transition: transform var(--dur-fold) var(--ease-fold); transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
 .shift-layer { position: absolute; left: 0; top: 0; width: calc(1728 * var(--u)); height: 0; }
 
 .row__name { font-family: 'Geist', system-ui, sans-serif; transition: color var(--dur-ui) ease; }
@@ -472,7 +478,7 @@ hr { border: 0; margin: 0; }
 .row__desc, .row__cta {
   opacity: 0;
   transform: translateY(calc(14 * var(--u)));
-  transition: opacity 260ms ease, transform 460ms var(--ease-drawer);
+  transition: opacity 260ms ease, transform var(--dur-fold) var(--ease-fold);
 }
 
 /* The scroller reaches 206px above the strip, up to the thumbnail row, so a
@@ -516,7 +522,7 @@ hr { border: 0; margin: 0; }
   opacity: 0;
   transform-origin: 0 0;
   transform: translate3d(calc(var(--dx) * var(--u)), calc(var(--dy) * var(--u)), 0) scale(var(--s));
-  transition: opacity 120ms ease 500ms, transform var(--dur-fold) var(--ease-drawer);
+  transition: opacity 120ms ease 500ms, transform var(--dur-fold) var(--ease-fold);
 }
 /* No placeholder colour: a shot begins exactly over its own thumbnail, so
    until its bytes arrive the thumbnail underneath is what shows through. */
@@ -528,7 +534,7 @@ hr { border: 0; margin: 0; }
 .row.is-open .row__track li {
   transform: none;
   transition: opacity 120ms ease calc(var(--i) * 55ms),
-              transform var(--dur-fold) var(--ease-drawer) calc(var(--i) * 55ms);
+              transform var(--dur-fold) var(--ease-fold) calc(var(--i) * 55ms);
 }
 /* Opacity is the one thing that waits for the images: on a cold click the
    thumbnails simply stay until the shots can take over. */
@@ -767,10 +773,20 @@ hr { border: 0; margin: 0; }
   }
   .thumbs, .row__shots { overflow-x: auto; scrollbar-width: none; }
   .thumbs::-webkit-scrollbar, .row__shots::-webkit-scrollbar { display: none; }
+  /* The comp drops the intro on the phone. */
+  .intro { display: none; }
+
+  /* The toggle covers the whole row, so without this the strip never sees a
+     swipe. Lifted above it, and left free on both axes so the browser can tell
+     a sideways pan of the strip from a vertical scroll of the page by the
+     gesture itself; main.js forwards a tap back to the toggle. */
   .thumbs {
     display: block;
     overscroll-behavior-x: contain;
     pointer-events: auto;
+    z-index: 4;
+    touch-action: pan-x pan-y;
+    cursor: pointer;
   }
   .thumbs img { position: absolute; }
   .row__view { max-width: 5ch; opacity: 1; }
