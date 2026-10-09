@@ -658,7 +658,7 @@ hr { border: 0; margin: 0; }
   .stage { display: flex; justify-content: center; }
   .frame {
     width: calc(402 * var(--u));
-    height: calc((4436 + var(--push, 0)) * var(--u));
+    height: calc((4406 + var(--push, 0)) * var(--u));
   }
 
   /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
@@ -739,7 +739,7 @@ hr { border: 0; margin: 0; }
   .cards {
     position: absolute;
     left: 0;
-    top: calc(2251 * var(--u));
+    top: calc(2221 * var(--u));
     width: calc(402 * var(--u));
     height: calc(371 * var(--u));
     display: flex;
@@ -785,14 +785,26 @@ hr { border: 0; margin: 0; }
      a sideways pan of the strip from a vertical scroll of the page by the
      gesture itself; main.js forwards a tap back to the toggle. */
   .thumbs {
-    display: block;
+    /* A row in normal flow, not absolute children inside their own scroller:
+       the latter does create scrollable overflow, but it is the brittlest way
+       to ask for it. The gap and the widths reproduce the comp's offsets
+       exactly, so the shots still take off from where their thumbnail sits. */
+    display: flex;
+    align-items: flex-start;
+    gap: calc(11.585 * var(--u));
     overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
     pointer-events: auto;
     z-index: 4;
     touch-action: pan-x pan-y;
     cursor: pointer;
   }
-  .thumbs img { position: absolute; }
+  .thumbs img {
+    position: static;
+    flex: none;
+    width: calc(var(--mw) * var(--u));
+    height: calc(var(--mh) * var(--u));
+  }
   /* Open, the thumbnails are invisible but still a layer: without this they
      sit on the big strip and swallow the swipe meant for it. */
   .row.is-open .thumbs { pointer-events: none; }
