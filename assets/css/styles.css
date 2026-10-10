@@ -866,7 +866,7 @@ hr { border: 0; margin: 0; }
   left: calc(717 * var(--u));
   top: calc(61 * var(--u));
   width: calc(239 * var(--u));
-  height: calc(463.305 * var(--u));
+  height: calc(469.63 * var(--u));
   max-height: calc(100% - 72 * var(--u));
   display: flex;
   flex-direction: column;
@@ -891,14 +891,18 @@ hr { border: 0; margin: 0; }
 @media (hover: hover) and (pointer: fine) { .about__val a:hover { color: var(--live); } }
 
 .about__social {
+  /* The comp draws these at 25.305 with a 7.381 gap. A quarter larger reads
+     better beside the name and gives a thumb something to aim at; the whole
+     row scales together, so it keeps the comp's proportions. */
+  --soc: 31.63;
   display: flex;
-  gap: calc(7.381 * var(--u));
+  gap: calc(9.226 * var(--u));
   margin-top: calc(19 * var(--u));
 }
 .about__social a {
   display: block;
-  width: calc(25.305 * var(--u));
-  height: calc(25.305 * var(--u));
+  width: calc(var(--soc) * var(--u));
+  height: calc(var(--soc) * var(--u));
   opacity: 0.8;
   transition: opacity var(--dur-ui) ease, transform var(--dur-ui) var(--ease-out);
 }
