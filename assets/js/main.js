@@ -374,6 +374,190 @@
     });
   });
 
+  /* ---------- About: a pop-up over the landing ----------
+     The window is a fragment target, so it opens and closes without this file.
+     What JS adds is the fade, the focus handling, and the rail: a minimap of
+     the information, where the bright segment is the part you are looking at
+     and every tick is a section you can jump to. */
+
+  var about = document.getElementById('about');
+  var aboutScroll = document.getElementById('aboutScroll');
+  var aboutRail = document.getElementById('aboutRail');
+  var aboutFill = document.getElementById('aboutFill');
+
+  if (about && aboutScroll && aboutRail && aboutFill) {
+    var aboutOpen = false;
+    var aboutReturn = null;
+    var marks = Array.prototype.slice.call(aboutScroll.querySelectorAll('[data-about-sec]'));
+    var ticks = marks.map(function (el) {
+      var tick = document.createElement('button');
+      tick.type = 'button';
+      tick.className = 'about__tick';
+      tick.innerHTML = '<span class="u-sr-only">' + el.getAttribute('data-about-sec') + '</span>';
+      tick.addEventListener('click', function () { jumpTo(el); });
+      aboutRail.appendChild(tick);
+      return tick;
+    });
+
+    // The scroller's own padding is the air above the first line; a jump that
+    // lands on a section should put its rule where that air ends.
+    var padTop = function () {
+      return parseFloat(window.getComputedStyle(aboutScroll).paddingTop) || 0;
+    };
+    var offsetOf = function (el) {
+      return el.getBoundingClientRect().top
+        - aboutScroll.getBoundingClientRect().top
+        + aboutScroll.scrollTop;
+    };
+
+    function jumpTo(el) {
+      var target = Math.max(0, offsetOf(el) - padTop());
+      if (reduced) { aboutScroll.scrollTop = target; return; }
+      aboutScroll.scrollTo({ top: target, behavior: 'smooth' });
+    }
+
+    // Everything the rail draws is a fraction of the whole content, so the
+    // ticks and the window segment share one scale and always line up.
+    function layoutRail() {
+      var total = aboutScroll.scrollHeight;
+      if (!total) return;
+      marks.forEach(function (el, i) {
+        ticks[i].hidden = !!el.hidden;
+        if (el.hidden) return;
+        ticks[i].style.setProperty('--t', Math.min(0.995, offsetOf(el) / total));
+      });
+      drawRail();
+    }
+
+    function drawRail() {
+      var total = aboutScroll.scrollHeight;
+      var seen = aboutScroll.clientHeight;
+      if (!total) return;
+      aboutFill.style.setProperty('--p0', aboutScroll.scrollTop / total);
+      aboutFill.style.setProperty('--ph', Math.min(1, seen / total));
+
+      // The section you are in is the last one whose rule has passed the top
+      // of the window, with a little tolerance for a jump that lands short.
+      var probe = aboutScroll.scrollTop + padTop() + 4;
+      var current = 0;
+      marks.forEach(function (el, i) { if (!el.hidden && offsetOf(el) <= probe) current = i; });
+      if (aboutScroll.scrollTop + seen >= total - 2) current = marks.length - 1;
+      ticks.forEach(function (tick, i) { tick.classList.toggle('is-current', i === current); });
+    }
+
+    aboutScroll.addEventListener('scroll', drawRail, { passive: true });
+
+    /* The CV row is in the design, but the PDF is Victor's to drop in. Rather
+       than hand a visitor a 404, the row asks for the file once and takes
+       itself out of the window if it is not there yet; the day it lands, the
+       row comes back on its own. */
+    var cvAsked = false;
+    function checkCv() {
+      var dl = about.querySelector('.about__dl');
+      if (cvAsked || !dl || !window.fetch) return;
+      cvAsked = true;
+      var sec = dl.closest('.about__sec');
+      window.fetch(dl.getAttribute('href'), { method: 'HEAD' }).then(function (res) {
+        if (res.ok) return;
+        sec.hidden = true;
+        if (aboutOpen) layoutRail();
+      }).catch(function () {});
+    }
+
+    /* ---------- Opening and closing ---------- */
+
+    var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function openAbout() {
+      if (aboutOpen) return;
+      aboutOpen = true;
+      aboutReturn = document.activeElement;
+      about.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setLabel('About');
+      // One forced reflow rather than a frame callback: it gives the
+      // transition a start value to run from and the rail a box to measure,
+      // both synchronously. A requestAnimationFrame would do the same only
+      // once the engine chooses to paint, which it need not do at once.
+      void about.offsetWidth;
+      about.classList.add('is-visible');
+      layoutRail();
+      checkCv();
+      var close = document.getElementById('aboutClose');
+      if (close) close.focus({ preventScroll: true });
+    }
+
+    function closeAbout(returnFocus) {
+      if (!aboutOpen) return;
+      aboutOpen = false;
+      about.classList.remove('is-visible');
+      // The hash would hold it open through :target, so it goes with it.
+      if (window.location.hash === '#about' && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      document.body.style.overflow = '';
+      updateLabel();
+      var hide = function () { if (!aboutOpen) about.classList.remove('is-open'); };
+      if (reduced) hide(); else window.setTimeout(hide, 320);
+      // The link that opened this lives in the menu, which is closed and inert
+      // by now, so focusing it would quietly do nothing. The button that owns
+      // the menu is where the caret belongs.
+      var back = aboutReturn;
+      if (back && back.closest && back.closest('#navPanel')) back = menuBtn;
+      if (returnFocus && back && back.focus) back.focus({ preventScroll: true });
+      aboutReturn = null;
+    }
+
+    document.addEventListener('click', function (event) {
+      var opener = event.target.closest('[data-about-open]');
+      if (opener) {
+        event.preventDefault();
+        closeMenu(false);
+        openAbout();
+        return;
+      }
+      if (event.target.closest('.about__scrim, #aboutClose')) {
+        event.preventDefault();
+        closeAbout(true);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (!aboutOpen) return;
+      if (event.key === 'Escape') { closeAbout(true); return; }
+      if (event.key !== 'Tab') return;
+      // aria-modal only tells assistive tech; the tab ring has to be held here.
+      var items = Array.prototype.filter.call(
+        about.querySelectorAll(FOCUSABLE),
+        function (el) { return el.offsetParent !== null || el === document.activeElement; }
+      );
+      if (!items.length) return;
+      var first = items[0];
+      var last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    });
+
+    window.addEventListener('resize', function () { if (aboutOpen) layoutRail(); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { if (aboutOpen) layoutRail(); });
+    }
+    // The portrait is lazy and arrives after the first measure on the phone
+    // layout, where it sits in the flow and moves every section below it.
+    var portrait = about.querySelector('.about__photo');
+    if (portrait) portrait.addEventListener('load', function () { if (aboutOpen) layoutRail(); });
+
+    // Landing on /#about with JS on: take it over so it behaves like any
+    // other opening, rather than being held open by the hash.
+    if (window.location.hash === '#about') {
+      about.classList.add('is-visible');
+      openAbout();
+    }
+  }
+
   /* ---------- Footer clock, in Barcelona time ---------- */
 
   var clock = document.getElementById('clock');

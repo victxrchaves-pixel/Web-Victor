@@ -649,6 +649,307 @@ hr { border: 0; margin: 0; }
   transition: clip-path 900ms var(--ease-in-out);
 }
 
+/* ---------- About: a pop-up over the landing ----------
+   Traced from Figma · About View (450:1399). The window is 1036 x 647 comp
+   pixels and rides the same --u as the canvas behind it, so it scales with
+   everything else. Two things are deliberate here. The right-hand block is
+   positioned against the dialog rather than placed inside the scroller, so it
+   stays put while the information moves - one element, no sticky, no second
+   scroll container. And the scrollbar is taken away in favour of the rail in
+   the left gutter, which says where you are and jumps where you point. */
+
+.about {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: none;
+  /* The comp hangs the window from y=129, just clear of the pill, rather than
+     centring it; holding that and capping the height keeps the pill in front
+     of the window instead of on top of it on a short screen. */
+  align-items: flex-start;
+  justify-content: center;
+  padding: calc(129 * var(--u)) 0 calc(24 * var(--u));
+  --ink: #fafafa;
+}
+/* :target is the no-JS way in: the menu's About link is a real fragment link,
+   and both close controls point back out of it. With JS the class takes over
+   so the window can be faded in and the hash left alone. */
+.about:target,
+.about.is-open { display: flex; }
+
+.about__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(2.65px);
+  backdrop-filter: blur(2.65px);
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out);
+}
+
+.about__dialog {
+  position: relative;
+  width: calc(1036 * var(--u));
+  height: calc(647 * var(--u));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100svh - 153 * var(--u));
+  padding: calc(11 * var(--u)) calc(18 * var(--u));
+  display: flex;
+  flex-direction: column;
+  border-radius: calc(5 * var(--u));
+  background: var(--glass);
+  /* The comp blurs the window by 3.3px over a scrim blurred by 2.65. At comp
+     size that is enough to wash the page out; at phone size the window covers
+     almost the whole screen and the display type behind it still read
+     through, so the glass is taken deeper. */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(calc(14 * var(--u))) scale(0.99);
+  transition: opacity 300ms var(--ease-out), transform 420ms var(--ease-drawer);
+}
+
+/* Where the glass cannot be made, the window simply turns opaque: the page
+   behind must not be readable through the information. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .about__scrim { background: rgba(0, 0, 0, 0.72); }
+  .about__dialog { background: rgba(10, 10, 10, 0.95); }
+}
+
+.about:target .about__scrim,
+.about.is-visible .about__scrim { opacity: 1; }
+.about:target .about__dialog,
+.about.is-visible .about__dialog { opacity: 1; transform: none; }
+
+/* ---------- Header ---------- */
+
+.about__head {
+  flex: none;
+  height: calc(24 * var(--u));
+  margin-bottom: calc(26 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.about__close {
+  display: block;
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
+  opacity: 0.75;
+  transition: opacity var(--dur-ui) ease;
+}
+.about__close img { width: 100%; height: 100%; }
+@media (hover: hover) and (pointer: fine) { .about__close:hover { opacity: 1; } }
+
+/* ---------- The scrolling information ---------- */
+
+.about__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: calc(610 * var(--u));
+  padding: calc(20 * var(--u)) 0 calc(26 * var(--u)) calc(39 * var(--u));
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+/* The rail is the scrollbar here, so the real one goes. */
+.about__scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+.about__intro {
+  width: calc(559 * var(--u));
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: calc(15 * var(--u));
+  line-height: calc(20 * var(--u));
+}
+.about__intro p { margin: 0; }
+.about__intro p + p { margin-top: calc(20 * var(--u)); }
+
+.about__sections { margin-top: calc(86 * var(--u)); width: calc(571 * var(--u)); }
+.about__sec + .about__sec { margin-top: calc(32 * var(--u)); }
+
+.about__line {
+  width: calc(572 * var(--u));
+  height: max(1px, calc(1 * var(--u)));
+  margin-bottom: calc(7 * var(--u));
+  background: rgba(250, 250, 250, 0.34);
+}
+
+.about__row {
+  display: grid;
+  grid-template-columns: calc(259 * var(--u)) calc(312 * var(--u));
+  align-items: start;
+}
+.about__label {
+  margin: 0;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-weight: 400;
+  font-size: calc(15 * var(--u));
+  line-height: calc(20 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.about__body {
+  margin: 0;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: calc(15 * var(--u));
+  line-height: calc(20 * var(--u));
+}
+.about__body p { margin: 0; }
+.about__list li { margin: 0; }
+
+/* A spell of work starts a new block, so the date that opens one gets the
+   blank line the comp leaves above it. */
+.about__when {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-weight: 200;
+}
+.about__body > .about__when + * { margin-top: 0; }
+.about__body > .about__when:not(:first-child) { margin-top: calc(20 * var(--u)); }
+.about__what { font-weight: 700; }
+
+.about__body--end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.about__dl {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: color var(--dur-ui) ease;
+}
+.about__dl img {
+  width: calc(20 * var(--u));
+  height: calc(20 * var(--u));
+  transition: transform var(--dur-ui) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .about__dl:hover { color: var(--live); }
+  .about__dl:hover img { transform: translateY(calc(3 * var(--u))); }
+}
+
+/* The ten marks are different shapes, so they keep the comp's own x and y
+   rather than being handed to a flex row that would align them its way. */
+.about__soft {
+  position: relative;
+  width: calc(181.5 * var(--u));
+  height: calc(67.252 * var(--u));
+}
+.soft {
+  position: absolute;
+  left: calc(var(--sx) * var(--u));
+  top: calc(var(--sy) * var(--u));
+  width: calc(var(--sw) * var(--u));
+  height: calc(var(--sh) * var(--u));
+}
+.soft img { width: 100%; height: 100%; }
+/* The Adobe marks are a glyph inside an empty square; the square is the grid
+   cell and the glyph sits at its own inset within it. */
+.soft--inset img {
+  position: absolute;
+  inset: calc(var(--it) * 1%) calc(var(--ir) * 1%) calc(var(--ib) * 1%) calc(var(--il) * 1%);
+  width: auto;
+  height: auto;
+}
+
+/* ---------- The block that does not move ---------- */
+
+.about__side {
+  position: absolute;
+  left: calc(694 * var(--u));
+  top: calc(61 * var(--u));
+  width: calc(285 * var(--u));
+  height: calc(570 * var(--u));
+  max-height: calc(100% - 72 * var(--u));
+  display: flex;
+  flex-direction: column;
+}
+.about__photo {
+  width: 100%;
+  height: calc(382 * var(--u));
+  flex: 0 1 auto;
+  min-height: 0;
+  object-fit: cover;
+}
+.about__card { flex: none; margin-top: calc(19 * var(--u)); }
+.about__card p { margin: 0; font-size: calc(15 * var(--u)); line-height: calc(20 * var(--u)); }
+.about__name {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: calc(24 * var(--u)) !important;
+  line-height: calc(29 * var(--u)) !important;
+}
+.about__key { font-weight: 700; margin-top: calc(20 * var(--u)) !important; }
+.about__val a { transition: color var(--dur-ui) ease; }
+@media (hover: hover) and (pointer: fine) { .about__val a:hover { color: var(--live); } }
+
+/* ---------- The guide rail ----------
+   Thin on purpose: it should read as a margin mark, not as a control. It
+   carries how far down the information you are, and each tick is the fast way
+   to a section. */
+
+.about__rail {
+  position: absolute;
+  left: calc(20 * var(--u));
+  top: calc(61 * var(--u));
+  bottom: calc(11 * var(--u));
+  width: calc(16 * var(--u));
+}
+.about__rail-track,
+.about__rail-fill {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  margin-left: -0.5px;
+}
+.about__rail-track { bottom: 0; background: rgba(250, 250, 250, 0.13); }
+/* Not a fill from the top but the window you are looking through: its length
+   is how much of the information fits on screen, its place is where that is. */
+.about__rail-fill {
+  top: calc(var(--p0, 0) * 100%);
+  height: calc(var(--ph, 0) * 100%);
+  background: rgba(250, 250, 250, 0.55);
+  transition: top 120ms linear;
+}
+
+.about__tick {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(16 * var(--u));
+  top: calc(var(--t, 0) * 100%);
+  margin-top: calc(-8 * var(--u));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.about__tick::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(5px, calc(7 * var(--u)));
+  height: max(1px, calc(1 * var(--u)));
+  transform: translate(-50%, -50%);
+  background: rgba(250, 250, 250, 0.22);
+  transition: width var(--dur-ui) var(--ease-out), background var(--dur-ui) ease;
+}
+.about__tick.is-current::before { width: max(11px, calc(13 * var(--u))); background: rgba(250, 250, 250, 0.9); }
+@media (hover: hover) and (pointer: fine) {
+  .about__tick:hover::before { width: max(11px, calc(13 * var(--u))); background: rgba(250, 250, 250, 0.7); }
+}
+
 /* ---------- Mobile: the comp has no small frame, so the same
               elements reflow into one column ---------- */
 
@@ -835,6 +1136,84 @@ hr { border: 0; margin: 0; }
   }
 
   .footer .chips { display: block; }
+
+  /* ---------- About, on the phone column ----------
+     The comp only draws the window at desktop size. Here it becomes a sheet
+     that hangs under the pill: one column, the block that stays put on the
+     wide canvas back in the flow between the opening lines and the record,
+     and the rail still in the gutter it was given. */
+
+  .about { align-items: flex-end; padding: 0 0 calc(16 * var(--u)); }
+
+  .about__dialog {
+    width: calc(372 * var(--u));
+    height: calc(100svh - 96 * var(--u));
+    max-width: none;
+    max-height: none;
+    padding: calc(13 * var(--u)) calc(15 * var(--u));
+  }
+
+  .about__scroll {
+    width: 100%;
+    padding: calc(16 * var(--u)) calc(8 * var(--u)) calc(22 * var(--u)) calc(22 * var(--u));
+  }
+
+  .about__rail {
+    left: calc(4 * var(--u));
+    top: calc(63 * var(--u));
+    bottom: calc(13 * var(--u));
+  }
+
+  .about__intro {
+    width: 100%;
+    font-size: calc(16 * var(--u));
+    line-height: calc(22 * var(--u));
+  }
+  .about__intro p + p { margin-top: calc(22 * var(--u)); }
+
+  .about__sections { width: 100%; margin-top: calc(40 * var(--u)); }
+  .about__line { width: 100%; }
+
+  /* No room for two columns: the label becomes a heading over its block. */
+  .about__row {
+    grid-template-columns: 1fr;
+    row-gap: calc(9 * var(--u));
+  }
+  .about__row--cv {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    row-gap: 0;
+  }
+  .about__label {
+    font-size: calc(14 * var(--u));
+    line-height: calc(19 * var(--u));
+  }
+  .about__body {
+    width: 100%;
+    font-size: calc(16 * var(--u));
+    line-height: calc(22 * var(--u));
+  }
+  .about__body > .about__when:not(:first-child) { margin-top: calc(22 * var(--u)); }
+
+  .about__side {
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin-top: calc(38 * var(--u));
+  }
+  .about__photo {
+    flex: none;
+    width: calc(220 * var(--u));
+    height: calc(295 * var(--u));
+  }
+  .about__card { margin-top: calc(17 * var(--u)); }
+  .about__card p { font-size: calc(15 * var(--u)); line-height: calc(21 * var(--u)); }
+  .about__name {
+    font-size: calc(22 * var(--u)) !important;
+    line-height: calc(28 * var(--u)) !important;
+  }
+  .about__key { margin-top: calc(21 * var(--u)) !important; }
 }
 
 /* Between the phone column and the desktop canvas there is nothing to
@@ -845,6 +1224,8 @@ hr { border: 0; margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee--anim .marquee__track { animation: none; }
+  .about__scrim, .about__dialog, .about__rail-fill, .about__tick::before { transition: none; }
+  .about__dialog { transform: none; }
   .footer__dot { animation: none; }
   .js-anim [data-reveal] { transform: none; }
   .js-anim [data-reveal].is-in { animation: revealFade 300ms ease forwards; }

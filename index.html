@@ -49,7 +49,7 @@
       </div>
 
       <ul class="pill__links" inert>
-        <li><a href="#top">About</a></li>
+        <li><a href="#about" data-about-open>About</a></li>
         <li><a href="#work">Work</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -362,6 +362,184 @@
   </footer>
 
 </div>
+</div>
+
+
+<!--
+  About — a pop-up over the landing, not a page of its own.
+  Window and placement traced from Figma · About View (450:1399); the copy
+  from About Info (448:507). The window is 1036 x 647 comp pixels, so it rides
+  the same --u as the canvas behind it. The right-hand block is pinned to the
+  dialog rather than sitting inside the scroller, so only the information
+  moves; the rail in the left gutter is the read-out of where that scroll is
+  and the quick way to jump. Without JS, :target still opens it and the two
+  close links still shut it.
+-->
+<div class="about" id="about">
+  <a class="about__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
+
+  <div class="about__dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <h2 class="u-sr-only" id="aboutTitle">About Victor Chaves</h2>
+
+    <div class="about__head">
+      <a class="about__close" href="#top" id="aboutClose">
+        <span class="u-sr-only">Close</span>
+        <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
+      </a>
+    </div>
+
+    <!-- Thin enough to read as a guide rather than a control, but every tick
+         is a real jump target. JS writes the ticks from the sections below. -->
+    <nav class="about__rail" id="aboutRail" aria-label="About sections">
+      <span class="about__rail-track" aria-hidden="true"></span>
+      <span class="about__rail-fill" id="aboutFill" aria-hidden="true"></span>
+    </nav>
+
+    <div class="about__scroll" id="aboutScroll" tabindex="0">
+
+      <div class="about__intro" id="about-intro" data-about-sec="Intro">
+        <p>Hey I&rsquo;m Victor</p>
+        <p>A graphic designer and digital creative, specializing in the creation
+          of visual identities and experiences with a strategic and contemporary approach.
+          I am passionate about transforming ideas into visual concepts that connect
+          with people, paying close attention to both the aesthetics and the intention
+          behind every detail.</p>
+        <p>In addition, I integrate artificial intelligence tools into creative and production
+          processes, from image and video generation to automations, workflows,
+          and integrations that optimize results and enhance creativity.</p>
+      </div>
+
+      <!-- Pinned to the dialog on the desktop canvas, back in the flow on a
+           phone, where there is no room beside the information. -->
+      <aside class="about__side">
+        <img class="about__photo" src="assets/img/about-portrait.webp"
+             alt="Victor Chaves" width="600" height="805" loading="lazy" decoding="async">
+        <div class="about__card">
+          <p class="about__name">Victor Chaves Cerrejón</p>
+          <p class="about__key">Mail</p>
+          <p class="about__val"><a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a></p>
+          <p class="about__key">Instagram &amp; TikTok</p>
+          <p class="about__val">@chavescerrejon</p>
+        </div>
+      </aside>
+
+      <div class="about__sections">
+
+        <section class="about__sec" id="about-cv" data-about-sec="CV">
+          <hr class="about__line">
+          <div class="about__row about__row--cv">
+            <h3 class="about__label">[ Curriculum Vitae ]</h3>
+            <p class="about__body about__body--end">
+              <a class="about__dl" href="assets/cv/victor-chaves-cv.pdf" download>
+                <span>Download</span>
+                <img src="assets/icons/down-arrow-sm.svg" alt="" width="20" height="20" aria-hidden="true">
+              </a>
+            </p>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-events" data-about-sec="Events">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Events ]</h3>
+            <div class="about__body">
+              <p class="about__when">2026</p>
+              <p class="about__what">BRUT!</p>
+              <p>BareFolio presentation at BRUT!,<br>
+                Barcelona&rsquo;s design festival,<br>
+                at the Disseny Hub Barcelona.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-education" data-about-sec="Education">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Education ]</h3>
+            <div class="about__body">
+              <p class="about__when">2023&ndash;2026</p>
+              <p class="about__what">Bachelor&rsquo;s Degree in Graphic Design</p>
+              <p>LCI Barcelona</p>
+              <p class="about__when">2020</p>
+              <p class="about__what">High School</p>
+              <p>Escola Garbí Pere Vergés d&rsquo;Esplugues</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-employment" data-about-sec="Employment">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Employment ]</h3>
+            <div class="about__body">
+              <p class="about__when">2025 &ndash; 6 months (Internship)</p>
+              <p class="about__what">Glamm BCN</p>
+              <p>Social media management, website management, and creation of graphic elements for the brand.</p>
+              <p class="about__when">2023/2025 &ndash; 2 years</p>
+              <p class="about__what">MonEstilistes</p>
+              <p>Social media management and creation<br>of graphic elements for the brand.</p>
+              <p class="about__when">2022&ndash;2024 &ndash; 2 years</p>
+              <p class="about__what">Nonvero Society</p>
+              <p>Clothing brand project; served as a designer, sourced suppliers, developed marketing campaigns, created social media content,<br>and produced audiovisual content.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-skills" data-about-sec="Skills">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Skills ]</h3>
+            <ul class="about__body about__list">
+              <li>Creative Leadership</li>
+              <li>Empathy</li>
+              <li>Attention to Detail</li>
+              <li>Ownership</li>
+              <li>Curiosity</li>
+              <li>Innovation Mindset</li>
+              <li>Growth Mindset</li>
+              <li>Client Relationship Management</li>
+              <li>Presentation Skills</li>
+              <li>Negotiation</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-software" data-about-sec="Software">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Softwares ]</h3>
+            <!-- The grid keeps the comp's own x/y: the icons are different
+                 shapes and a flex row would not line them up the same way. -->
+            <div class="about__body about__soft">
+              <span class="soft" style="--sx:0;       --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/manus.svg" alt="Manus" width="24" height="24"></span>
+              <span class="soft" style="--sx:38.083;  --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/chatgpt.svg" alt="ChatGPT" width="24" height="24"></span>
+              <span class="soft" style="--sx:76.165;  --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/claude.svg" alt="Claude" width="24" height="24"></span>
+              <span class="soft" style="--sx:115.868; --sy:2.026;  --sw:20.257; --sh:20.257"><img src="assets/icons/soft/shopify.svg" alt="Shopify" width="20" height="20"></span>
+              <span class="soft" style="--sx:151.520; --sy:0;      --sw:24.839; --sh:28.682"><img src="assets/icons/soft/figma.svg" alt="Figma" width="25" height="29"></span>
+              <span class="soft soft--inset" style="--sx:0;       --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:13.96; --ib:26.75; --il:16.89"><img src="assets/icons/soft/photoshop.svg" alt="Adobe Photoshop" width="17" height="11"></span>
+              <span class="soft soft--inset" style="--sx:38.083;  --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:8.56;  --ib:26.68; --il:8.57"><img src="assets/icons/soft/after-effects.svg" alt="Adobe After Effects" width="20" height="11"></span>
+              <span class="soft soft--inset" style="--sx:76.165;  --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:17.05; --ib:27.36; --il:20.54"><img src="assets/icons/soft/premiere-pro.svg" alt="Adobe Premiere Pro" width="15" height="11"></span>
+              <span class="soft soft--inset" style="--sx:114.248; --sy:30.303; --sw:24.308; --sh:24.308; --it:25.10; --ir:24.11; --ib:26.74; --il:24.11"><img src="assets/icons/soft/indesign.svg" alt="Adobe InDesign" width="13" height="12"></span>
+              <span class="soft soft--inset" style="--sx:152.330; --sy:30.303; --sw:24.308; --sh:24.308; --it:24.14; --ir:20.35; --ib:27.36; --il:16.85"><img src="assets/icons/soft/illustrator.svg" alt="Adobe Illustrator" width="15" height="12"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-languages" data-about-sec="Languages">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Languages ]</h3>
+            <ul class="about__body about__list">
+              <li>Spanish &mdash; Native</li>
+              <li>Catalan &mdash; Native</li>
+              <li>English &mdash; First</li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="assets/js/main.js" defer></script>

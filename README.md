@@ -30,7 +30,10 @@ assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
 assets/img/*.webp       row thumbnails, exported from Figma (2× display size)
 assets/img/large/*.webp the same shots at 705px tall, for an expanded row
+assets/img/about-portrait.webp  the portrait in the About window
 assets/icons/*.svg      logo, menu, arrow, status dot
+assets/icons/soft/*.svg the ten tool marks in About
+assets/cv/              where the CV PDF goes (see below)
 assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
 ```
 
@@ -56,6 +59,14 @@ Everything editable lives in `index.html`:
   images show, and should be replaced with real project copy.
 - **The View Project buttons currently link to `#contact`.** When a case study
   exists, point each row's `.row__cta` at its page.
+- **The CV PDF is missing.** The About window's first row offers
+  `assets/cv/victor-chaves-cv.pdf` for download. Put the file there and the row
+  appears; until then the window asks for it once on opening, finds nothing and
+  takes the row out rather than handing a visitor a 404. Nothing else to change.
+- **About** — the copy lives in `#about` at the end of `index.html`, one
+  `<section class="about__sec">` per record. Each carries a `data-about-sec`
+  name, which is the label the rail's tick announces, so adding a section adds
+  its tick with it.
 
 Colours, type sizes and spacing are custom properties at the top of
 `styles.css`, all derived from the Figma frame.
@@ -168,6 +179,41 @@ on the band hands them over as it comes near.
 The large shots are not in the initial payload. A row fetches its own the first
 time the pointer settles on it, or when it opens.
 
+## The About pop-up
+
+About is a window over the landing, not a page: `#about` sits at the end of
+`index.html`, outside the canvas, and the menu's About link opens it. Traced
+from Figma · About View (`450:1399`) for the window, About Info (`448:507`) for
+the copy; the window is 1036 x 647 comp pixels and rides the same `--u`, so it
+scales with everything else and hangs from y=129, just clear of the pill.
+
+Three things are worth knowing.
+
+**Only the information moves.** The portrait and the contact lines are
+`position: absolute` against the dialog while the text beside them is inside the
+scroller, so the block stays put without `sticky` and without a second scroll
+container. On the phone column it drops back into the flow between the opening
+lines and the record, where there is no room beside them.
+
+**The rail is the scrollbar.** The real one is taken away and the left gutter
+carries a 1px track instead. The bright segment on it is the window you are
+looking through - its length is how much of the information fits on screen, its
+place is where that is - and each tick is a section you can jump to, named for
+a screen reader by its `data-about-sec`. Ticks and segment share one scale
+(a fraction of the whole content), so they always line up, and a hidden section
+takes its tick with it.
+
+**It opens without JavaScript.** `.about:target` is the way in, so the menu's
+`href="#about"` works on its own and the close control and the scrim are real
+links back out. With JavaScript the class takes over, the hash is left alone,
+and closing clears it if a deep link set it. Opening reveals through one forced
+reflow rather than a frame callback: a callback only runs when the engine
+chooses to paint, and in WebKit that need not be at once - the window stayed at
+opacity 0 until something else asked for a frame.
+
+Escape closes it, focus is held inside while it is open and handed back to the
+menu button after - not to the link that opened it, which is inert by then.
+
 ## Motion
 
 Scroll reveals, the outlined heading, the image marquee and the hover states are
@@ -240,7 +286,14 @@ large text needs). To fix it without touching any position, add to `styles.css`:
 1. **"ShEudle A call"** in the comp is spelled `Schedule A Call`.
 2. **"Victor Chaves cerrejon"** ships as `Victor Chaves Cerrejón`, with the
    accent his name takes.
-3. The comp is a static frame, so the motion below is additional by request.
+3. **"CURRICULUM VIATE"** and **"LENGUAGES"** in About Info ship as
+   `Curriculum Vitae` and `Languages`.
+4. The About window's opening paragraphs wrap to their column rather than
+   keeping the comp's hand-placed line breaks, which only hold at one width.
+5. The window's glass is blurred by 12px, not the comp's 3.3px. At comp size
+   3.3 is enough to wash the page out; on a phone the window covers nearly the
+   whole screen and the display type behind it read straight through.
+6. The comp is a static frame, so the motion below is additional by request.
 
 ## Motion
 
