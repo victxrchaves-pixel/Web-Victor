@@ -33,6 +33,7 @@ assets/img/large/*.webp the same shots at 705px tall, for an expanded row
 assets/img/about-portrait.webp  the portrait in the About window
 assets/icons/*.svg      logo, menu, arrow, status dot
 assets/icons/soft/*.svg the ten tool marks in About
+assets/icons/social/*.svg  Instagram, TikTok and LinkedIn, in the About card
 assets/cv/              where the CV PDF goes (see below)
 assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
 ```
@@ -51,9 +52,10 @@ Everything editable lives in `index.html`:
   705px-tall twin in `assets/img/large/` for the expanded strip, whose `--w` is
   `470 x (thumbnail width / thumbnail height)`.
 - **Services** — the four `<ul class="services__col">` lists.
-- **Links** — the social chips point at generic profile URLs
-  (`https://www.instagram.com/` and friends). Replace them with the real
-  profiles. The email is already `itsvictxrchaves@gmail.com`.
+- **Links** — the social chips in the hero and the footer, and the three icons
+  in the About window, all point at `@chavescerrejon` on Instagram, TikTok and
+  LinkedIn. The landing's email is `itsvictxrchaves@gmail.com`; About carries
+  the personal one, `chavescerrejon@gmail.com`.
 - **Row copy** — an open row shows a `.row__desc` paragraph. BareFolio's is the
   designer's own; the other three are placeholders written from what their
   images show, and should be replaced with real project copy.
@@ -189,7 +191,8 @@ scales with everything else and hangs from y=90, just clear of the pill.
 
 Three things are worth knowing.
 
-**Only the information moves.** The portrait and the contact lines are
+**Only the information moves.** The portrait, the three social icons and the
+contact lines are
 `position: absolute` against the dialog while the text beside them is inside the
 scroller, so the block stays put without `sticky` and without a second scroll
 container. On the phone column it drops back into the flow between the opening

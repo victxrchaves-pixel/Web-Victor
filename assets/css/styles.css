@@ -866,7 +866,7 @@ hr { border: 0; margin: 0; }
   left: calc(717 * var(--u));
   top: calc(61 * var(--u));
   width: calc(239 * var(--u));
-  height: calc(503 * var(--u));
+  height: calc(463.305 * var(--u));
   max-height: calc(100% - 72 * var(--u));
   display: flex;
   flex-direction: column;
@@ -884,11 +884,28 @@ hr { border: 0; margin: 0; }
   font-family: 'Geist Mono', ui-monospace, monospace;
   font-weight: 500;
   font-size: calc(18 * var(--u)) !important;
-  line-height: calc(26 * var(--u)) !important;
+  line-height: calc(23 * var(--u)) !important;
 }
-.about__key { font-weight: 700; margin-top: calc(20 * var(--u)) !important; }
+.about__key { font-weight: 700; margin-top: calc(19 * var(--u)) !important; }
 .about__val a { transition: color var(--dur-ui) ease; }
 @media (hover: hover) and (pointer: fine) { .about__val a:hover { color: var(--live); } }
+
+.about__social {
+  display: flex;
+  gap: calc(7.381 * var(--u));
+  margin-top: calc(19 * var(--u));
+}
+.about__social a {
+  display: block;
+  width: calc(25.305 * var(--u));
+  height: calc(25.305 * var(--u));
+  opacity: 0.8;
+  transition: opacity var(--dur-ui) ease, transform var(--dur-ui) var(--ease-out);
+}
+.about__social img { width: 100%; height: 100%; }
+@media (hover: hover) and (pointer: fine) {
+  .about__social a:hover { opacity: 1; transform: translateY(calc(-2 * var(--u))); }
+}
 
 /* ---------- The guide rail ----------
    Thin on purpose: it should read as a margin mark, not as a control. It
@@ -1213,7 +1230,16 @@ hr { border: 0; margin: 0; }
     font-size: calc(19 * var(--u)) !important;
     line-height: calc(26 * var(--u)) !important;
   }
-  .about__key { margin-top: calc(21 * var(--u)) !important; }
+  .about__key { margin-top: calc(19 * var(--u)) !important; }
+
+  .about__social {
+    gap: 0;
+    margin-left: calc(-9 * var(--u));
+  }
+  .about__social a {
+    box-sizing: content-box;
+    padding: calc(9 * var(--u));
+  }
 }
 
 /* Between the phone column and the desktop canvas there is nothing to
