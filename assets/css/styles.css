@@ -650,7 +650,7 @@ hr { border: 0; margin: 0; }
 }
 
 /* ---------- About: a pop-up over the landing ----------
-   Traced from Figma · About View (450:1399). The window is 1036 x 647 comp
+   Traced from Figma · About View (450:1399). The window is 1036 x 733 comp
    pixels and rides the same --u as the canvas behind it, so it scales with
    everything else. Two things are deliberate here. The right-hand block is
    positioned against the dialog rather than placed inside the scroller, so it
@@ -663,12 +663,12 @@ hr { border: 0; margin: 0; }
   inset: 0;
   z-index: 55;
   display: none;
-  /* The comp hangs the window from y=129, just clear of the pill, rather than
+  /* The comp hangs the window from y=90, just clear of the pill, rather than
      centring it; holding that and capping the height keeps the pill in front
      of the window instead of on top of it on a short screen. */
   align-items: flex-start;
   justify-content: center;
-  padding: calc(129 * var(--u)) 0 calc(24 * var(--u));
+  padding: calc(90 * var(--u)) 0 calc(24 * var(--u));
   --ink: #fafafa;
 }
 /* :target is the no-JS way in: the menu's About link is a real fragment link,
@@ -690,9 +690,9 @@ hr { border: 0; margin: 0; }
 .about__dialog {
   position: relative;
   width: calc(1036 * var(--u));
-  height: calc(647 * var(--u));
+  height: calc(733 * var(--u));
   max-width: calc(100vw - 32px);
-  max-height: calc(100svh - 153 * var(--u));
+  max-height: calc(100svh - 114 * var(--u));
   padding: calc(11 * var(--u)) calc(18 * var(--u));
   display: flex;
   flex-direction: column;
@@ -747,8 +747,8 @@ hr { border: 0; margin: 0; }
 .about__scroll {
   flex: 1 1 auto;
   min-height: 0;
-  width: calc(610 * var(--u));
-  padding: calc(20 * var(--u)) 0 calc(26 * var(--u)) calc(39 * var(--u));
+  width: calc(633 * var(--u));
+  padding: calc(20 * var(--u)) 0 calc(26 * var(--u)) calc(62 * var(--u));
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -863,17 +863,17 @@ hr { border: 0; margin: 0; }
 
 .about__side {
   position: absolute;
-  left: calc(694 * var(--u));
+  left: calc(717 * var(--u));
   top: calc(61 * var(--u));
-  width: calc(285 * var(--u));
-  height: calc(570 * var(--u));
+  width: calc(239 * var(--u));
+  height: calc(503 * var(--u));
   max-height: calc(100% - 72 * var(--u));
   display: flex;
   flex-direction: column;
 }
 .about__photo {
-  width: 100%;
-  height: calc(382 * var(--u));
+  width: calc(237 * var(--u));
+  height: calc(318 * var(--u));
   flex: 0 1 auto;
   min-height: 0;
   object-fit: cover;
@@ -881,10 +881,10 @@ hr { border: 0; margin: 0; }
 .about__card { flex: none; margin-top: calc(19 * var(--u)); }
 .about__card p { margin: 0; font-size: calc(15 * var(--u)); line-height: calc(20 * var(--u)); }
 .about__name {
-  font-family: 'Geist', system-ui, sans-serif;
-  font-weight: 700;
-  font-size: calc(24 * var(--u)) !important;
-  line-height: calc(29 * var(--u)) !important;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-weight: 500;
+  font-size: calc(18 * var(--u)) !important;
+  line-height: calc(26 * var(--u)) !important;
 }
 .about__key { font-weight: 700; margin-top: calc(20 * var(--u)) !important; }
 .about__val a { transition: color var(--dur-ui) ease; }
@@ -897,10 +897,10 @@ hr { border: 0; margin: 0; }
 
 .about__rail {
   position: absolute;
-  left: calc(20 * var(--u));
+  left: calc(28 * var(--u));
   top: calc(61 * var(--u));
   bottom: calc(11 * var(--u));
-  width: calc(16 * var(--u));
+  width: calc(18 * var(--u));
 }
 .about__rail-track,
 .about__rail-fill {
@@ -1210,8 +1210,8 @@ hr { border: 0; margin: 0; }
   .about__card { margin-top: calc(17 * var(--u)); }
   .about__card p { font-size: calc(15 * var(--u)); line-height: calc(21 * var(--u)); }
   .about__name {
-    font-size: calc(22 * var(--u)) !important;
-    line-height: calc(28 * var(--u)) !important;
+    font-size: calc(19 * var(--u)) !important;
+    line-height: calc(26 * var(--u)) !important;
   }
   .about__key { margin-top: calc(21 * var(--u)) !important; }
 }

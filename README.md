@@ -184,8 +184,8 @@ time the pointer settles on it, or when it opens.
 About is a window over the landing, not a page: `#about` sits at the end of
 `index.html`, outside the canvas, and the menu's About link opens it. Traced
 from Figma · About View (`450:1399`) for the window, About Info (`448:507`) for
-the copy; the window is 1036 x 647 comp pixels and rides the same `--u`, so it
-scales with everything else and hangs from y=129, just clear of the pill.
+the copy; the window is 1036 x 733 comp pixels and rides the same `--u`, so it
+scales with everything else and hangs from y=90, just clear of the pill.
 
 Three things are worth knowing.
 
