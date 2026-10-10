@@ -185,21 +185,32 @@ time the pointer settles on it, or when it opens.
 
 About is a window over the landing, not a page: `#about` sits at the end of
 `index.html`, outside the canvas, and the menu's About link opens it. Traced
-from Figma · About View (`450:1399`) for the window, About Info (`448:507`) for
-the copy; the window is 1036 x 733 comp pixels and rides the same `--u`, so it
-scales with everything else and hangs from y=90, just clear of the pill.
+from Figma · About View (`450:1399`) for the window, the phone About
+(`450:1797`) for the small one, About Info (`448:507`) for the copy. The wide
+window is 1036 x 733 comp pixels and rides the same `--u`, so it scales with
+everything else and hangs from y=90, just clear of the pill. The phone one goes
+full bleed - 402 comp pixels is the whole column - and sits on the bottom edge
+as a sheet, held far enough down to leave a strip of the dimmed page to tap.
 
-Three things are worth knowing.
+Four things are worth knowing.
 
 **Only the information moves.** The portrait, the three social icons and the
-contact lines are
-`position: absolute` against the dialog while the text beside them is inside the
-scroller, so the block stays put without `sticky` and without a second scroll
-container. On the phone column it drops back into the flow between the opening
-lines and the record, where there is no room beside them.
+contact lines are `position: absolute` against the dialog while the text beside
+them is inside the scroller, so the block stays put without `sticky` and without
+a second scroll container. The phone comp makes that same block the head of the
+column - portrait beside the name, the contact at the foot of it - so it leads
+the markup and the desktop position is the one that is lifted out.
+
+**The phone reads the record in a different order.** The wide comp puts Events
+second, the phone one fourth. `.about__sections` is a flex column, so the order
+is CSS rather than a second copy of the markup; the rail then re-hangs its own
+marks by measured position, so what the eye sees and what the tab key does stay
+the same.
 
 **The rail is the scrollbar.** The real one is taken away and the left gutter
-carries a 1px track instead. The bright segment on it is the window you are
+carries a 1px track instead. The phone comp leaves no gutter - the column needs
+its full 366 for the portrait and the name beside it - so there the rail goes
+under the window's own padding, against the edge, with smaller marks. The bright segment on it is the window you are
 looking through - its length is how much of the information fits on screen, its
 place is where that is - and each tick is a section you can jump to, named for
 a screen reader by its `data-about-sec`. Ticks and segment share one scale

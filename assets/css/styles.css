@@ -768,8 +768,13 @@ hr { border: 0; margin: 0; }
 .about__intro p { margin: 0; }
 .about__intro p + p { margin-top: calc(20 * var(--u)); }
 
-.about__sections { margin-top: calc(86 * var(--u)); width: calc(571 * var(--u)); }
-.about__sec + .about__sec { margin-top: calc(32 * var(--u)); }
+.about__sections {
+  margin-top: calc(86 * var(--u));
+  width: calc(571 * var(--u));
+  display: flex;
+  flex-direction: column;
+  gap: calc(32 * var(--u));
+}
 
 .about__line {
   width: calc(572 * var(--u));
@@ -1159,93 +1164,130 @@ hr { border: 0; margin: 0; }
   .footer .chips { display: block; }
 
   /* ---------- About, on the phone column ----------
-     The comp only draws the window at desktop size. Here it becomes a sheet
-     that hangs under the pill: one column, the block that stays put on the
-     wide canvas back in the flow between the opening lines and the record,
-     and the rail still in the gutter it was given. */
+     Traced from Figma · the phone About (450:1797). The window goes full
+     bleed - 402 comp pixels is the whole column - and sits on the bottom edge
+     as a sheet, with the pill still above it. The block that is pinned beside
+     the information on the wide canvas becomes the head of the column here,
+     portrait beside the name, so it leads the markup; the desktop position is
+     the one that is lifted out of the flow.
 
-  .about { align-items: flex-end; padding: 0 0 calc(16 * var(--u)); }
+     The comp leaves no gutter: everything starts at the window's own 18px
+     padding and the column is its full 366 wide, which the portrait and the
+     name beside it need to the last pixel. So the rail goes under that
+     padding, against the window's edge, with marks small enough to stay out
+     of the text - a hairline at the margin, which is what it was asked to
+     be. */
+
+  .about { align-items: flex-end; padding: 0; }
 
   .about__dialog {
-    width: calc(372 * var(--u));
-    height: calc(100svh - 96 * var(--u));
+    width: calc(402 * var(--u));
+    /* Edge to edge and sitting on the bottom, but held far enough down that
+       a strip of the dimmed page is left under the pill: full bleed would
+       leave nowhere to tap to close, and the dash alone is a small target. */
+    height: calc(100svh - 108 * var(--u));
     max-width: none;
     max-height: none;
-    padding: calc(13 * var(--u)) calc(15 * var(--u));
+    padding: calc(11 * var(--u)) calc(18 * var(--u))
+             max(calc(11 * var(--u)), env(safe-area-inset-bottom));
+    border-radius: calc(5 * var(--u)) calc(5 * var(--u)) 0 0;
   }
 
   .about__scroll {
     width: 100%;
-    padding: calc(16 * var(--u)) calc(8 * var(--u)) calc(22 * var(--u)) calc(22 * var(--u));
+    padding: 0 0 calc(22 * var(--u));
   }
 
   .about__rail {
-    left: calc(4 * var(--u));
-    top: calc(63 * var(--u));
-    bottom: calc(13 * var(--u));
+    left: 0;
+    top: calc(61 * var(--u));
+    bottom: calc(11 * var(--u));
+    width: calc(14 * var(--u));
+  }
+  /* Against the window's own edge the marks have to stay out of the text. */
+  .about__tick::before { width: max(5px, calc(6 * var(--u))); }
+  .about__tick.is-current::before { width: max(8px, calc(9 * var(--u))); }
+  @media (hover: hover) and (pointer: fine) {
+    .about__tick:hover::before { width: max(8px, calc(9 * var(--u))); }
   }
 
-  .about__intro {
-    width: 100%;
-    font-size: calc(16 * var(--u));
-    line-height: calc(22 * var(--u));
-  }
-  .about__intro p + p { margin-top: calc(22 * var(--u)); }
-
-  .about__sections { width: 100%; margin-top: calc(40 * var(--u)); }
-  .about__line { width: 100%; }
-
-  /* No room for two columns: the label becomes a heading over its block. */
-  .about__row {
-    grid-template-columns: 1fr;
-    row-gap: calc(9 * var(--u));
-  }
-  .about__row--cv {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    row-gap: 0;
-  }
-  .about__label {
-    font-size: calc(14 * var(--u));
-    line-height: calc(19 * var(--u));
-  }
-  .about__body {
-    width: 100%;
-    font-size: calc(16 * var(--u));
-    line-height: calc(22 * var(--u));
-  }
-  .about__body > .about__when:not(:first-child) { margin-top: calc(22 * var(--u)); }
+  /* ---------- The head of the column ---------- */
 
   .about__side {
     position: static;
     width: 100%;
-    height: auto;
+    height: calc(210 * var(--u));
     max-height: none;
-    margin-top: calc(38 * var(--u));
+    flex-direction: row;
+    align-items: flex-end;
+    gap: calc(19 * var(--u));
   }
   .about__photo {
     flex: none;
-    width: calc(220 * var(--u));
-    height: calc(295 * var(--u));
+    width: calc(156 * var(--u));
+    height: calc(210 * var(--u));
   }
-  .about__card { margin-top: calc(17 * var(--u)); }
-  .about__card p { font-size: calc(15 * var(--u)); line-height: calc(21 * var(--u)); }
+  /* The name sits at the top of its column and the contact at the foot of it,
+     which is the comp's 116px gap measured rather than hard-coded. */
+  .about__card {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  /* The comp sets this at 14.385, which fills its 191 column to the last
+     pixel; a hair under keeps it on one line whatever the rasteriser does. */
   .about__name {
-    font-size: calc(19 * var(--u)) !important;
-    line-height: calc(26 * var(--u)) !important;
+    font-size: calc(14 * var(--u)) !important;
+    line-height: calc(19 * var(--u)) !important;
+    white-space: nowrap;
   }
-  .about__key { margin-top: calc(19 * var(--u)) !important; }
+  .about__card p { font-size: calc(11.987 * var(--u)); line-height: calc(16 * var(--u)); }
+  .about__key { margin-top: calc(15 * var(--u)) !important; }
 
   .about__social {
+    --soc: 34.5;
     gap: 0;
-    margin-left: calc(-9 * var(--u));
+    margin-top: 0;
+    margin-left: calc(-6 * var(--u));
   }
   .about__social a {
     box-sizing: content-box;
-    padding: calc(9 * var(--u));
+    padding: calc(6 * var(--u));
   }
-}
 
+  /* ---------- The information ---------- */
+
+  .about__intro {
+    width: 100%;
+    margin-top: calc(30 * var(--u));
+  }
+
+  .about__sections { width: 100%; margin-top: calc(23 * var(--u)); }
+  .about__line { width: 100%; }
+
+  /* No room for two columns: the label becomes a heading over its block. The
+     comp also reads the record in a different order here. */
+  .about__row {
+    grid-template-columns: 1fr;
+    row-gap: calc(10 * var(--u));
+  }
+  .about__row--cv { grid-template-columns: 1fr; }
+  .about__body { width: calc(312 * var(--u)); max-width: 100%; }
+  .about__body--end { width: calc(320 * var(--u)); max-width: 100%; }
+  .about__soft { width: calc(181.5 * var(--u)); }
+
+  #about-cv         { order: 1; }
+  #about-education  { order: 2; }
+  #about-employment { order: 3; }
+  #about-events     { order: 4; }
+  #about-skills     { order: 5; }
+  #about-software   { order: 6; }
+  #about-languages  { order: 7; }
+}
 /* Between the phone column and the desktop canvas there is nothing to
    interpolate: the two comps are different layouts, so they simply swap. */
 

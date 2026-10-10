@@ -418,30 +418,40 @@
 
     // Everything the rail draws is a fraction of the whole content, so the
     // ticks and the window segment share one scale and always line up.
+    var placed = [];
+
     function layoutRail() {
       var total = aboutScroll.scrollHeight;
       if (!total) return;
+      placed = [];
       marks.forEach(function (el, i) {
         ticks[i].hidden = !!el.hidden;
         if (el.hidden) return;
-        ticks[i].style.setProperty('--t', Math.min(0.995, offsetOf(el) / total));
+        var at = offsetOf(el);
+        ticks[i].style.setProperty('--t', Math.min(0.995, at / total));
+        placed.push({ i: i, at: at });
       });
+      placed.sort(function (a, b) { return a.at - b.at; });
+      // The phone comp reads the record in a different order from the wide
+      // one, which CSS does with `order`. The rail answers to the eye, not to
+      // the markup, so its marks are re-hung in the order they are seen.
+      placed.forEach(function (o) { aboutRail.appendChild(ticks[o.i]); });
       drawRail();
     }
 
     function drawRail() {
       var total = aboutScroll.scrollHeight;
       var seen = aboutScroll.clientHeight;
-      if (!total) return;
+      if (!total || !placed.length) return;
       aboutFill.style.setProperty('--p0', aboutScroll.scrollTop / total);
       aboutFill.style.setProperty('--ph', Math.min(1, seen / total));
 
       // The section you are in is the last one whose rule has passed the top
       // of the window, with a little tolerance for a jump that lands short.
       var probe = aboutScroll.scrollTop + padTop() + 4;
-      var current = 0;
-      marks.forEach(function (el, i) { if (!el.hidden && offsetOf(el) <= probe) current = i; });
-      if (aboutScroll.scrollTop + seen >= total - 2) current = marks.length - 1;
+      var current = placed[0].i;
+      placed.forEach(function (o) { if (o.at <= probe) current = o.i; });
+      if (aboutScroll.scrollTop + seen >= total - 2) current = placed[placed.length - 1].i;
       ticks.forEach(function (tick, i) { tick.classList.toggle('is-current', i === current); });
     }
 
