@@ -1247,7 +1247,10 @@ html:has(.about:target) .nav { pointer-events: none; }
     height: 100svh;
     max-width: none;
     max-height: none;
-    padding: max(calc(11 * var(--u)), env(safe-area-inset-top))
+    /* The comp drops the whole window 36 lower on this canvas: the head sits
+       at 47 rather than 11, which on a full-screen sheet is the air the status
+       bar and the notch want anyway. */
+    padding: max(calc(47 * var(--u)), env(safe-area-inset-top))
              calc(18 * var(--u))
              max(calc(11 * var(--u)), env(safe-area-inset-bottom));
     border-radius: 0;
@@ -1257,6 +1260,10 @@ html:has(.about:target) .nav { pointer-events: none; }
     width: 100%;
     padding: 0 0 calc(22 * var(--u));
   }
+
+  /* The head is inset further than the information under it - 31 against 18 -
+     so the dash comes in off the corner. */
+  .about__head { margin-inline: calc(13 * var(--u)); }
 
   /* The dash is the only way out now that the bar is gone, so it gets a
      target a thumb can hit without moving where it is drawn. */
@@ -1268,7 +1275,7 @@ html:has(.about:target) .nav { pointer-events: none; }
 
   .about__rail {
     left: 0;
-    top: calc(50 * var(--u) + max(calc(11 * var(--u)), env(safe-area-inset-top)));
+    top: calc(50 * var(--u) + max(calc(47 * var(--u)), env(safe-area-inset-top)));
     bottom: max(calc(11 * var(--u)), env(safe-area-inset-bottom));
     width: calc(14 * var(--u));
   }

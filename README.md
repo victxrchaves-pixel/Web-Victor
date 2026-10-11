@@ -196,8 +196,10 @@ from Figma · About View (`450:1399`) for the window, the phone About
 window is 1036 x 733 comp pixels and rides the same `--u`, so it scales with
 everything else and hangs from y=90, just clear of the pill. The phone one
 takes the whole screen: full bleed, full height, and the bar hidden while it is
-up, so the window is the view rather than something laid over it. The dash is
-then the only way out, so it carries a 44px target under the comp's 24px mark.
+up, so the window is the view rather than something laid over it. Its head sits
+at 47 rather than 11 and is inset further than the information under it, so the
+dash comes in off the corner; it is the only way out, so it carries a 44px
+target under the comp's 24px mark.
 
 Five things are worth knowing.
 
