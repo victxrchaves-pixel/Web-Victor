@@ -93,6 +93,12 @@ Two things that technique will bite you with:
   ends up `width: auto`, not at the width its own rule set two lines earlier.
   Anything sized outside the shared rule — the nav pill — has to restate its
   box inside the mobile block.
+- **A transformed ancestor becomes the containing block for `position: fixed`
+  descendants.** Centring `.nav` on the phone column with
+  `transform: translateX(-50%)` quietly re-anchored the menu's scrim to it, and
+  `.nav` is `height: 0` — so the scrim measured 390 × 0 and the page behind the
+  open menu was never dimmed. It is centred by arithmetic instead:
+  `left: calc(50% - 201 * var(--u))`.
 
 The unit is `100vw / 402` up to 430px and then stops, so the phone column
 centres on a tablet rather than being blown up to fill it, and the desktop

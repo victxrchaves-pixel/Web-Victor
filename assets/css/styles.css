@@ -298,8 +298,11 @@ html:has(.about:target) .nav { pointer-events: none; }
   flex: none;
 }
 /* Outlined, not filled: the comp now draws these as a hairline box over the
-   panel's own glass, so they read as the landing's buttons do. The arrow is
-   white with them, and inverts with the rest on hover. */
+   panel's own glass, so they read as the landing's buttons do. Nothing but the
+   stroke - the comp's backdrop blur is left off here, because the panel
+   already blurs what is behind it and blurring a second time over its own
+   translucent black darkened the box. The arrow is white with them, and
+   inverts with the rest on hover. */
 .pill__btn {
   flex: 1;
   display: flex;
@@ -309,8 +312,6 @@ html:has(.about:target) .nav { pointer-events: none; }
   padding: calc(11.468 * var(--u)) calc(25.484 * var(--u));
   border: 1px solid #fafafa;
   border-radius: calc(6.371 * var(--u));
-  -webkit-backdrop-filter: blur(calc(4.205 * var(--u)));
-  backdrop-filter: blur(calc(4.205 * var(--u)));
   color: #fafafa;
   font-size: calc(15 * var(--u));
   line-height: calc(20 * var(--u));
@@ -368,7 +369,12 @@ html:has(.about:target) .nav { pointer-events: none; }
 @media (hover: hover) and (pointer: fine) {
   .pill__toggle:hover .burger line { stroke: var(--live); }
   .btn--glass:hover { background: rgba(234, 234, 234, 0.44); }
-  .btn--outline:hover, .btn--outline-soft:hover { background: rgba(255, 255, 255, 0.12); }
+  /* Every outlined button here fills white and flips its ink, the way the
+     row's View Project already did; a faint wash read as nothing. */
+  .btn--outline:hover, .btn--outline-soft:hover {
+    background: var(--fg); color: #000; border-color: var(--fg);
+  }
+  .btn--outline:hover .btn__icon, .btn--outline-soft:hover .btn__icon { filter: invert(1); }
 }
 
 /* ---------- Hero ---------- */
@@ -1075,7 +1081,11 @@ html:has(.about:target) .nav { pointer-events: none; }
   /* The nav is fixed to the viewport, not to the frame, so it needs the
      column's own width to stay centred over it. The pill centres itself inside
      that, so it has to keep its own left against the canvas rule. */
-  .nav { width: calc(402 * var(--u)); left: 50%; transform: translateX(-50%); }
+  /* Centred by arithmetic, not by a transform: a transformed ancestor becomes
+     the containing block for its position:fixed descendants, and .nav is
+     height:0 - which collapsed the menu's scrim to nothing on this canvas and
+     left the page behind it undimmed. */
+  .nav { width: calc(402 * var(--u)); left: calc(50% - 201 * var(--u)); }
   /* A var() that cannot resolve computes to the property's initial value, not
      to the declaration above it - so the pill has to restate its whole box. */
   .pill { left: 50%; width: calc(354 * var(--u)); height: calc(46 * var(--u)); }
