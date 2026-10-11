@@ -46,6 +46,17 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { overflow-x: clip; scroll-behavior: smooth; }
+/* An overlay owns the screen while it is up. overflow:hidden on the body is
+   not enough on iOS, so the page is taken out of the scroll flow altogether
+   and put back where it was on release; main.js holds the offset. */
+html.is-locked { overflow: hidden; }
+html.is-locked body {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -140,7 +151,13 @@ hr { border: 0; margin: 0; }
   width: calc(1728 * var(--u));
   height: 0;
   z-index: 60;
+  transition: opacity 260ms var(--ease-out);
 }
+/* With the About window up, the bar answers nothing: a tap on it falls
+   through to the scrim underneath, which is what closes the window. The
+   :has() line is the same thing for the no-script way in. */
+.about-is-open .nav,
+html:has(.about:target) .nav { pointer-events: none; }
 
 .nav__scrim {
   position: fixed;
@@ -1178,19 +1195,23 @@ hr { border: 0; margin: 0; }
      of the text - a hairline at the margin, which is what it was asked to
      be. */
 
-  .about { align-items: flex-end; padding: 0; }
+  .about { align-items: stretch; padding: 0; }
+
+  /* The whole screen, with the bar out of the way: on a phone the window is
+     the view, not something laid over it. The dash is then the way out, so
+     it keeps the top corner to itself. */
+  .about-is-open .nav,
+  html:has(.about:target) .nav { opacity: 0; }
 
   .about__dialog {
     width: calc(402 * var(--u));
-    /* Edge to edge and sitting on the bottom, but held far enough down that
-       a strip of the dimmed page is left under the pill: full bleed would
-       leave nowhere to tap to close, and the dash alone is a small target. */
-    height: calc(100svh - 108 * var(--u));
+    height: 100svh;
     max-width: none;
     max-height: none;
-    padding: calc(11 * var(--u)) calc(18 * var(--u))
+    padding: max(calc(11 * var(--u)), env(safe-area-inset-top))
+             calc(18 * var(--u))
              max(calc(11 * var(--u)), env(safe-area-inset-bottom));
-    border-radius: calc(5 * var(--u)) calc(5 * var(--u)) 0 0;
+    border-radius: 0;
   }
 
   .about__scroll {
@@ -1198,10 +1219,18 @@ hr { border: 0; margin: 0; }
     padding: 0 0 calc(22 * var(--u));
   }
 
+  /* The dash is the only way out now that the bar is gone, so it gets a
+     target a thumb can hit without moving where it is drawn. */
+  .about__close {
+    box-sizing: content-box;
+    padding: calc(11 * var(--u));
+    margin: calc(-11 * var(--u));
+  }
+
   .about__rail {
     left: 0;
-    top: calc(61 * var(--u));
-    bottom: calc(11 * var(--u));
+    top: calc(50 * var(--u) + max(calc(11 * var(--u)), env(safe-area-inset-top)));
+    bottom: max(calc(11 * var(--u)), env(safe-area-inset-bottom));
     width: calc(14 * var(--u));
   }
   /* Against the window's own edge the marks have to stay out of the text. */
@@ -1227,8 +1256,9 @@ hr { border: 0; margin: 0; }
     width: calc(156 * var(--u));
     height: calc(210 * var(--u));
   }
-  /* The name sits at the top of its column and the contact at the foot of it,
-     which is the comp's 116px gap measured rather than hard-coded. */
+  /* The comp leaves 116 between the name and the contact, which on a phone
+     reads as a hole rather than as air; the contact comes up under the name
+     instead and the column is free to end above the portrait. */
   .about__card {
     flex: 1 1 auto;
     min-width: 0;
@@ -1236,8 +1266,8 @@ hr { border: 0; margin: 0; }
     margin-top: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
   }
+  .about__contact { margin-top: calc(26 * var(--u)); }
   /* The comp sets this at 14.385, which fills its 191 column to the last
      pixel; a hair under keeps it on one line whatever the rasteriser does. */
   .about__name {

@@ -188,11 +188,22 @@ About is a window over the landing, not a page: `#about` sits at the end of
 from Figma · About View (`450:1399`) for the window, the phone About
 (`450:1797`) for the small one, About Info (`448:507`) for the copy. The wide
 window is 1036 x 733 comp pixels and rides the same `--u`, so it scales with
-everything else and hangs from y=90, just clear of the pill. The phone one goes
-full bleed - 402 comp pixels is the whole column - and sits on the bottom edge
-as a sheet, held far enough down to leave a strip of the dimmed page to tap.
+everything else and hangs from y=90, just clear of the pill. The phone one
+takes the whole screen: full bleed, full height, and the bar hidden while it is
+up, so the window is the view rather than something laid over it. The dash is
+then the only way out, so it carries a 44px target under the comp's 24px mark.
 
-Four things are worth knowing.
+Five things are worth knowing.
+
+**The landing is held still behind it.** Every overlay here - the menu and the
+About window - locks the page while it is up: `html.is-locked` takes the body
+out of the scroll flow with `position: fixed` and `main.js` holds the offset so
+it goes back exactly where it was. `overflow: hidden` on the body alone does not
+hold on iOS, which is why. A count keeps two overlays from releasing each
+other's hold, and while the About window is up the bar answers nothing - a tap
+on it falls through to the scrim, which closes the window. Anything added later
+that takes over the screen should call `lockPage()` / `unlockPage()` the same
+way.
 
 **Only the information moves.** The portrait, the three social icons and the
 contact lines are `position: absolute` against the dialog while the text beside
@@ -205,7 +216,9 @@ the markup and the desktop position is the one that is lifted out.
 second, the phone one fourth. `.about__sections` is a flex column, so the order
 is CSS rather than a second copy of the markup; the rail then re-hangs its own
 marks by measured position, so what the eye sees and what the tab key does stay
-the same.
+the same. The comp also leaves 116 between the name and the social marks, which
+on a phone reads as a hole rather than as air, so the contact block comes up
+under the name instead.
 
 **The rail is the scrollbar.** The real one is taken away and the left gutter
 carries a 1px track instead. The phone comp leaves no gutter - the column needs

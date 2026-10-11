@@ -8,6 +8,32 @@
   var setLabel = function () {};
   var updateLabel = function () {};
 
+  /* ---------- Holding the page still ----------
+     Anything that takes over the screen - the menu, the About window - owns
+     it while it is up: the landing behind must not scroll and must not answer
+     a pointer. overflow:hidden on the body alone does not hold on iOS, so the
+     page is taken out of the scroll flow and put back exactly where it was.
+     The count is there so two overlays cannot release each other's hold. */
+
+  var locks = 0;
+  var lockedAt = 0;
+
+  function lockPage() {
+    if (locks++) return;
+    lockedAt = window.scrollY || window.pageYOffset || 0;
+    document.body.style.top = (-lockedAt) + 'px';
+    document.documentElement.classList.add('is-locked');
+  }
+
+  function unlockPage() {
+    if (!locks || --locks) return;
+    document.documentElement.classList.remove('is-locked');
+    document.body.style.top = '';
+    // The page scrolls smoothly by default; putting it back is not a journey.
+    try { window.scrollTo({ top: lockedAt, left: 0, behavior: 'instant' }); }
+    catch (err) { window.scrollTo(0, lockedAt); }
+  }
+
   /* ---------- Scroll reveal (fires once per element) ---------- */
 
   var revealables = document.querySelectorAll('[data-reveal]');
@@ -77,7 +103,7 @@
     menuBtn.setAttribute('aria-expanded', 'true');
     scrim.hidden = false;
     requestAnimationFrame(function () { scrim.classList.add('is-visible'); });
-    document.body.style.overflow = 'hidden';
+    lockPage();
     setLabel('Menu');
     var first = panel.querySelector('.pill__links a');
     if (first) first.focus({ preventScroll: true });
@@ -91,7 +117,7 @@
     setFolded(true);
     menuBtn.setAttribute('aria-expanded', 'false');
     scrim.classList.remove('is-visible');
-    document.body.style.overflow = '';
+    unlockPage();
     updateLabel();
     var hide = function () { if (!menuOpen) scrim.hidden = true; };
     if (reduced) hide(); else window.setTimeout(hide, 320);
@@ -483,7 +509,8 @@
       aboutOpen = true;
       aboutReturn = document.activeElement;
       about.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('about-is-open');
+      lockPage();
       setLabel('About');
       // One forced reflow rather than a frame callback: it gives the
       // transition a start value to run from and the rail a box to measure,
@@ -505,7 +532,8 @@
       if (window.location.hash === '#about' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
-      document.body.style.overflow = '';
+      document.documentElement.classList.remove('about-is-open');
+      unlockPage();
       updateLabel();
       var hide = function () { if (!aboutOpen) about.classList.remove('is-open'); };
       if (reduced) hide(); else window.setTimeout(hide, 320);
