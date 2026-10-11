@@ -297,6 +297,9 @@ html:has(.about:target) .nav { pointer-events: none; }
   width: 100%;
   flex: none;
 }
+/* Outlined, not filled: the comp now draws these as a hairline box over the
+   panel's own glass, so they read as the landing's buttons do. The arrow is
+   white with them, and inverts with the rest on hover. */
 .pill__btn {
   flex: 1;
   display: flex;
@@ -304,14 +307,17 @@ html:has(.about:target) .nav { pointer-events: none; }
   justify-content: center;
   gap: calc(14.016 * var(--u));
   padding: calc(11.468 * var(--u)) calc(25.484 * var(--u));
+  border: 1px solid #fafafa;
   border-radius: calc(6.371 * var(--u));
-  background: #fff;
-  color: #000;
+  -webkit-backdrop-filter: blur(calc(4.205 * var(--u)));
+  backdrop-filter: blur(calc(4.205 * var(--u)));
+  color: #fafafa;
   font-size: calc(15 * var(--u));
   line-height: calc(20 * var(--u));
   text-transform: uppercase;
   white-space: nowrap;
-  transition: background var(--dur-ui) ease, transform var(--dur-fast) var(--ease-out);
+  transition: background var(--dur-ui) ease, color var(--dur-ui) ease,
+              border-color var(--dur-ui) ease, transform var(--dur-fast) var(--ease-out);
 }
 .pill__btn img { width: calc(24 * var(--u)); height: calc(24 * var(--u)); flex: none; }
 .pill__btn:active { transform: scale(0.98); }
@@ -331,7 +337,8 @@ html:has(.about:target) .nav { pointer-events: none; }
 
 @media (hover: hover) and (pointer: fine) {
   .pill__links a:hover { color: var(--live); }
-  .pill__btn:hover { background: rgba(255, 255, 255, 0.82); }
+  .pill__btn:hover { background: var(--fg); color: #000; border-color: var(--fg); }
+  .pill__btn:hover img { filter: invert(1); }
 }
 
 /* Buttons keep the comp's box and the comp's inner coordinates. */
@@ -1075,11 +1082,33 @@ html:has(.about:target) .nav { pointer-events: none; }
   /* Line breaks the wide comp needs and the narrow one does not. */
   .u-desk { display: none; }
   .nav__cta { display: none; }
-  .pill.is-open { width: calc(372 * var(--u)); }
+  /* The phone comp holds the panel at its closed width: it grows downwards
+     and not sideways. */
+  .pill { gap: 0; }
+  .pill.is-open { width: calc(354 * var(--u)); }
   /* One above the other, each spanning the panel inside its padding. */
-  .pill__actions { flex-direction: column; gap: calc(10 * var(--u)); }
-  .pill__btn { flex: none; width: 100%; }
-  .pill__links li:not(:last-child) { padding-bottom: calc(12 * var(--u)); }
+  /* The rules stop short of the panel's edge here rather than bleeding past
+     it, and the type comes down from 18 to 15. */
+  .pill__links {
+    width: calc(314 * var(--u));
+    margin-inline: 0;
+    margin-top: calc(26 * var(--u));
+  }
+  .pill__links li { padding: calc(5 * var(--u)) calc(18 * var(--u)); }
+  .pill__links li:not(:last-child) { padding-bottom: calc(11 * var(--u)); }
+  .pill__links li:last-child { padding-block: calc(10 * var(--u)); }
+  .pill__links a { font-size: calc(15 * var(--u)); line-height: calc(20 * var(--u)); }
+
+  .pill__actions {
+    flex-direction: column;
+    gap: calc(10 * var(--u));
+    width: calc(282 * var(--u));
+    margin-top: calc(12 * var(--u));
+  }
+  .pill__btn { flex: none; width: 100%; padding-block: calc(8 * var(--u)); }
+  /* The comp puts the call on top here, the other way round from the wide
+     panel; CSS does that rather than a second copy of the markup. */
+  .pill__actions a:nth-child(2) { order: -1; }
 
   /* Not in the phone comp: the hero photo runs straight into the dark, so it
      is masked away over its last third rather than stopping on an edge. */
