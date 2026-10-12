@@ -208,7 +208,9 @@
     };
 
     updateLabel = function () {
-      if (menuOpen) return;
+      // A window over the landing names itself in the bar, and locking the
+      // page fires one last scroll event that would otherwise undo that.
+      if (menuOpen || openSheetEl) return;
       // A section takes over once its top passes three quarters down the
       // viewport; at the very bottom the last one always wins, since a short
       // page can never scroll its threshold past the probe.
@@ -400,11 +402,114 @@
     });
   });
 
-  /* ---------- About: a pop-up over the landing ----------
-     The window is a fragment target, so it opens and closes without this file.
-     What JS adds is the fade, the focus handling, and the rail: a minimap of
-     the information, where the bright segment is the part you are looking at
-     and every tick is a section you can jump to. */
+  /* ---------- Windows over the landing ----------
+     About and Contact are the same thing twice: a window that takes the
+     screen, holds the page still behind it, and gives it back where it was.
+     Each is a .sheet with its own content; everything below is the shell they
+     share. Each one is a fragment target too, so the menu's links work and
+     both close controls lead back out with the script off. */
+
+  var sheets = Array.prototype.slice.call(document.querySelectorAll('.sheet'));
+  var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var openSheetEl = null;
+  var sheetReturn = null;
+  var onSheetOpen = {};          /* id -> what that window wants doing on open */
+
+  function openSheet(el) {
+    if (!el || openSheetEl === el) return;
+    if (openSheetEl) closeSheet(false);
+    openSheetEl = el;
+    sheetReturn = document.activeElement;
+    el.classList.add('is-open');
+    document.documentElement.classList.add('sheet-is-open');
+    lockPage();
+    setLabel(el.getAttribute('data-sheet-label') || 'Menu');
+    // One forced reflow rather than a frame callback: it gives the transition
+    // a start value to run from and any measuring a box to work on, both
+    // synchronously. A requestAnimationFrame would do the same only once the
+    // engine chooses to paint, which it need not do at once.
+    void el.offsetWidth;
+    el.classList.add('is-visible');
+    if (onSheetOpen[el.id]) onSheetOpen[el.id]();
+    var close = el.querySelector('.sheet__close');
+    if (close) close.focus({ preventScroll: true });
+  }
+
+  function closeSheet(returnFocus) {
+    var el = openSheetEl;
+    if (!el) return;
+    openSheetEl = null;
+    el.classList.remove('is-visible');
+    document.documentElement.classList.remove('sheet-is-open');
+    // The hash would hold it open through :target, so it goes with it.
+    if (window.location.hash === '#' + el.id && window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    unlockPage();
+    updateLabel();
+    var hide = function () { if (openSheetEl !== el) el.classList.remove('is-open'); };
+    if (reduced) hide(); else window.setTimeout(hide, 320);
+    // The link that opened this lives in the menu, which is closed and inert
+    // by now, so focusing it would quietly do nothing. The button that owns
+    // the menu is where the caret belongs.
+    var back = sheetReturn;
+    if (back && back.closest && back.closest('#navPanel')) back = menuBtn;
+    if (returnFocus && back && back.focus) back.focus({ preventScroll: true });
+    sheetReturn = null;
+  }
+
+  if (sheets.length) {
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target || !target.closest) return;
+
+      var opener = target.closest('[data-sheet-open]');
+      if (opener) {
+        var wanted = document.querySelector(opener.getAttribute('href'));
+        if (wanted && wanted.classList.contains('sheet')) {
+          event.preventDefault();
+          closeMenu(false);
+          openSheet(wanted);
+          return;
+        }
+      }
+      if (target.closest('.sheet__scrim, .sheet__close')) {
+        event.preventDefault();
+        closeSheet(true);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (!openSheetEl) return;
+      if (event.key === 'Escape') { closeSheet(true); return; }
+      if (event.key !== 'Tab') return;
+      // aria-modal only tells assistive tech; the tab ring has to be held here.
+      var items = Array.prototype.filter.call(
+        openSheetEl.querySelectorAll(FOCUSABLE),
+        function (el) { return el.offsetParent !== null || el === document.activeElement; }
+      );
+      if (!items.length) return;
+      var first = items[0];
+      var last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    });
+
+    // Landing on a window's own fragment with JS on: take it over so it
+    // behaves like any other opening, rather than being held open by the hash.
+    var landed = window.location.hash && document.querySelector(window.location.hash);
+    if (landed && landed.classList.contains('sheet')) {
+      landed.classList.add('is-visible');
+      openSheet(landed);
+    }
+  }
+
+  /* ---------- The About window's rail ----------
+     A minimap of the information: the bright segment is the part you are
+     looking at and every tick is a section you can jump to. */
 
   var about = document.getElementById('about');
   var aboutScroll = document.getElementById('aboutScroll');
@@ -412,8 +517,6 @@
   var aboutFill = document.getElementById('aboutFill');
 
   if (about && aboutScroll && aboutRail && aboutFill) {
-    var aboutOpen = false;
-    var aboutReturn = null;
     var marks = Array.prototype.slice.call(aboutScroll.querySelectorAll('[data-about-sec]'));
     var ticks = marks.map(function (el) {
       var tick = document.createElement('button');
@@ -496,104 +599,20 @@
       window.fetch(dl.getAttribute('href'), { method: 'HEAD' }).then(function (res) {
         if (res.ok) return;
         sec.hidden = true;
-        if (aboutOpen) layoutRail();
+        if (openSheetEl === about) layoutRail();
       }).catch(function () {});
     }
 
-    /* ---------- Opening and closing ---------- */
+    onSheetOpen.about = function () { layoutRail(); checkCv(); };
 
-    var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-    function openAbout() {
-      if (aboutOpen) return;
-      aboutOpen = true;
-      aboutReturn = document.activeElement;
-      about.classList.add('is-open');
-      document.documentElement.classList.add('about-is-open');
-      lockPage();
-      setLabel('About');
-      // One forced reflow rather than a frame callback: it gives the
-      // transition a start value to run from and the rail a box to measure,
-      // both synchronously. A requestAnimationFrame would do the same only
-      // once the engine chooses to paint, which it need not do at once.
-      void about.offsetWidth;
-      about.classList.add('is-visible');
-      layoutRail();
-      checkCv();
-      var close = document.getElementById('aboutClose');
-      if (close) close.focus({ preventScroll: true });
-    }
-
-    function closeAbout(returnFocus) {
-      if (!aboutOpen) return;
-      aboutOpen = false;
-      about.classList.remove('is-visible');
-      // The hash would hold it open through :target, so it goes with it.
-      if (window.location.hash === '#about' && window.history.replaceState) {
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-      document.documentElement.classList.remove('about-is-open');
-      unlockPage();
-      updateLabel();
-      var hide = function () { if (!aboutOpen) about.classList.remove('is-open'); };
-      if (reduced) hide(); else window.setTimeout(hide, 320);
-      // The link that opened this lives in the menu, which is closed and inert
-      // by now, so focusing it would quietly do nothing. The button that owns
-      // the menu is where the caret belongs.
-      var back = aboutReturn;
-      if (back && back.closest && back.closest('#navPanel')) back = menuBtn;
-      if (returnFocus && back && back.focus) back.focus({ preventScroll: true });
-      aboutReturn = null;
-    }
-
-    document.addEventListener('click', function (event) {
-      var opener = event.target.closest('[data-about-open]');
-      if (opener) {
-        event.preventDefault();
-        closeMenu(false);
-        openAbout();
-        return;
-      }
-      if (event.target.closest('.about__scrim, #aboutClose')) {
-        event.preventDefault();
-        closeAbout(true);
-      }
-    });
-
-    document.addEventListener('keydown', function (event) {
-      if (!aboutOpen) return;
-      if (event.key === 'Escape') { closeAbout(true); return; }
-      if (event.key !== 'Tab') return;
-      // aria-modal only tells assistive tech; the tab ring has to be held here.
-      var items = Array.prototype.filter.call(
-        about.querySelectorAll(FOCUSABLE),
-        function (el) { return el.offsetParent !== null || el === document.activeElement; }
-      );
-      if (!items.length) return;
-      var first = items[0];
-      var last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault(); last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault(); first.focus();
-      }
-    });
-
-    window.addEventListener('resize', function () { if (aboutOpen) layoutRail(); });
+    window.addEventListener('resize', function () { if (openSheetEl === about) layoutRail(); });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { if (aboutOpen) layoutRail(); });
+      document.fonts.ready.then(function () { if (openSheetEl === about) layoutRail(); });
     }
     // The portrait is lazy and arrives after the first measure on the phone
     // layout, where it sits in the flow and moves every section below it.
     var portrait = about.querySelector('.about__photo');
-    if (portrait) portrait.addEventListener('load', function () { if (aboutOpen) layoutRail(); });
-
-    // Landing on /#about with JS on: take it over so it behaves like any
-    // other opening, rather than being held open by the hash.
-    if (window.location.hash === '#about') {
-      about.classList.add('is-visible');
-      openAbout();
-    }
+    if (portrait) portrait.addEventListener('load', function () { if (openSheetEl === about) layoutRail(); });
   }
 
   /* ---------- Footer clock, in Barcelona time ---------- */

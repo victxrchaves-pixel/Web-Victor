@@ -187,12 +187,29 @@ on the band hands them over as it comes near.
 The large shots are not in the initial payload. A row fetches its own the first
 time the pointer settles on it, or when it opens.
 
-## The About pop-up
+## The two pop-ups
 
-About is a window over the landing, not a page: `#about` sits at the end of
-`index.html`, outside the canvas, and the menu's About link opens it. Traced
-from Figma · About View (`450:1399`) for the window, the phone About
-(`450:1797`) for the small one, About Info (`448:507`) for the copy. The wide
+About and Contact are windows over the landing, not pages: both sit at the end
+of `index.html`, outside the canvas, and the menu's links open them. They are
+the same thing twice — a `.sheet` with the shell they share (`.sheet__scrim`,
+`.sheet__dialog`, `.sheet__head`, `.sheet__close`, `.sheet__scroll`) and its own
+content inside. One controller in `main.js` opens, closes, locks and traps focus
+for whichever is up; `data-sheet-open` on a link says which, `data-sheet-label`
+on the window says what the bar should read while it is. Adding a third is a
+`.sheet` with a size rule and a link.
+
+**Contact** is traced from Figma · Contact View (`468:2538`) and Mobile Contact
+(`468:3011`): 1036 x 565.935 comp pixels, the display line and the two buttons
+down a 625 column, the marks and the address at the foot of a 239 one beside it.
+The phone comp folds the two into one and puts the address straight after the
+note, so that is the order of the markup and the wide canvas lifts the
+right-hand pair out of the flow at the comp's own coordinates. Its block is
+named `touch__` rather than `contact__`, which the landing's own contact section
+already owns.
+
+**About** is traced from Figma · About View (`450:1399`) for the window, the
+phone About (`450:1797`) for the small one, About Info (`448:507`) for the copy.
+The wide
 window is 1036 x 733 comp pixels and rides the same `--u`, so it scales with
 everything else and hangs from y=90, just clear of the pill. The phone one
 takes the whole screen: full bleed, full height, and the bar hidden while it is
@@ -238,8 +255,8 @@ a screen reader by its `data-about-sec`. Ticks and segment share one scale
 (a fraction of the whole content), so they always line up, and a hidden section
 takes its tick with it.
 
-**It opens without JavaScript.** `.about:target` is the way in, so the menu's
-`href="#about"` works on its own and the close control and the scrim are real
+**They open without JavaScript.** `.sheet:target` is the way in, so the menu's
+`href="#about"` and `href="#get-in-touch"` work on their own and the close control and the scrim are real
 links back out. With JavaScript the class takes over, the hash is left alone,
 and closing clears it if a deep link set it. Opening reveals through one forced
 reflow rather than a frame callback: a callback only runs when the engine

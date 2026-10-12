@@ -49,9 +49,9 @@
       </div>
 
       <ul class="pill__links" inert>
-        <li><a href="#about" data-about-open>About</a></li>
+        <li><a href="#about" data-sheet-open>About</a></li>
         <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#get-in-touch" data-sheet-open>Contact</a></li>
       </ul>
 
       <div class="pill__actions" inert>
@@ -375,14 +375,14 @@
   and the quick way to jump. Without JS, :target still opens it and the two
   close links still shut it.
 -->
-<div class="about" id="about">
-  <a class="about__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
+<div class="sheet about" id="about" data-sheet-label="About">
+  <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
 
-  <div class="about__dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <h2 class="u-sr-only" id="aboutTitle">About Victor Chaves</h2>
 
-    <div class="about__head">
-      <a class="about__close" href="#top" id="aboutClose">
+    <div class="sheet__head">
+      <a class="sheet__close" href="#top">
         <span class="u-sr-only">Close</span>
         <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
       </a>
@@ -395,7 +395,7 @@
       <span class="about__rail-fill" id="aboutFill" aria-hidden="true"></span>
     </nav>
 
-    <div class="about__scroll" id="aboutScroll" tabindex="0">
+    <div class="sheet__scroll about__scroll" id="aboutScroll" tabindex="0">
 
       <!-- Pinned to the dialog on the desktop canvas, where it sits beside the
            information and does not scroll with it; on the phone comp it is a
@@ -547,6 +547,69 @@
           </div>
         </section>
 
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+  Contact — the second pop-up, on the same shell as About.
+  Traced from Figma · Contact View (468:2538) for the wide window and Mobile
+  Contact (468:3011) for the small one. The wide one is 1036 x 565.935 comp
+  pixels, with the display line and the two buttons in a 625 column and the
+  marks and the address held at the foot of a 239 one beside it. On the phone
+  the two columns become one and the address joins the paragraph, which is
+  where the comp puts it, so the order of the markup is the phone's and the
+  wide canvas lifts its right-hand pair out of the flow.
+-->
+<div class="sheet sheet--touch" id="get-in-touch" data-sheet-label="Contact">
+  <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
+
+  <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <h2 class="u-sr-only" id="contactTitle">Get in touch</h2>
+
+    <div class="sheet__head">
+      <a class="sheet__close" href="#top">
+        <span class="u-sr-only">Close</span>
+        <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
+      </a>
+    </div>
+
+    <div class="sheet__scroll touch__body">
+      <p class="touch__display">Brief me<br>Something.</p>
+
+      <div class="touch__note">
+        <p class="touch__label">[ Get in touch ]</p>
+        <p class="touch__copy">Please feel free to contact me<br>
+          to discuss your project.<br>
+          I&rsquo;ll make it sharper.</p>
+      </div>
+
+      <p class="touch__mail">
+        <span class="touch__mail-key">Mail</span>
+        <a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a>
+      </p>
+
+      <ul class="touch__social">
+        <li><a href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <img src="assets/icons/social/instagram.svg" alt="" width="44" height="44"></a></li>
+        <li><a href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+          <img src="assets/icons/social/tiktok.svg" alt="" width="44" height="44"></a></li>
+        <li><a href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <img src="assets/icons/social/linkedin.svg" alt="" width="44" height="44"></a></li>
+      </ul>
+
+      <div class="touch__actions">
+        <a class="touch__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
+          <span>Send an email</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
+        <a class="touch__btn" href="https://cal.com/itsvictxrchaves/30min"
+           data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
+           data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+          <span>Schedule A Call</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
       </div>
     </div>
   </div>
