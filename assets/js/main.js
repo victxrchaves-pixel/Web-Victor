@@ -118,7 +118,10 @@
     menuBtn.setAttribute('aria-expanded', 'false');
     scrim.classList.remove('is-visible');
     unlockPage();
-    updateLabel();
+    // The menu can be opened over a window, which is still there underneath;
+    // the bar goes back to naming it rather than to naming the page.
+    if (openSheetEl) setLabel(openSheetEl.getAttribute('data-sheet-label') || '');
+    else updateLabel();
     var hide = function () { if (!menuOpen) scrim.hidden = true; };
     if (reduced) hide(); else window.setTimeout(hide, 320);
     if (returnFocus) menuBtn.focus({ preventScroll: true });
@@ -136,7 +139,12 @@
     });
 
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && menuOpen) closeMenu(true);
+      if (event.key !== 'Escape' || !menuOpen) return;
+      // The menu can be unfolded over an open window. This Escape puts the
+      // menu away and does nothing else: the handlers registered after this
+      // one - the window's, the open row's - do not get the same key.
+      event.stopImmediatePropagation();
+      closeMenu(true);
     });
 
     // Keep the open panel fitted when the viewport changes under it.
@@ -183,7 +191,7 @@
     // Measured from real elements, not comp coordinates: the two canvases put
     // these in very different places.
     var SECTIONS = [
-      { el: null,                                        text: 'ItsVictorChaves' },
+      { el: null,                                        text: 'ChavesCerrejon' },
       { el: document.querySelector('.row__toggle'),      text: 'Work' },
       { el: document.querySelector('.services .display'), text: 'What I Do' },
       { el: document.querySelector('.contact .display'), text: 'Contact' }
@@ -480,7 +488,9 @@
     });
 
     document.addEventListener('keydown', function (event) {
-      if (!openSheetEl) return;
+      // The menu can be unfolded over a window; while it is, it owns the keys
+      // and the ring, and Escape puts it away before the window.
+      if (!openSheetEl || menuOpen) return;
       if (event.key === 'Escape') { closeSheet(true); return; }
       if (event.key !== 'Tab') return;
       // aria-modal only tells assistive tech; the tab ring has to be held here.

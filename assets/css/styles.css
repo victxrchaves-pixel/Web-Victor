@@ -39,6 +39,11 @@
   --dur-fold: 620ms;
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-fold: cubic-bezier(0.65, 0, 0.35, 1);   /* ease-in-out, both ends */
+  /* A window opens with a little overshoot and shuts without one: coming out
+     should feel like something springing open, going back like something
+     being put away. */
+  --ease-pop: cubic-bezier(0.22, 1.3, 0.36, 1);
+  --ease-shut: cubic-bezier(0.4, 0, 0.9, 0.55);
   --dur-fast: 160ms;
   --dur-ui: 220ms;
 }
@@ -153,11 +158,9 @@ hr { border: 0; margin: 0; }
   z-index: 60;
   transition: opacity 260ms var(--ease-out);
 }
-/* With the About window up, the bar answers nothing: a tap on it falls
-   through to the scrim underneath, which is what closes the window. The
-   :has() line is the same thing for the no-script way in. */
-.sheet-is-open .nav,
-html:has(.sheet:target) .nav { pointer-events: none; }
+/* The bar stays live over an open window: the menu unfolds on top of it,
+   with its own scrim, and the window is still there underneath when the menu
+   closes again. */
 
 .nav__scrim {
   position: fixed;
@@ -714,7 +717,7 @@ html:has(.sheet:target) .nav { pointer-events: none; }
   -webkit-backdrop-filter: blur(2.65px);
   backdrop-filter: blur(2.65px);
   opacity: 0;
-  transition: opacity 320ms var(--ease-out);
+  transition: opacity 200ms var(--ease-shut);
 }
 
 .sheet__dialog {
@@ -733,9 +736,15 @@ html:has(.sheet:target) .nav { pointer-events: none; }
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   color: var(--ink);
+  /* The window grows out of the top edge it hangs from, which is where the
+     bar is, and falls back into it. Declaring the shut curve here and the
+     open one on .is-visible gives each direction its own: a transition is
+     the one on the state being moved to. */
+  transform-origin: 50% 0;
   opacity: 0;
-  transform: translateY(calc(14 * var(--u))) scale(0.99);
-  transition: opacity 300ms var(--ease-out), transform 420ms var(--ease-drawer);
+  transform: translateY(calc(-18 * var(--u))) scale(0.9);
+  transition: opacity 180ms var(--ease-shut) 20ms,
+              transform 240ms var(--ease-shut);
 }
 
 /* Where the glass cannot be made, the window simply turns opaque: the page
@@ -746,9 +755,13 @@ html:has(.sheet:target) .nav { pointer-events: none; }
 }
 
 .sheet:target .sheet__scrim,
-.sheet.is-visible .sheet__scrim { opacity: 1; }
+.sheet.is-visible .sheet__scrim { opacity: 1; transition: opacity 280ms var(--ease-out); }
 .sheet:target .sheet__dialog,
-.sheet.is-visible .sheet__dialog { opacity: 1; transform: none; }
+.sheet.is-visible .sheet__dialog {
+  opacity: 1;
+  transform: none;
+  transition: opacity 200ms ease-out, transform 480ms var(--ease-pop);
+}
 
 /* Each window brings its own box; everything above it is the shell. */
 .about .sheet__dialog { width: calc(1036 * var(--u)); height: calc(733 * var(--u)); }
@@ -1342,7 +1355,7 @@ html:has(.sheet:target) .nav { pointer-events: none; }
      the view, not something laid over it. The dash is then the way out, so
      it keeps the top corner to itself. */
   .sheet-is-open .nav,
-  html:has(.sheet:target) .nav { opacity: 0; }
+  html:has(.sheet:target) .nav { opacity: 0; pointer-events: none; }
 
   /* Both windows take the screen here, so the shell's own box is the one
      that counts; the selector matches the per-window rules it has to beat. */
@@ -1350,6 +1363,12 @@ html:has(.sheet:target) .nav { pointer-events: none; }
   .sheet--touch .sheet__dialog {
     width: calc(402 * var(--u));
     height: 100svh;
+  }
+  /* Filling the screen, a scale would pull the window's own edges in; from
+     the bottom it reads as the sheet it is. */
+  .sheet__dialog {
+    transform-origin: 50% 100%;
+    transform: translateY(calc(46 * var(--u))) scale(0.985);
   }
   .sheet__dialog {
     width: calc(402 * var(--u));
@@ -1540,7 +1559,7 @@ html:has(.sheet:target) .nav { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .marquee--anim .marquee__track { animation: none; }
   .sheet__scrim, .sheet__dialog, .about__rail-fill, .about__tick::before { transition: none; }
-  .sheet__dialog { transform: none; }
+  .sheet__dialog, .sheet.is-visible .sheet__dialog { transform: none; transition: none; }
   .footer__dot { animation: none; }
   .js-anim [data-reveal] { transform: none; }
   .js-anim [data-reveal].is-in { animation: revealFade 300ms ease forwards; }

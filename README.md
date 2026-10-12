@@ -54,8 +54,8 @@ Everything editable lives in `index.html`:
 - **Services** — the four `<ul class="services__col">` lists.
 - **Links** — the social chips in the hero and the footer, and the three icons
   in the About window, all point at `@chavescerrejon` on Instagram, TikTok and
-  LinkedIn. The landing's email is `itsvictxrchaves@gmail.com`; About carries
-  the personal one, `chavescerrejon@gmail.com`.
+  LinkedIn, and every `mailto:` on the site is `chavescerrejon@gmail.com`. The
+  Cal.com handle for a call is still `itsvictxrchaves`.
 - **Row copy** — an open row shows a `.row__desc` paragraph. BareFolio's is the
   designer's own; the other three are placeholders written from what their
   images show, and should be replaced with real project copy.
@@ -265,6 +265,21 @@ opacity 0 until something else asked for a frame.
 
 Escape closes it, focus is held inside while it is open and handed back to the
 menu button after - not to the link that opened it, which is inert by then.
+
+**The menu unfolds over them.** The bar stays live with a window up: opening the
+menu does not put the window away, it comes down on top of it with its own
+scrim, and closing the menu leaves the window where it was. While the menu is
+up it owns the keys and the focus ring, so its Escape stops there - that is what
+`stopImmediatePropagation` in its handler is for, since the window's own handler
+is registered after it and would otherwise see the same key. On the phone the
+bar is hidden with a window up, so this is a wide-canvas affair.
+
+**They open with a pop and shut without one.** `--ease-pop` overshoots a little
+and `--ease-shut` does not; the window grows out of the top edge it hangs from
+on the wide canvas and rises from the bottom one on the phone, where it fills
+the screen and a scale would pull its own edges in. Each direction has its own
+curve because a transition is the one declared on the state being moved to: the
+shut one sits on `.sheet__dialog`, the open one on `.sheet.is-visible`.
 
 ## Motion
 
