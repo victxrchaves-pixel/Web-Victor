@@ -606,22 +606,19 @@ hr { border: 0; margin: 0; }
    type wants. What is left to say is the size, the line it sits on, and the
    rise. */
 .row--type .row__track { gap: 0; }
-/* Closed, the row shows the same alphabet at reading size rather than
-   photographs: two lines, set tight and centred in the band. A photograph can
-   bleed past the frame and be cut, which is what the comp has the strips do; a
-   letter cannot, so this one strip is narrowed to end on the frame's edge and
-   the lines are sized to fill exactly that. */
+/* Closed, the strip is the alphabet rather than photographs of it: one line at
+   124, running off the frame's right edge exactly as the comp draws it. The
+   comp lets every row's strip bleed and be cut; this one is no different. */
 .thumbs--type {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   font-family: 'Nuvra', 'Geist', serif;
-  font-size: calc(29.21 * var(--u));
-  line-height: calc(36 * var(--u));
+  font-size: calc(124 * var(--u));
+  /* The line sits below its own font-size to put the baseline where the comp
+     has it, 115 under the strip's top. */
+  line-height: calc(137 * var(--u));
   color: var(--fg);
   white-space: nowrap;
+  overflow: hidden;
 }
-.spec__line { display: block; }
 .row__track .glyph {
   width: auto;
   font-family: 'Nuvra', 'Geist', serif;
@@ -632,12 +629,21 @@ hr { border: 0; margin: 0; }
   line-height: calc(370 * var(--u));
   height: calc(470 * var(--u));
   color: var(--fg);
-  transform: translate3d(0, calc(70 * var(--u)), 0);
-}
-.row.is-open .row__track .glyph {
   transform: none;
-  transition: opacity 200ms ease calc(var(--i) * 18ms),
-              transform var(--dur-fold) var(--ease-fold) calc(var(--i) * 18ms);
+}
+/* A photograph flies from its own thumbnail; the alphabet has no thumbnails to
+   fly from, but closed and open it is the same line of the same face at two
+   sizes - so the whole strip makes the flight at once, one transform instead of
+   fifty-two. --ts is the ratio of the two sizes, --tdx/--tdy the distance
+   between the two lines' origins. The letters only fade in behind it. */
+.row--type .row__track {
+  transform-origin: 0 0;
+  transform: translate3d(calc(var(--tdx) * var(--u)), calc(var(--tdy) * var(--u)), 0) scale(var(--ts));
+  transition: transform var(--dur-fold) var(--ease-fold);
+}
+.row--type.is-open .row__track { transform: none; }
+.row.is-open .row__track .glyph {
+  transition: opacity 200ms ease calc(var(--i) * 18ms);
 }
 
 .row.is-open .row__panel { visibility: visible; transition-delay: 0s; }
@@ -1379,12 +1385,12 @@ hr { border: 0; margin: 0; }
     height: calc(var(--mh) * var(--u));
   }
   .thumbs--type {
-    flex-direction: column;
-    justify-content: center;
-    gap: 0;
-    overflow: visible;
-    font-size: calc(20.54 * var(--u));
-    line-height: calc(25 * var(--u));
+    display: block;
+    /* The same line against the phone's taller band. It does not scroll on its
+       own: the strip is where the flight starts, so it always starts on the A. */
+    overflow: hidden;
+    font-size: calc(141.6 * var(--u));
+    line-height: calc(156.5 * var(--u));
   }
 
   /* Open, the thumbnails are invisible but still a layer: without this they
@@ -1406,8 +1412,12 @@ hr { border: 0; margin: 0; }
     font-size: calc(272 * var(--u));
     line-height: calc(252 * var(--u));
     height: calc(320 * var(--u));
-    transform: translate3d(0, calc(48 * var(--u)), 0);
+    transform: none;
   }
+  .row--type .row__track {
+    transform: translate3d(calc(var(--mtdx) * var(--u)), calc(var(--mtdy) * var(--u)), 0) scale(var(--mts));
+  }
+  .row--type.is-open .row__track { transform: none; }
 
 
   .footer .chips { display: block; }
@@ -1651,7 +1661,8 @@ hr { border: 0; margin: 0; }
   .row:has(.row__toggle:hover) .thumbs { transform: none; }
   .row, .shift, .frame, .row__panel { transition: none; }
   .row__desc, .row__cta, .row__track li,
-  .row__track .glyph, .row.is-open .row__track .glyph { transition: opacity 200ms ease; transform: none; }
+  .row__track .glyph, .row.is-open .row__track .glyph,
+  .row--type .row__track { transition: opacity 200ms ease; transform: none; }
   .row.is-open .row__desc, .row.is-open .row__cta, .row.is-open .row__track li { transition-delay: 0s; }
   .row__view { transition: opacity 160ms ease; }
   .row__sign span { transition: opacity 160ms ease; transform: none; }

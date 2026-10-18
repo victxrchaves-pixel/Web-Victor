@@ -222,17 +222,16 @@ The list runs to fourteen projects. The landing's "Work ( + )" button and the
 ### The Nuvra row is a specimen
 
 Nuvra is a typeface of his own, so that row is the face rather than photographs
-of it, open or closed. Closed, the strip holds the alphabet interleaved —
-`AaBbCc…Zz` — in two tight lines centred in the band. Open, the same alphabet
-runs at full height and scrolls sideways like any other row's strip. The row is
-marked `.row--type` and carries `data-face="Nuvra"`.
+of it, open or closed. Closed, the strip is one line of the alphabet interleaved
+— `AaBbCc…Zz` — set at 124 and running off the frame's right edge, exactly as
+the comp draws it. Open, the same line runs at 400 and scrolls sideways like any
+other row's strip. The row is marked `.row--type` and carries
+`data-face="Nuvra"`.
 
-A photograph may bleed past the frame and be cut, which is what the comp has the
-strips do; a letter may not. So this one strip is narrowed from the comp's 576
-to 529, ending exactly on the frame's edge, and the two lines are sized to fill
-precisely that (29.21 comp px on the wide canvas, 20.54 on the phone). The face
-has kerning, so those sizes were measured in the browser rather than only
-counted from the advance widths; the two agree to 0.2%.
+The closed line's size and position were read off the comp rather than guessed:
+the render of node `465:2154` puts the capital A's ink at x 1165, its cap height
+at 93px and its baseline at y 1679, which fits a 124 font-size on a text box
+starting at 1157 to within 2px across the first seven letters.
 
 Three things follow from it, and all three are general rather than special-cased:
 
@@ -244,11 +243,15 @@ Three things follow from it, and all three are general rather than special-cased
 - **The hand-over waits for the face.** `handOver()` holds the thumbnails in
   place until every shot can be drawn; with no shots to wait for it waits on
   `document.fonts.load()` instead, and only then fades them.
-- **The letters have nothing to fly from.** The other rows' shots start exactly
-  on their own thumbnail; a letter has no thumbnail, so it rises onto the line
-  instead, one after the next. The glyphs carry no `--w`/`--dx`/`--s`, so the
+- **The strip makes the flight, not the letters.** The other rows' shots each
+  start on their own thumbnail, so each carries its own `--dx`/`--dy`/`--s`.
+  Closed and open, the alphabet is the same line of the same face at two sizes,
+  so one transform does for all of it: `--ts` is the ratio of the two sizes and
+  `--tdx`/`--tdy` the distance between the two lines' origins. The letters only
+  fade in behind it. The glyphs carry no `--w`/`--dx`/`--s` of their own, so the
   track's declarations for them are invalid and fall back to `auto` and `none` —
-  which is what a line of type wants anyway.
+  which is what a line of type wants anyway. The start of the flight lands on
+  the closed line to 0.01px in both Chromium and WebKit.
 
 The open line is centred on its ink, not on the face's own box: Nuvra's ascent
 and descent make the box sit low, so the glyph's `line-height` is set below its
