@@ -47,7 +47,11 @@ Everything editable lives in `index.html`:
   `.row__panel` the toggle opens. To add a project, copy a whole `<li>`, swap
   the text and images, and shift every `--y` below it by 198.
 - **Thumbnails** — drop new files into `assets/img/` and point the `src` at
-  them. Keep the `width`/`height` attributes matching the file so the page does
+  them. A row's strip can hold any number of shots: the one thing that has to
+  be recomputed is each large shot's `--dx`, which is
+  `thumbnail left − (shots --x + the widths and 33.571 gaps of the shots before
+  it)`; `--mdx` is the same sum on the phone canvas, with the scroller at 15
+  and a 22.857 gap. Keep the `width`/`height` attributes matching the file so the page does
   not jump while images load; a thumbnail's `--w` sets its width. Each one has a
   705px-tall twin in `assets/img/large/` for the expanded strip, whose `--w` is
   `470 x (thumbnail width / thumbnail height)`.
@@ -57,8 +61,9 @@ Everything editable lives in `index.html`:
   LinkedIn, and every `mailto:` on the site is `chavescerrejon@gmail.com`. The
   Cal.com handle for a call is still `itsvictxrchaves`.
 - **Row copy** — an open row shows a `.row__desc` paragraph. BareFolio's is the
-  designer's own; the other three are placeholders written from what their
-  images show, and should be replaced with real project copy.
+  designer's own; IDLE CBD Oil, Fernet Branca and Atlas carry placeholders
+  written from what their images show, and should be replaced with real project
+  copy.
 - **The View Project buttons currently link to `#contact`.** When a case study
   exists, point each row's `.row__cta` at its page.
 - **The CV PDF is missing.** The About window's first row offers
