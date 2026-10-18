@@ -617,7 +617,10 @@ hr { border: 0; margin: 0; }
   line-height: calc(137 * var(--u));
   color: var(--fg);
   white-space: nowrap;
-  overflow: hidden;
+  /* No clip of its own. The frame is the full width of the window here, so the
+     page already cuts the line on the frame's edge - and it keeps cutting it
+     there while the strip slides on hover, which a clip carried by the strip
+     would not: that one would travel with it and open a gap at the edge. */
 }
 .row__track .glyph {
   width: auto;
