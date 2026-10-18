@@ -221,10 +221,18 @@ The list runs to fourteen projects. The landing's "Work ( + )" button and the
 
 ### The Nuvra row is a specimen
 
-Nuvra is a typeface of his own, so that row opens on the face rather than on
-photographs: the whole alphabet, upper and lower case, set in Nuvra and scrolled
-like any other row's strip. The row is marked `.row--type` and carries
-`data-face="Nuvra"`.
+Nuvra is a typeface of his own, so that row is the face rather than photographs
+of it, open or closed. Closed, the strip holds the alphabet interleaved —
+`AaBbCc…Zz` — in two tight lines centred in the band. Open, the same alphabet
+runs at full height and scrolls sideways like any other row's strip. The row is
+marked `.row--type` and carries `data-face="Nuvra"`.
+
+A photograph may bleed past the frame and be cut, which is what the comp has the
+strips do; a letter may not. So this one strip is narrowed from the comp's 576
+to 529, ending exactly on the frame's edge, and the two lines are sized to fill
+precisely that (29.21 comp px on the wide canvas, 20.54 on the phone). The face
+has kerning, so those sizes were measured in the browser rather than only
+counted from the advance widths; the two agree to 0.2%.
 
 Three things follow from it, and all three are general rather than special-cased:
 
@@ -242,11 +250,14 @@ Three things follow from it, and all three are general rather than special-cased
   track's declarations for them are invalid and fall back to `auto` and `none` —
   which is what a line of type wants anyway.
 
-The line is centred on its ink, not on the face's own box: Nuvra's ascent and
-descent make the box sit low, so the glyph's `line-height` is set below its
+The open line is centred on its ink, not on the face's own box: Nuvra's ascent
+and descent make the box sit low, so the glyph's `line-height` is set below its
 `font-size` to put the same air over the capitals as under the descenders.
 Fifty-two letters make a long strip — about eight screens on a desktop and
 rather more on a phone. That is the point of it.
+
+`assets/img/nuvra-0*.webp` are the four specimen posters the row used to show.
+Nothing points at them now; they are kept for the case study.
 
 ## The two pop-ups
 

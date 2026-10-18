@@ -606,6 +606,22 @@ hr { border: 0; margin: 0; }
    type wants. What is left to say is the size, the line it sits on, and the
    rise. */
 .row--type .row__track { gap: 0; }
+/* Closed, the row shows the same alphabet at reading size rather than
+   photographs: two lines, set tight and centred in the band. A photograph can
+   bleed past the frame and be cut, which is what the comp has the strips do; a
+   letter cannot, so this one strip is narrowed to end on the frame's edge and
+   the lines are sized to fill exactly that. */
+.thumbs--type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: 'Nuvra', 'Geist', serif;
+  font-size: calc(29.21 * var(--u));
+  line-height: calc(36 * var(--u));
+  color: var(--fg);
+  white-space: nowrap;
+}
+.spec__line { display: block; }
 .row__track .glyph {
   width: auto;
   font-family: 'Nuvra', 'Geist', serif;
@@ -618,9 +634,6 @@ hr { border: 0; margin: 0; }
   color: var(--fg);
   transform: translate3d(0, calc(70 * var(--u)), 0);
 }
-/* The space between the capitals and the lower case, in the measure of the
-   face rather than of the layout. */
-.row__track .glyph--gap { width: calc(215 * var(--u)); }
 .row.is-open .row__track .glyph {
   transform: none;
   transition: opacity 200ms ease calc(var(--i) * 18ms),
@@ -1365,6 +1378,15 @@ hr { border: 0; margin: 0; }
     width: calc(var(--mw) * var(--u));
     height: calc(var(--mh) * var(--u));
   }
+  .thumbs--type {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    overflow: visible;
+    font-size: calc(20.54 * var(--u));
+    line-height: calc(25 * var(--u));
+  }
+
   /* Open, the thumbnails are invisible but still a layer: without this they
      sit on the big strip and swallow the swipe meant for it. */
   .row.is-open .thumbs { pointer-events: none; }
@@ -1386,7 +1408,7 @@ hr { border: 0; margin: 0; }
     height: calc(320 * var(--u));
     transform: translate3d(0, calc(48 * var(--u)), 0);
   }
-  .row__track .glyph--gap { width: calc(146 * var(--u)); }
+
 
   .footer .chips { display: block; }
 
