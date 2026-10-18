@@ -268,6 +268,17 @@
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
     });
+    /* A row whose strip is a typeface has no photographs to fetch: what it
+       needs warmed is the face its specimen is set in. */
+    warmFace(row);
+  };
+
+  /* data-face names a webfont this row is set in. The face blocks rather than
+     swaps, so asking for it early is what keeps the strip from arriving late. */
+  var warmFace = function (row) {
+    var face = row.getAttribute('data-face');
+    if (!face || !document.fonts || !document.fonts.load) return null;
+    try { return document.fonts.load('1em "' + face + '"'); } catch (e) { return null; }
   };
 
   /* The shots start life on top of their own thumbnails, so the thumbnails are
@@ -276,6 +287,16 @@
   var handOver = function (row) {
     var shots = row.querySelectorAll('.row__track img');
     var pending = shots.length;
+    /* Nothing to load means nothing to wait for - unless the strip is type,
+       in which case the face is what the thumbnails are covering for. */
+    if (!pending) {
+      var hand = function () {
+        if (row.classList.contains('is-open')) row.classList.add('is-handed');
+      };
+      var face = warmFace(row);
+      if (face && face.then) face.then(hand, hand); else hand();
+      return;
+    }
     var ready = function () {
       if (--pending > 0) return;
       if (row.classList.contains('is-open')) row.classList.add('is-handed');

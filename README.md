@@ -38,7 +38,8 @@ assets/icons/*.svg      logo, menu, arrow, status dot
 assets/icons/soft/*.svg the ten tool marks in About
 assets/icons/social/*.svg  Instagram, TikTok and LinkedIn, in the About card
 assets/cv/              where the CV PDF goes (see below)
-assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
+assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset),
+                        and Nuvra, the typeface the Nuvra row is set in
 ```
 
 ## Editing the content
@@ -217,6 +218,35 @@ Three things are page-level rather than shared:
 
 The list runs to fourteen projects. The landing's "Work ( + )" button and the
 "Work" item in both menus come here.
+
+### The Nuvra row is a specimen
+
+Nuvra is a typeface of his own, so that row opens on the face rather than on
+photographs: the whole alphabet, upper and lower case, set in Nuvra and scrolled
+like any other row's strip. The row is marked `.row--type` and carries
+`data-face="Nuvra"`.
+
+Three things follow from it, and all three are general rather than special-cased:
+
+- **The face is warmed, not swapped.** `@font-face` for Nuvra is
+  `font-display: block`, because a specimen shown in Geist for a moment is worse
+  than one that arrives a moment late. `loadShots()` — the same hook that
+  fetches a row's photographs on a deliberate hover — asks for any `data-face`
+  the row names at the same time.
+- **The hand-over waits for the face.** `handOver()` holds the thumbnails in
+  place until every shot can be drawn; with no shots to wait for it waits on
+  `document.fonts.load()` instead, and only then fades them.
+- **The letters have nothing to fly from.** The other rows' shots start exactly
+  on their own thumbnail; a letter has no thumbnail, so it rises onto the line
+  instead, one after the next. The glyphs carry no `--w`/`--dx`/`--s`, so the
+  track's declarations for them are invalid and fall back to `auto` and `none` —
+  which is what a line of type wants anyway.
+
+The line is centred on its ink, not on the face's own box: Nuvra's ascent and
+descent make the box sit low, so the glyph's `line-height` is set below its
+`font-size` to put the same air over the capitals as under the descenders.
+Fifty-two letters make a long strip — about eight screens on a desktop and
+rather more on a phone. That is the point of it.
 
 ## The two pop-ups
 

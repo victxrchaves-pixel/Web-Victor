@@ -21,6 +21,17 @@
   font-style: normal;
   font-display: swap;
 }
+/* Nuvra is one of the projects, not part of the interface: it is only ever
+   used to set its own specimen, and only once that row has been opened. It
+   blocks rather than swaps, because a specimen shown in the wrong face for
+   a moment is worse than one that arrives a moment late. */
+@font-face {
+  font-family: 'Nuvra';
+  src: url('../fonts/nuvra-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
 
 :root {
   --u: calc(100vw / 1728);          /* one comp pixel */
@@ -583,6 +594,38 @@ hr { border: 0; margin: 0; }
 /* No placeholder colour: a shot begins exactly over its own thumbnail, so
    until its bytes arrive the thumbnail underneath is what shows through. */
 .row__track img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- A row whose strip is a typeface ----------
+   Nuvra is a typeface, so its row opens on the face itself rather than on
+   photographs: the whole alphabet, upper and lower case, set in Nuvra and
+   scrolled like any other row's strip. A letter has no thumbnail to fly from,
+   so instead of the flight it rises onto the line, one after the next.
+
+   The letters carry no --w/--dx/--s, so the track's own declarations for them
+   are invalid and fall back to auto and none - which is exactly what a line of
+   type wants. What is left to say is the size, the line it sits on, and the
+   rise. */
+.row--type .row__track { gap: 0; }
+.row__track .glyph {
+  width: auto;
+  font-family: 'Nuvra', 'Geist', serif;
+  /* 400 puts a capital at 300 of the strip's 470 and leaves the same 35 of air
+     over the capitals as under the descenders: the line is centred on its ink,
+     not on the face's own box, which sits low because of the descent. */
+  font-size: calc(400 * var(--u));
+  line-height: calc(370 * var(--u));
+  height: calc(470 * var(--u));
+  color: var(--fg);
+  transform: translate3d(0, calc(70 * var(--u)), 0);
+}
+/* The space between the capitals and the lower case, in the measure of the
+   face rather than of the layout. */
+.row__track .glyph--gap { width: calc(215 * var(--u)); }
+.row.is-open .row__track .glyph {
+  transform: none;
+  transition: opacity 200ms ease calc(var(--i) * 18ms),
+              transform var(--dur-fold) var(--ease-fold) calc(var(--i) * 18ms);
+}
 
 .row.is-open .row__panel { visibility: visible; transition-delay: 0s; }
 .row.is-open .row__desc,
@@ -1337,6 +1380,13 @@ hr { border: 0; margin: 0; }
     height: calc(320 * var(--u));
     transform: translate3d(calc(var(--mdx) * var(--u)), calc(var(--mdy) * var(--u)), 0) scale(var(--ms));
   }
+  .row__track .glyph {
+    font-size: calc(272 * var(--u));
+    line-height: calc(252 * var(--u));
+    height: calc(320 * var(--u));
+    transform: translate3d(0, calc(48 * var(--u)), 0);
+  }
+  .row__track .glyph--gap { width: calc(146 * var(--u)); }
 
   .footer .chips { display: block; }
 
@@ -1578,7 +1628,8 @@ hr { border: 0; margin: 0; }
   .hero__bg { animation: none; transform: none; }
   .row:has(.row__toggle:hover) .thumbs { transform: none; }
   .row, .shift, .frame, .row__panel { transition: none; }
-  .row__desc, .row__cta, .row__track li { transition: opacity 200ms ease; transform: none; }
+  .row__desc, .row__cta, .row__track li,
+  .row__track .glyph, .row.is-open .row__track .glyph { transition: opacity 200ms ease; transform: none; }
   .row.is-open .row__desc, .row.is-open .row__cta, .row.is-open .row__track li { transition-delay: 0s; }
   .row__view { transition: opacity 160ms ease; }
   .row__sign span { transition: opacity 160ms ease; transform: none; }
