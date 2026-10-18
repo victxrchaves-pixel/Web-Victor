@@ -1,7 +1,9 @@
-# Victor Chaves — portfolio landing
+# Victor Chaves — portfolio
 
-Landing page built from the Figma design
-[`ItsVictorChaves`, node `291:488`](https://www.figma.com/design/hcXyUBt9PtmNsvvoUE86IH/ItsVictorChaves?node-id=291-488).
+Two pages built from the Figma file `ItsVictorChaves`: the
+[landing, node `291:488`](https://www.figma.com/design/hcXyUBt9PtmNsvvoUE86IH/ItsVictorChaves?node-id=291-488),
+and the
+[projects list, node `465:2154`](https://www.figma.com/design/hcXyUBt9PtmNsvvoUE86IH/ItsVictorChaves?node-id=465-2154).
 
 Static HTML, CSS and JavaScript. No build step, no dependencies, no framework:
 open `index.html` and it works.
@@ -25,7 +27,8 @@ configuration.
 ## Structure
 
 ```
-index.html              all the markup
+index.html              the landing
+projects.html           the full list of projects
 assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
 assets/img/*.webp       row thumbnails, exported from Figma (2× display size)
@@ -40,7 +43,7 @@ assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset)
 
 ## Editing the content
 
-Everything editable lives in `index.html`:
+Everything editable lives in `index.html` and `projects.html`:
 
 - **Projects** — each one is an `<li class="row">` inside `.work__list`: the
   name, its `<span class="tag">` labels, the thumbnails in `.thumbs` and the
@@ -191,6 +194,29 @@ on the band hands them over as it comes near.
 
 The large shots are not in the initial payload. A row fetches its own the first
 time the pointer settles on it, or when it opens.
+
+## The projects page
+
+`projects.html` is the same canvas as the landing, traced from node `465:2154`
+(1728 x 3743). It reuses every rule and every script the landing has: the rows,
+the fold, the two pop-ups and the menu are the same code, so a change to a row
+is a change on both pages.
+
+Three things are page-level rather than shared:
+
+- **The frame's height.** `.frame` now reads `--frame-h` and `--mframe-h`, and
+  each page states its own comp heights inline (`4484`/`4406` for the landing,
+  `3743`/`5387` here). The CSS keeps the landing's as fallbacks.
+- **The opening label.** The pill starts on whatever `#navLabel` already says
+  in the markup — `ChavesCerrejon` on the landing, `Work` here — and the spy
+  takes over from there.
+- **The phone column.** The comp has no phone frame for this page, so the phone
+  canvas is an interpretation: the rows keep the landing's own rhythm (one every
+  290, starting at 240), and the contact block and footer keep the offsets the
+  phone comp already set for them, rebased onto the display line at 4400.
+
+The list runs to fourteen projects. The landing's "Work ( + )" button and the
+"Work" item in both menus come here.
 
 ## The two pop-ups
 
@@ -366,6 +392,12 @@ large text needs). To fix it without touching any position, add to `styles.css`:
    3.3 is enough to wash the page out; on a phone the window covers nearly the
    whole screen and the display type behind it read straight through.
 6. The comp is a static frame, so the motion below is additional by request.
+7. Two thumbnails in the projects comp — Bruma's second and NOX's second — are
+   drawn as empty boxes. The slot is kept rather than closed up, as a grey
+   `.thumbs__slot` / `.shot--slot`, so the strip holds the comp's rhythm and the
+   picture drops straight in when it is shot.
+8. Every row description except BareFolio's is placeholder copy, and every
+   "View Project" points at the contact block until the case studies exist.
 
 ## Motion
 

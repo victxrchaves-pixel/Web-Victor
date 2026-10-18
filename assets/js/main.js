@@ -191,7 +191,9 @@
     // Measured from real elements, not comp coordinates: the two canvases put
     // these in very different places.
     var SECTIONS = [
-      { el: null,                                        text: 'ChavesCerrejon' },
+      // The page's own opening label, so a traced page that is not the
+      // landing (the projects list) starts on its own name.
+      { el: null, text: (navLabel.textContent || '').trim() || 'ChavesCerrejon' },
       { el: document.querySelector('.row__toggle'),      text: 'Work' },
       { el: document.querySelector('.services .display'), text: 'What I Do' },
       { el: document.querySelector('.contact .display'), text: 'Contact' }

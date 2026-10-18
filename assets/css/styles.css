@@ -109,7 +109,9 @@ hr { border: 0; margin: 0; }
 .frame {
   position: relative;
   width: calc(1728 * var(--u));
-  height: calc((4484 + var(--push, 0)) * var(--u));
+  /* Each page states its own comp height on .frame, so one canvas serves
+     several traced pages; the fallbacks are the landing's. */
+  height: calc((var(--frame-h, 4484) + var(--push, 0)) * var(--u));
   /* The canvas is laid out once per fold, not once per frame: everything that
      moves is transformed, so the frame only has to own the scroll height. It
      grows at once and shrinks after the fold, so the ground is never missing
@@ -124,7 +126,7 @@ hr { border: 0; margin: 0; }
 
 .pill, .pill__logo, .pill__current,
 .btn, .btn__label, .btn__icon,
-.t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
+.t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot,
 .row__toggle, .row__shots,
 .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
   position: absolute;
@@ -481,6 +483,10 @@ hr { border: 0; margin: 0; }
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
+/* Two boxes in the projects comp are drawn empty - the picture for them has
+   not been shot yet - so the slot is kept rather than closed up: the strip
+   keeps the comp's rhythm and the image drops straight in when it arrives. */
+.thumbs__slot, .shot--slot { background: #d9d9d9; }
 .thumbs { transition: transform var(--dur-ui) var(--ease-out), opacity 120ms ease 480ms; }
 
 /* ---------- A row, expanded ---------- */
@@ -1143,7 +1149,7 @@ hr { border: 0; margin: 0; }
   .stage { display: flex; justify-content: center; }
   .frame {
     width: calc(402 * var(--u));
-    height: calc((4406 + var(--push, 0)) * var(--u));
+    height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0)) * var(--u));
   }
 
   /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
@@ -1154,7 +1160,7 @@ hr { border: 0; margin: 0; }
      from .tags by inheritance, the same way it does on the desktop canvas. */
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
-  .t, .chips, .chips li, .tags, .thumbs, .thumbs img,
+  .t, .chips, .chips li, .tags, .thumbs, .thumbs img, .thumbs__slot,
   .row__toggle, .row__shots,
   .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
     --mx: initial; --my: initial; --mw: initial; --mh: initial;
@@ -1166,7 +1172,7 @@ hr { border: 0; margin: 0; }
 
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
-  .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img,
+  .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot,
   .row__toggle, .row__shots,
   .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
     left: calc(var(--mx, var(--x, 0)) * var(--u));
@@ -1310,7 +1316,7 @@ hr { border: 0; margin: 0; }
     touch-action: pan-x pan-y;
     cursor: pointer;
   }
-  .thumbs img {
+  .thumbs img, .thumbs__slot {
     position: static;
     flex: none;
     width: calc(var(--mw) * var(--u));
