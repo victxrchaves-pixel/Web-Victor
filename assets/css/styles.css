@@ -687,6 +687,14 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   transition: transform var(--dur-fold) var(--ease-fold);
 }
 .row--type.is-open .row__track { transform: none; }
+/* The specimen is this row's strip, so the project's own photographs come after
+   the alphabet rather than instead of it: scroll past the z and the work is
+   there. They ride the strip's one transform like the letters do - they carry
+   no --dx of their own, so the track's flight declaration is invalid for them
+   and falls back to none - and only want the gutter the letters do without. */
+.row--type .row__track li.more { margin-left: calc(33.571 * var(--u)); }
+.row.is-open .row--type .row__track li.more,
+.row--type.is-open .row__track li.more { transition-delay: 300ms; }
 .row.is-open .row__track .glyph {
   transition: opacity 200ms ease calc(var(--i) * 18ms);
 }
@@ -1648,6 +1656,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     transform: translate3d(calc(var(--mtdx) * var(--u)), calc(var(--mtdy) * var(--u)), 0) scale(var(--mts));
   }
   .row--type.is-open .row__track { transform: none; }
+  .row--type .row__track li.more { margin-left: calc(22.857 * var(--u)); }
 
 
   .footer .chips { display: block; }

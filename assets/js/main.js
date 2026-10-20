@@ -294,15 +294,15 @@
 
   /* The large shots stay out of the initial payload; a row fetches its own the
      first time someone shows interest in it. */
-  var loadShots = function (row) {
-    Array.prototype.forEach.call(row.querySelectorAll('.row__track img[data-src]'), function (img) {
+  var promote = function (scope) {
+    Array.prototype.forEach.call(scope.querySelectorAll('img[data-src]'), function (img) {
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
     });
     /* A film's sources are held back the same way, one step deeper: the <source>
        elements carry the address and the <video> only starts looking once they
        have it. */
-    Array.prototype.forEach.call(row.querySelectorAll('.row__track video'), function (video) {
+    Array.prototype.forEach.call(scope.querySelectorAll('video'), function (video) {
       var held = video.querySelectorAll('source[data-src]');
       if (held.length) {
         Array.prototype.forEach.call(held, function (source) {
@@ -313,6 +313,33 @@
         video.load();
         playIfSeen(video);
       }
+    });
+  };
+
+  /* Past the last thumbnail, a strip holds the rest of the project - pieces the
+     closed row has nothing on screen for, waiting off to the right. Those are
+     not part of the opening, so they are fetched when the reader scrolls the
+     strip to them rather than on the click. The strip itself is the frame of
+     reference, not the window: a row can be open while the page is scrolled
+     somewhere else entirely, and what counts is how far along the strip is. */
+  var moreSeen = function (shots) {
+    if (!('IntersectionObserver' in window)) return null;
+    if (shots.__seen) return shots.__seen;
+    shots.__seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        shots.__seen.unobserve(e.target);
+        promote(e.target);
+      });
+    }, { root: shots, rootMargin: '0px 300px' });
+    return shots.__seen;
+  };
+
+  var loadShots = function (row) {
+    var seen = moreSeen(row.querySelector('.row__shots'));
+    Array.prototype.forEach.call(row.querySelectorAll('.row__track > li'), function (li) {
+      if (li.classList.contains('more') && seen) seen.observe(li);
+      else promote(li);
     });
     /* A row whose strip is a typeface has no photographs to fetch: what it
        needs warmed is the face its specimen is set in. */
@@ -331,7 +358,9 @@
      what covers for them until their bytes arrive: the swap only happens once
      every shot in the row can actually be drawn. */
   var handOver = function (row) {
-    var shots = row.querySelectorAll('.row__track img, .row__track video');
+    /* Only the shots that fly out of a thumbnail: the ones further along the
+       strip are off to the right, with nothing of theirs on screen to cover. */
+    var shots = row.querySelectorAll('.row__track > li:not(.more) img, .row__track > li:not(.more) video');
     var pending = shots.length;
     /* Nothing to load means nothing to wait for - unless the strip is type,
        in which case the face is what the thumbnails are covering for. */
