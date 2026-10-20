@@ -199,7 +199,7 @@ time the pointer settles on it, or when it opens.
 ## The projects page
 
 `projects.html` is the same canvas as the landing, traced from node `465:2154`
-(1728 x 3743). It reuses every rule and every script the landing has: the rows,
+(1728 x 3907). It reuses every rule and every script the landing has: the rows,
 the fold, the two pop-ups and the menu are the same code, so a change to a row
 is a change on both pages.
 
@@ -207,17 +207,46 @@ Three things are page-level rather than shared:
 
 - **The frame's height.** `.frame` now reads `--frame-h` and `--mframe-h`, and
   each page states its own comp heights inline (`4484`/`4406` for the landing,
-  `3743`/`5387` here). The CSS keeps the landing's as fallbacks.
+  `3907`/`5457` here). The CSS keeps the landing's as fallbacks.
 - **The opening label.** The pill starts on whatever `#navLabel` already says
   in the markup — `ChavesCerrejon` on the landing, `Work` here — and the spy
   takes over from there.
 - **The phone column.** The comp has no phone frame for this page, so the phone
-  canvas is an interpretation: the rows keep the landing's own rhythm (one every
-  290, starting at 240), and the contact block and footer keep the offsets the
-  phone comp already set for them, rebased onto the display line at 4400.
+  canvas is an interpretation: the filter wraps under the heading, the rows keep
+  the landing's own rhythm (one every 290, starting at 310), and the contact
+  block and footer keep the offsets the phone comp already set for them, rebased
+  onto the display line at 4470.
 
 The list runs to fourteen projects. The landing's "Work ( + )" button and the
 "Work" item in both menus come here.
+
+### Filtering by category
+
+The chips beside the heading show one category at a time; pressing the pressed
+one gives the whole list back. Each row names its own categories in `data-cat`,
+taken from the tags the comp gives it.
+
+On a traced canvas hiding a row cannot close the gap it leaves, so the rows
+under it have to be told how far up to come. Two custom properties carry that,
+alongside the fold's own `--push`:
+
+- `--ry`, on each row: the distance from its place in the comp to the place it
+  takes once the rows above it are gone. Zero with no filter on, so the comp's
+  coordinates stand.
+- `--trim`, on `.frame`: the whole height the filter has taken out. `.shift`
+  rides it with `--push`, and the frame's height adds both.
+
+Row heights come from the comp itself - the distance from one rule to the next -
+rather than from a single step, so a filtered list keeps the spacing the comp
+gives each row. The frame gives height back only once everything has moved
+(`.is-untrimming` drops that delay when the list is growing again, the way
+`.has-open` does for the fold), and a row that is open when the filter changes
+is folded shut first, since the gap it was filling is about to move.
+
+Three tags in the comp - Typeface, Photography and Clothes - have no chip of
+their own, so Nuvra, and nothing else, falls out of the list under every filter.
+That is the comp's data, not a rule in the code: give the row a category a chip
+names and it comes back.
 
 ### The Nuvra row is a specimen
 
@@ -230,8 +259,8 @@ other row's strip. The row is marked `.row--type` and carries
 
 The closed line's size and position were read off the comp rather than guessed:
 the render of node `465:2154` puts the capital A's ink at x 1165, its cap height
-at 93px and its baseline at y 1679, which fits a 124 font-size on a text box
-starting at 1157 to within 2px across the first seven letters.
+at 93px and its baseline 143 under the row's rule, which is a 124 font-size on
+the text box the comp puts at x 1160.
 
 Three things follow from it, and all three are general rather than special-cased:
 

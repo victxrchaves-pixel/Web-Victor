@@ -122,14 +122,14 @@ hr { border: 0; margin: 0; }
   width: calc(1728 * var(--u));
   /* Each page states its own comp height on .frame, so one canvas serves
      several traced pages; the fallbacks are the landing's. */
-  height: calc((var(--frame-h, 4484) + var(--push, 0)) * var(--u));
+  height: calc((var(--frame-h, 4484) + var(--push, 0) + var(--trim, 0)) * var(--u));
   /* The canvas is laid out once per fold, not once per frame: everything that
      moves is transformed, so the frame only has to own the scroll height. It
      grows at once and shrinks after the fold, so the ground is never missing
      from under the footer. */
   transition: height 0s linear var(--dur-fold);
 }
-.frame.has-open { transition-delay: 0s; }
+.frame.has-open, .frame.is-untrimming { transition-delay: 0s; }
 /* Hint the compositor only while a fold is in flight: these are large layers
    and promoting them for good would cost memory on a phone for nothing. */
 .frame.is-folding .row,
@@ -431,6 +431,23 @@ hr { border: 0; margin: 0; }
   transition: background var(--dur-fast) ease;
 }
 @media (hover: hover) and (pointer: fine) { .chip:hover { background: rgba(255, 255, 255, 0.16); } }
+/* The filter's chips are buttons, not links, so they have to be told to look
+   like the rest of their family. Pressed, one inverts: the page is showing that
+   category and nothing else, which is worth more than a tint. */
+button.chip {
+  margin: 0; padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
+@media (hover: hover) and (pointer: fine) {
+  button.chip[aria-pressed="true"]:hover { background: var(--fg); }
+}
+.chip:focus-visible { outline: 2px solid var(--live); outline-offset: calc(2 * var(--u)); }
 
 /* ---------- Featured work ---------- */
 
@@ -443,12 +460,28 @@ hr { border: 0; margin: 0; }
   left: 0; top: 0;
   width: calc(1728 * var(--u));
   height: 0;
-  transition: transform var(--dur-fold) var(--ease-fold);
+  /* --ry is where the filter has put this row: the distance from its own place
+     in the comp to the place it takes once the rows above it have been hidden.
+     It is zero with no filter on, so the comp's own coordinates stand. */
+  transform: translate3d(0, calc(var(--ry, 0) * var(--u)), 0);
+  transition: transform var(--dur-fold) var(--ease-fold), opacity 240ms ease;
 }
-.row.is-open ~ .row { transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
+.row.is-open ~ .row { transform: translate3d(0, calc((var(--ry, 0) + var(--push, 0)) * var(--u)), 0); }
+/* Filtered out: gone from the page and from the tab order, but still a row, so
+   the ones that stay can slide over the space it leaves. */
+.row.is-filtered {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 200ms ease, visibility 0s linear 200ms;
+}
 
-/* Everything that lives below the list rides the same push. */
-.shift { transition: transform var(--dur-fold) var(--ease-fold); transform: translate3d(0, calc(var(--push, 0) * var(--u)), 0); }
+/* Everything that lives below the list rides the same push, and rises by
+   whatever the filter has taken out of the list above it. */
+.shift {
+  transition: transform var(--dur-fold) var(--ease-fold);
+  transform: translate3d(0, calc((var(--push, 0) + var(--trim, 0)) * var(--u)), 0);
+}
 .shift-layer { position: absolute; left: 0; top: 0; width: calc(1728 * var(--u)); height: 0; }
 
 .row__name { font-family: 'Geist', system-ui, sans-serif; transition: color var(--dur-ui) ease; }
@@ -487,10 +520,10 @@ hr { border: 0; margin: 0; }
 .tag {
   --y: 0;
   display: flex; align-items: center; justify-content: center;
-  padding-top: calc(2.5 * var(--u));
+  padding-top: calc(2 * var(--u));
   background: var(--tag-bg);
-  font-size: calc(12.926 * var(--u));
-  line-height: calc(16.25 * var(--u));
+  font-size: calc(10.34 * var(--u));
+  line-height: calc(13 * var(--u));
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
@@ -1214,7 +1247,7 @@ hr { border: 0; margin: 0; }
   .stage { display: flex; justify-content: center; }
   .frame {
     width: calc(402 * var(--u));
-    height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0)) * var(--u));
+    height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0) + var(--trim, 0)) * var(--u));
   }
 
   /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
@@ -1254,6 +1287,29 @@ hr { border: 0; margin: 0; }
   .btn__label, .card { height: auto; }
   /* Figma measured these boxes with its own metrics; the names are one line. */
   .row__name { white-space: nowrap; }
+
+  /* The comp puts the filter beside the heading, which only a wide canvas has
+     room for. On the phone it wraps under it, laid out rather than placed. */
+  .chips--filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: calc(8 * var(--u));
+  }
+  .chips--filter li {
+    position: static;
+    width: auto;
+    height: calc(36 * var(--u));
+  }
+  .chips--filter .chip { padding-inline: calc(14 * var(--u)); font-size: calc(12.4 * var(--u)); }
+
+  /* The pills shrank on the wide canvas; at a quarter of the width a phone has,
+     they would stop being readable, so they keep the phone comp's size. */
+  .tag {
+    padding-top: calc(2.5 * var(--u));
+    font-size: calc(12.926 * var(--u));
+    line-height: calc(16.25 * var(--u));
+  }
   /* An <hr> carries no --h, so the shared rule resolves to height:auto - which
      on an empty element is nothing at all. It has to restate its own line. */
   .rule {

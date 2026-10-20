@@ -254,6 +254,8 @@
   /* Each comp has its own idea of how much taller an open row is. */
   var DESKTOP_PUSH = 536;         /* 734 open - 198 closed */
   var PHONE_PUSH = 400;           /* 690 open - 290 closed */
+  var DESK_STEP = 198;            /* a closed row, on each canvas: what the */
+  var PHONE_STEP = 290;           /* last row is worth when the filter counts */
   var openRow = null;
   var folding = 0;
   var FOLD_MS = 700;              /* --dur-fold plus the longest stagger */
@@ -394,9 +396,92 @@
       row.querySelector('.row__toggle').focus();
     });
 
-    /* Crossing the breakpoint swaps which comp the push is measured in. */
+    /* Crossing the breakpoint swaps which comp the push is measured in - and
+       which comp the filter's arithmetic is measured in with it. */
     window.addEventListener('resize', function () {
       if (openRow) frame.style.setProperty('--push', push());
+      if (activeFilter) layOut();
+    });
+  }
+
+  /* ---------- Filter the list by category ----------
+     The rows are placed at the comp's own coordinates, so hiding one cannot
+     close the gap it leaves on its own: the rows under it have to be told how
+     far up to come. Each row carries that distance as --ry, and the blocks
+     below the list ride --trim, the whole height the filter has taken out.
+     One category at a time, because the comp offers no way to show two. */
+
+  var filters = document.getElementById('filters');
+  var filterStatus = document.getElementById('filterStatus');
+  var activeFilter = '';
+
+  if (filters && rows.length) {
+    /* A row's place and its height, in whichever comp is on screen. The last
+       row has no next rule to measure against, so it takes the common step. */
+    var ruleAt = function (row) {
+      var hr = row.querySelector('.rule');
+      var v = hr && hr.style.getPropertyValue(isPhone() ? '--my' : '--y');
+      return v ? parseFloat(v) : 0;
+    };
+    var heightOf = function (i) {
+      if (i < rows.length - 1) return ruleAt(rows[i + 1]) - ruleAt(rows[i]);
+      return isPhone() ? PHONE_STEP : DESK_STEP;
+    };
+
+    var trim = 0, untrimming = 0;
+    var layOut = function () {
+      var top = ruleAt(rows[0]);
+      var cursor = top, full = top;
+      rows.forEach(function (row, i) {
+        var h = heightOf(i);
+        full += h;
+        if (row.classList.contains('is-filtered')) { row.style.setProperty('--ry', 0); return; }
+        row.style.setProperty('--ry', cursor - ruleAt(row));
+        cursor += h;
+      });
+      var next = cursor - full;
+      /* The frame takes a smaller height only once everything has finished
+         moving into it, so the ground is never missing from under the footer -
+         but a list that is growing back needs the room straight away. */
+      if (next > trim) {
+        frame.classList.add('is-untrimming');
+        window.clearTimeout(untrimming);
+        untrimming = window.setTimeout(function () {
+          frame.classList.remove('is-untrimming');
+        }, FOLD_MS);
+      }
+      trim = next;
+      frame.style.setProperty('--trim', next);
+    };
+
+    var applyFilter = function (name) {
+      activeFilter = name;
+      /* An open row would be left hanging over the gap it used to fill. */
+      if (openRow) toggleRow(openRow);
+      var shown = 0;
+      rows.forEach(function (row) {
+        var cats = (row.getAttribute('data-cat') || '').split(' ');
+        var keep = !name || cats.indexOf(name) !== -1;
+        row.classList.toggle('is-filtered', !keep);
+        if (keep) shown++;
+      });
+      Array.prototype.forEach.call(filters.querySelectorAll('[data-filter]'), function (btn) {
+        btn.setAttribute('aria-pressed', btn.getAttribute('data-filter') === name ? 'true' : 'false');
+      });
+      layOut();
+      if (filterStatus) {
+        filterStatus.textContent = name
+          ? shown + (shown === 1 ? ' project' : ' projects') + ' in this category'
+          : 'Showing all ' + rows.length + ' projects';
+      }
+    };
+
+    filters.addEventListener('click', function (event) {
+      var btn = event.target.closest('[data-filter]');
+      if (!btn) return;
+      var name = btn.getAttribute('data-filter');
+      /* Pressing the pressed one is how you get the whole list back. */
+      applyFilter(name === activeFilter ? '' : name);
     });
   }
 
