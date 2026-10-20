@@ -848,6 +848,23 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 /* The project's own logotype sits in the mosaic as a piece of it, but it is a
    mark and not a picture: it keeps its whole self and the page's own ground. */
 .piece--logo { object-fit: contain; background: none; }
+/* A sheet of the typeface, set in the typeface. The comp gives each block its
+   own size, leading and tracking; the dim letters are the unaccented ones the
+   accented sheet is built on. */
+.piece--spec {
+  margin: 0; background: none; height: auto;
+  font-family: 'Nuvra', 'Geist', serif;
+  font-size: calc(var(--fs) * var(--u));
+  line-height: calc(var(--lh) * var(--u));
+  letter-spacing: calc(var(--tr) * var(--u));
+  text-align: center;
+  color: var(--fg);
+  /* the accented sheets are one unbroken run of letters: they turn the line
+     wherever they have to, the way the comp sets them */
+  overflow-wrap: anywhere;
+}
+.piece--spec .dim { color: #848484; }
+
 /* A line the comp sets beside a logotype rather than inside it. */
 .piece--word {
   display: flex; align-items: center; justify-content: center;
@@ -1415,6 +1432,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     line-height: calc(var(--mlh) * var(--u));
   }
   .project__foot { margin-top: calc(40 * var(--u)); height: auto; font-size: calc(16.5 * var(--u)); line-height: calc(21 * var(--u)); }
+  .piece--spec {
+    font-size: calc(var(--mfs) * var(--u));
+    line-height: calc(var(--mlh) * var(--u));
+    letter-spacing: calc(var(--mtr) * var(--u));
+  }
   .project__see { position: static; margin-top: calc(10 * var(--u)); }
   .piece {
     left: calc(var(--mx) * var(--u));
