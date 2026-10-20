@@ -339,7 +339,19 @@ pinning is dropped and the writing simply comes first.
 A piece is a film wherever the piece itself is a film - on this page eight of
 the ten are - and plays under the same rules as the strips: nothing fetched
 until it is near the screen, paused when it leaves, poster only under
-`prefers-reduced-motion` or without JavaScript.
+`prefers-reduced-motion` or without JavaScript. The project's own logotype is a
+piece of the mosaic too, and it is the drawing itself: an SVG straight out of
+the comp, so it is sharp at any size and takes the page's own ground rather
+than a picture's.
+
+**The writing is the comp's, line break for line break.** Each paragraph is a
+list of lines in the project's table and the breaks are set where the comp sets
+them, since they are placed by hand and not by the measure. They are
+`u-desk` breaks: the comp tuned them to a 635 column and a phone's 372 would
+make nonsense of them, so the phone lets the text find its own.
+
+The phone canvas for these pages is on hold at the author's request, so the
+numbers below the breakpoint are laid out but not tuned.
 
 The thirteen other pages follow this one. `projects.html` points "View Project"
 at a page as soon as that page exists; until then it still points at the

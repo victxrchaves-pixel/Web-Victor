@@ -776,10 +776,16 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   height: calc(620 * var(--u));
 }
 .project__info-in > * { pointer-events: auto; }
+/* The block states its own --h and --w, and custom properties inherit: without
+   this the writing inside would take the block's height for its own on the
+   phone canvas, where the shared rule reads --h rather than --mh. Anything
+   that carries its own numbers inline still wins over this. */
+.project__info-in > * { --h: initial; --mh: initial; --w: initial; --mw: initial; }
 
 .project__title { font-family: 'Geist', system-ui, sans-serif; font-weight: 700; height: auto; }
 .project__kicker { font-family: 'Geist', system-ui, sans-serif; text-transform: uppercase; height: auto; }
 .project__body { font-family: 'Geist', system-ui, sans-serif; height: auto; }
+.project__body p + p { margin-top: calc(var(--lh) * var(--u)); }
 .project__meta { text-transform: uppercase; }
 .project__see {
   display: inline-flex; align-items: center; gap: calc(14 * var(--u));
@@ -800,9 +806,6 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   line-height: calc(23 * var(--u));
 }
 
-/* "Back to work" points the way it goes. */
-.project__back-icon { transform: rotate(-135deg); }
-
 .piece {
   position: absolute;
   left: calc(var(--x) * var(--u));
@@ -813,6 +816,9 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   display: block;
   background: #d9d9d9;
 }
+/* The project's own logotype sits in the mosaic as a piece of it, but it is a
+   mark and not a picture: it keeps its whole self and the page's own ground. */
+.piece--logo { object-fit: contain; background: none; }
 
 /* ---------- Full-bleed image band ---------- */
 
