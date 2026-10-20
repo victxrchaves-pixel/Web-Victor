@@ -8,6 +8,35 @@
   var setLabel = function () {};
   var updateLabel = function () {};
 
+  /* ---------- Films in the strips ----------
+     A few of the pieces are films, not photographs, so their slot plays rather
+     than showing one frame. Nothing is fetched or played until it is actually
+     on screen: a page of fourteen rows would otherwise pull every clip at once
+     and keep them all decoding. Each one carries its own first frame as a
+     poster, so the slot is never empty while the file is on its way, and that
+     is all anyone sees if the reader has asked for less motion. */
+
+  var seen = null;
+  var playIfSeen = function (el) { if (seen) seen.observe(el); };
+
+  if (!reduced && 'IntersectionObserver' in window) {
+    seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var v = entry.target;
+        if (entry.isIntersecting) {
+          if (v.preload === 'none') { v.preload = 'auto'; v.load(); }
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+    Array.prototype.forEach.call(document.querySelectorAll('.thumbs__video'), function (v) {
+      seen.observe(v);
+    });
+  }
+
   /* ---------- Holding the page still ----------
      Anything that takes over the screen - the menu, the About window - owns
      it while it is up: the landing behind must not scroll and must not answer
@@ -270,6 +299,21 @@
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
     });
+    /* A film's sources are held back the same way, one step deeper: the <source>
+       elements carry the address and the <video> only starts looking once they
+       have it. */
+    Array.prototype.forEach.call(row.querySelectorAll('.row__track video'), function (video) {
+      var held = video.querySelectorAll('source[data-src]');
+      if (held.length) {
+        Array.prototype.forEach.call(held, function (source) {
+          source.src = source.getAttribute('data-src');
+          source.removeAttribute('data-src');
+        });
+        video.preload = 'auto';
+        video.load();
+        playIfSeen(video);
+      }
+    });
     /* A row whose strip is a typeface has no photographs to fetch: what it
        needs warmed is the face its specimen is set in. */
     warmFace(row);
@@ -287,7 +331,7 @@
      what covers for them until their bytes arrive: the swap only happens once
      every shot in the row can actually be drawn. */
   var handOver = function (row) {
-    var shots = row.querySelectorAll('.row__track img');
+    var shots = row.querySelectorAll('.row__track img, .row__track video');
     var pending = shots.length;
     /* Nothing to load means nothing to wait for - unless the strip is type,
        in which case the face is what the thumbnails are covering for. */
@@ -303,10 +347,18 @@
       if (--pending > 0) return;
       if (row.classList.contains('is-open')) row.classList.add('is-handed');
     };
-    Array.prototype.forEach.call(shots, function (img) {
-      if (img.complete && img.naturalWidth) { ready(); return; }
-      img.addEventListener('load', ready, { once: true });
-      img.addEventListener('error', ready, { once: true });
+    Array.prototype.forEach.call(shots, function (el) {
+      if (el.tagName === 'VIDEO') {
+        /* A film is ready as soon as there is a frame to draw; until then its
+           poster is already showing, so nothing is missing either way. */
+        if (el.readyState >= 2) { ready(); return; }
+        el.addEventListener('loadeddata', ready, { once: true });
+        el.addEventListener('error', ready, { once: true });
+        return;
+      }
+      if (el.complete && el.naturalWidth) { ready(); return; }
+      el.addEventListener('load', ready, { once: true });
+      el.addEventListener('error', ready, { once: true });
     });
   };
 

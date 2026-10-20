@@ -137,7 +137,7 @@ hr { border: 0; margin: 0; }
 
 .pill, .pill__logo, .pill__current,
 .btn, .btn__label, .btn__icon,
-.t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot,
+.t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
 .row__toggle, .row__shots,
 .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
   position: absolute;
@@ -438,7 +438,11 @@ button.chip {
   margin: 0; padding: 0;
   border: 0;
   color: inherit;
-  font: inherit;
+  /* Not `font: inherit`: the shorthand also resets size and line-height, and
+     it out-specifies .chip, which is where the comp's 12.08 lives. Only the
+     family and weight have to be taken back off the UA sheet. */
+  font-family: inherit;
+  font-weight: inherit;
   letter-spacing: inherit;
   cursor: pointer;
   transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
@@ -527,6 +531,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   text-transform: uppercase;
 }
 .thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
+/* A slot whose piece is a film plays it rather than showing one frame of it.
+   The poster is that clip's own first frame, so the still and the loop agree
+   and nothing jumps when the file arrives. */
+.thumbs__video { --y: 0; object-fit: cover; background: #d9d9d9; display: block; }
+.row__track video { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* Two boxes in the projects comp are drawn empty - the picture for them has
    not been shot yet - so the slot is kept rather than closed up: the strip
    keeps the comp's rhythm and the image drops straight in when it arrives. */
@@ -1258,7 +1267,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
      from .tags by inheritance, the same way it does on the desktop canvas. */
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
-  .t, .chips, .chips li, .tags, .thumbs, .thumbs img, .thumbs__slot,
+  .t, .chips, .chips li, .tags, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
   .row__toggle, .row__shots,
   .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
     --mx: initial; --my: initial; --mw: initial; --mh: initial;
@@ -1270,7 +1279,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
-  .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot,
+  .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
   .row__toggle, .row__shots,
   .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
     left: calc(var(--mx, var(--x, 0)) * var(--u));
@@ -1301,7 +1310,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     width: auto;
     height: calc(36 * var(--u));
   }
-  .chips--filter .chip { padding-inline: calc(14 * var(--u)); font-size: calc(12.4 * var(--u)); }
+  .chips--filter .chip { padding-inline: calc(14 * var(--u)); }
 
   /* The pills shrank on the wide canvas; at a quarter of the width a phone has,
      they would stop being readable, so they keep the phone comp's size. */
@@ -1437,7 +1446,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     touch-action: pan-x pan-y;
     cursor: pointer;
   }
-  .thumbs img, .thumbs__slot {
+  .thumbs img, .thumbs__slot, .thumbs__video {
     position: static;
     flex: none;
     width: calc(var(--mw) * var(--u));

@@ -33,6 +33,8 @@ assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
 assets/img/*.webp       row thumbnails, cut from the originals (2× display size)
 assets/img/large/*.webp the same shots at 705px tall, for an expanded row
+assets/video/*.mp4|webm the slots whose piece is a film, at thumbnail size
+assets/video/large/*    the same films at 705px tall, for an expanded row
 assets/img/about-portrait.webp  the portrait in the About window
 assets/icons/*.svg      logo, menu, arrow, status dot
 assets/icons/soft/*.svg the ten tool marks in About
@@ -300,6 +302,22 @@ own, so they are frames lifted from that project's video.
 
 Nothing is exported from Figma any more. Figma's own renders were only ever a
 stand-in while the originals were out of reach.
+
+Seven slots are films rather than photographs, so they play instead of showing
+one frame: the five in BareFolio, Bruma's second and NOX's second. The last two
+were found rather than chosen - the picture the comp puts in those slots turns
+out to be a frame of that project's own video, which is what says the slot is a
+film. Each clip is cut to its box, trimmed to the eight seconds around that
+frame, and shipped twice: H.264 first, because it is both smaller here and what
+every shipping browser decodes, then VP9 for the builds without it.
+
+The poster on each one is that clip's own first frame, so the still and the loop
+agree and nothing jumps when the file lands. Nothing is fetched until the slot is
+near the screen, and a clip that scrolls away is paused; with
+`prefers-reduced-motion` nothing is fetched or played at all and the poster is
+the whole of it. Without JavaScript the same poster is what shows, which is why
+the films are addressed through `<source>` children rather than a `src`: the
+element can then be left entirely alone until something asks for it.
 
 ## The two pop-ups
 
