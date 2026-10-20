@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barefolio — Victor Chaves</title>
+<meta name="description" content="Creative environment system — a project by Victor Chaves Cerrejón.">
+<meta name="theme-color" content="#111111">
+<meta property="og:title" content="Barefolio — Victor Chaves">
+<meta property="og:description" content="Creative environment system">
+<meta property="og:type" content="article">
+<meta property="og:image" content="assets/img/project/barefolio-p01.webp">
+<link rel="icon" href="assets/icons/logo.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/geist-mono-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/geist-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<!--
+  Traced from Figma · ItsVictorChaves · node 330:2020 (file hcXyUBt9PtmNsvvoUE86IH).
+  The frame is 1728 x 5204: the landing's canvas again, so the same --u, the
+  same bar and the same two pop-ups. A project page is a column of writing on
+  the left and the work itself on the right, piece under piece, with no gutter
+  between them - the comp butts them edge to edge and so does this.
+  The comp has no phone frame, so the phone column is an interpretation: the
+  writing first, then the mosaic one piece to a row.
+-->
+<a class="skip-link" href="#work">Skip to the work</a>
+
+<div class="stage">
+<div class="frame" style="--frame-h:5204; --mframe-h:5392.732999999999">
+
+  <header class="nav" id="nav">
+    <div class="nav__scrim" id="navScrim" hidden></div>
+
+    <nav class="pill" id="navPanel" style="--y:26" aria-label="Main">
+      <div class="pill__row">
+        <a class="pill__logo" style="--w:21; --h:21.84" href="index.html" aria-label="Victor Chaves — home">
+          <img src="assets/icons/logo.svg" alt="" width="21" height="22">
+        </a>
+        <span class="pill__current" style="--fs:15; --lh:20" id="navLabel" aria-live="polite">Barefolio</span>
+        <button class="pill__toggle" type="button" id="menuBtn" aria-expanded="false" aria-controls="navPanel">
+          <span class="u-sr-only">Menu</span>
+          <svg class="burger" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <line class="burger__top" x1="4" y1="6" x2="20" y2="6"/>
+            <line class="burger__mid" x1="4" y1="12" x2="20" y2="12"/>
+            <line class="burger__bot" x1="4" y1="18" x2="20" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <ul class="pill__links" inert>
+        <li><a href="#about" data-sheet-open>About</a></li>
+        <li><a href="projects.html">Work</a></li>
+        <li><a href="#get-in-touch" data-sheet-open>Contact</a></li>
+      </ul>
+
+      <div class="pill__actions" inert>
+        <a class="pill__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
+          <span>Start A Project</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
+        <a class="pill__btn" href="https://cal.com/itsvictxrchaves/30min"
+           data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
+           data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+          <span>Schedule A Call</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="work">
+
+    <section class="project" id="top">
+      <a class="btn btn--outline project__back" style="--x:48; --y:24; --w:228.984; --h:49.935; --mx:15; --my:24; --mw:180; --mh:40" href="projects.html">
+        <img class="btn__icon project__back-icon" style="--x:24; --y:12.968; --w:24; --h:24; --mx:14; --my:8; --mw:20; --mh:20" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24" aria-hidden="true">
+        <span class="btn__label" style="--x:64.5; --y:12.468; --w:138; --fs:19.113; --lh:25; --mx:44; --my:10; --mw:120; --mfs:15; --mlh:20">Back to work</span>
+      </a>
+
+      <!--
+        The writing holds still while the work goes past it. The block is given
+        the mosaic's whole height to live in and sticks to the top inside it, so
+        it travels with the reader and comes to rest exactly when the last piece
+        does. Its children are placed against the block, not the frame, which is
+        why their numbers are the comp's minus the block's own top.
+      -->
+      <div class="project__info" style="--y:228; --h:4352; --my:108; --mh:4207.733">
+       <div class="project__info-in">
+        <h1 class="t project__title" style="--x:54; --y:0; --w:1137; --fs:80; --lh:68.56; --mx:15; --my:0; --mw:372; --mfs:42; --mlh:44" data-reveal="wipe"><span>Barefolio</span></h1>
+        <p class="t project__kicker" style="--x:57; --y:75; --w:577; --fs:30; --lh:37; --mx:15; --my:52; --mw:372; --mfs:19; --mlh:24" data-reveal>Creative environment system</p>
+        <span class="tags tags--project" style="--x:54; --y:133; --w:427.957; --h:46.452; --mx:15; --my:88; --mw:316; --mh:34">
+          <span class="tag" style="--x:0.0; --w:141.409; --mx:0.0; --mw:101.814">WEB design</span>
+          <span class="tag" style="--x:144.85; --w:88.409; --mx:104.314; --mw:63.654">UX/UI</span>
+          <span class="tag" style="--x:236.7; --w:67.409; --mx:170.469; --mw:48.534">App</span>
+          <span class="tag" style="--x:307.55; --w:120.409; --mx:221.503; --mw:86.694">BRANDING</span>
+        </span>
+        <p class="t project__body" style="--x:57; --y:190; --w:635; --fs:20; --lh:27.2; --mx:15; --my:150; --mw:372; --mfs:16.5; --mlh:23" data-reveal>BareFolio is a Creative Environment System that brings inspiration, process, portfolio, and professional connections together in one unified space. More than a social network, portfolio, or directory, it combines all three into one ecosystem. Designed for creators, studios, brands, and communities, BareFolio simplifies how creative work is discovered, presented, and connected, bringing professional identities together without the noise of traditional platforms. With curated access, no public metrics or engagement algorithms, and AI-powered classification, BareFolio offers a more focused and meaningful way to experience the creative world.</p>
+        <p class="t project__meta" style="--x:57; --y:563; --w:577; --fs:20; --lh:23; --mx:15; --my:538; --mw:372; --mfs:16.5; --mlh:21">Age: 2026</p>
+        <a class="t project__see" style="--x:530; --y:561; --w:119.016; --h:25; --mx:15; --my:568; --mw:160; --mh:22; --fs:20; --lh:25; --mfs:16.5; --mlh:21" href="#contact">
+          <span>See Web</span>
+          <img style="--w:24; --h:24" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24" aria-hidden="true">
+        </a>
+       </div>
+      </div>
+
+      <div class="project__mosaic">
+        <video class="piece piece--film" style="--x:864; --y:228; --w:864; --h:577; --mx:15; --my:710; --mw:372; --mh:248.431" poster="assets/img/project/barefolio-p01.webp"
+               width="864" height="577" muted loop playsinline preload="none" aria-label="BareFolio — the app across a wall of screens">
+          <source src="assets/video/project/barefolio-p01.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p01.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:864; --y:805; --w:432; --h:478.673; --mx:15; --my:966.431; --mw:372; --mh:412.191" poster="assets/img/project/barefolio-p02.webp"
+               width="432" height="479" muted loop playsinline preload="none" aria-label="BareFolio — the brand in motion">
+          <source src="assets/video/project/barefolio-p02.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p02.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:1296; --y:805; --w:432; --h:479; --mx:15; --my:1386.622; --mw:372; --mh:412.472" poster="assets/img/project/barefolio-p03.webp"
+               width="432" height="479" muted loop playsinline preload="none" aria-label="BareFolio — the app held in hand">
+          <source src="assets/video/project/barefolio-p03.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p03.webm" type="video/webm">
+        </video>
+        <img class="piece" style="--x:864; --y:1754; --w:432; --h:479; --mx:15; --my:1807.094; --mw:372; --mh:412.472" src="assets/img/project/barefolio-p04.webp" alt="BareFolio — the app on a tablet" width="432" height="479" loading="lazy">
+        <img class="piece" style="--x:1296; --y:1754; --w:432; --h:478.673; --mx:15; --my:2227.566; --mw:372; --mh:412.191" src="assets/img/project/barefolio-p05.webp" alt="BareFolio — a grid of app screens" width="432" height="479" loading="lazy">
+        <video class="piece piece--film" style="--x:864; --y:2233; --w:864; --h:572; --mx:15; --my:2647.7569999999996; --mw:372; --mh:246.278" poster="assets/img/project/barefolio-p06.webp"
+               width="864" height="572" muted loop playsinline preload="none" aria-label="BareFolio — the teaser">
+          <source src="assets/video/project/barefolio-p06.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p06.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:864; --y:2805; --w:432; --h:478.673; --mx:15; --my:2902.0349999999994; --mw:372; --mh:412.191" poster="assets/img/project/barefolio-p07.webp"
+               width="432" height="479" muted loop playsinline preload="none" aria-label="BareFolio — the mark, embossed">
+          <source src="assets/video/project/barefolio-p07.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p07.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:1296; --y:2805; --w:432; --h:479; --mx:15; --my:3322.225999999999; --mw:372; --mh:412.472" poster="assets/img/project/barefolio-p08.webp"
+               width="432" height="479" muted loop playsinline preload="none" aria-label="BareFolio — the app opening">
+          <source src="assets/video/project/barefolio-p08.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p08.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:864; --y:3284; --w:867; --h:648; --mx:15; --my:3742.6979999999994; --mw:372; --mh:278.035" poster="assets/img/project/barefolio-p09.webp"
+               width="867" height="648" muted loop playsinline preload="none" aria-label="BareFolio — the app on a laptop">
+          <source src="assets/video/project/barefolio-p09.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p09.webm" type="video/webm">
+        </video>
+        <video class="piece piece--film" style="--x:864; --y:3932; --w:864; --h:648; --mx:15; --my:4028.7329999999993; --mw:372; --mh:279.0" poster="assets/img/project/barefolio-p10.webp"
+               width="864" height="648" muted loop playsinline preload="none" aria-label="BareFolio — the printed pieces">
+          <source src="assets/video/project/barefolio-p10.mp4" type="video/mp4">
+          <source src="assets/video/project/barefolio-p10.webm" type="video/webm">
+        </video>
+      </div>
+    </section>
+    <section class="contact shift shift-layer" id="contact">
+      <h2 class="t display" style="--x:37; --y:4736; --w:1137; --fs:122.31; --lh:105; --mx:15; --my:4405.732999999999; --mw:372; --mfs:57.336; --mlh:49" data-reveal="wipe"><span>Brief me<br>Something.</span></h2>
+
+      <a class="t contact__email" style="--x:1110; --y:4736; --w:233; --fs:15.485; --lh:20; --mx:15; --my:4524.732999999999" href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a>
+      <p class="t label" style="--x:1110; --y:4927; --w:149; --fs:15.485; --lh:20; --mx:15; --my:4642.732999999999" data-reveal>[ Get in touch ]</p>
+      <p class="t contact__copy" style="--x:1110; --y:4974; --w:1137; --fs:22.31; --lh:29; --mx:15; --my:4670.732999999999; --mw:372; --mfs:17; --mlh:22" data-reveal>
+        Please feel free to contact me<br class="u-desk">
+        to discuss your project.<br class="u-desk">
+        I’ll make it sharper.
+      </p>
+
+      <a class="btn btn--outline" style="--x:57; --y:5006; --w:262.98; --h:49.94; --mx:15; --my:4843.232999999999; --mw:197.235; --mh:37.455" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
+        <span class="btn__label" style="--x:26.48; --y:12.47; --w:172; --fs:19.113; --lh:25; --mx:19.86; --my:9.353; --mw:129; --mfs:14.335; --mlh:18.75">Start A Project</span>
+        <img class="btn__icon" style="--x:212.5; --y:12.97; --w:24; --h:24; --mx:159.375; --my:9.728; --mw:18; --mh:18" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+      </a>
+      <a class="btn btn--outline" style="--x:353; --y:5006; --w:251.98; --h:49.94; --mx:15; --my:4784.732999999999; --mw:197.235; --mh:37.455"
+         href="https://cal.com/itsvictxrchaves/30min" data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+        <span class="btn__label" style="--x:26.48; --y:12.47; --w:161; --fs:19.113; --lh:25; --mx:19.86; --my:9.353; --mw:129; --mfs:14.335; --mlh:18.75">Schedule A Call</span>
+        <img class="btn__icon" style="--x:201.5; --y:12.97; --w:24; --h:24; --mx:159.375; --my:9.728; --mw:18; --mh:18" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer shift shift-layer">
+    <hr class="rule" style="--y:5108; --my:4968.732999999999">
+    <span class="t footer__item" style="--x:37; --y:5143; --w:205; --fs:15.485; --lh:20; --mx:98; --my:5287.732999999999">Victor Chaves Cerrejón</span>
+    <span class="t footer__item" style="--x:353; --y:5143; --w:168; --fs:15.485; --lh:20; --mx:117; --my:5310.732999999999">Based in Barcelona</span>
+    <img class="footer__dot" style="--x:743; --y:5151; --w:4; --h:4; --mx:87; --my:5024.732999999999" src="assets/icons/dot.svg" alt="" width="4" height="4">
+    <time class="t footer__item" style="--x:756; --y:5143; --w:214; --fs:15.485; --lh:20; --mx:100; --my:5016.732999999999" id="clock" datetime="">—</time>
+    <span class="t label footer__item" style="--x:1275; --y:5143; --w:93; --fs:15.485; --lh:20; --mx:154; --my:5067.732999999999">[ Follow ]</span>
+    <ul class="chips" style="--x:1400; --y:5137; --w:278.09; --h:31.54; --mx:75; --my:5103.732999999999; --mw:252; --mh:153">
+      <li style="--x:0; --w:89.36; --mw:252; --mh:44"><a class="chip" href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+      <li style="--x:109.36; --w:67.36; --mx:0; --my:54; --mw:252; --mh:45"><a class="chip" href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+      <li style="--x:196.73; --w:81.36; --mx:0; --my:109; --mw:252; --mh:44"><a class="chip" href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+    </ul>
+  </footer>
+
+</div>
+</div>
+
+
+<!--
+  About — a pop-up over the landing, not a page of its own.
+  Window and placement traced from Figma · About View (450:1399); the copy
+  from About Info (448:507). The window is 1036 x 733 comp pixels, so it rides
+  the same --u as the canvas behind it. The right-hand block is pinned to the
+  dialog rather than sitting inside the scroller, so only the information
+  moves; the rail in the left gutter is the read-out of where that scroll is
+  and the quick way to jump. Without JS, :target still opens it and the two
+  close links still shut it.
+-->
+<div class="sheet about" id="about" data-sheet-label="About">
+  <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
+
+  <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <h2 class="u-sr-only" id="aboutTitle">About Victor Chaves</h2>
+
+    <div class="sheet__head">
+      <a class="sheet__close" href="#top">
+        <span class="u-sr-only">Close</span>
+        <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
+      </a>
+    </div>
+
+    <!-- Thin enough to read as a guide rather than a control, but every tick
+         is a real jump target. JS writes the ticks from the sections below. -->
+    <nav class="about__rail" id="aboutRail" aria-label="About sections">
+      <span class="about__rail-track" aria-hidden="true"></span>
+      <span class="about__rail-fill" id="aboutFill" aria-hidden="true"></span>
+    </nav>
+
+    <div class="sheet__scroll about__scroll" id="aboutScroll" tabindex="0">
+
+      <!-- Pinned to the dialog on the desktop canvas, where it sits beside the
+           information and does not scroll with it; on the phone comp it is a
+           row at the head of the column, portrait beside the name, so it leads
+           the markup and the desktop position is the one that is lifted out. -->
+      <aside class="about__side">
+        <img class="about__photo" src="assets/img/about-portrait.webp"
+             alt="Victor Chaves" width="600" height="805" loading="lazy" decoding="async">
+        <div class="about__card">
+          <p class="about__name">Victor Chaves Cerrejón</p>
+          <div class="about__contact">
+            <ul class="about__social">
+              <li><a href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <img src="assets/icons/social/instagram.svg" alt="" width="25" height="25"></a></li>
+              <li><a href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                <img src="assets/icons/social/tiktok.svg" alt="" width="25" height="25"></a></li>
+              <li><a href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <img src="assets/icons/social/linkedin.svg" alt="" width="25" height="25"></a></li>
+            </ul>
+            <p class="about__key">Mail</p>
+            <p class="about__val"><a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a></p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="about__intro" id="about-intro" data-about-sec="Intro">
+        <p>Hey I&rsquo;m Victor</p>
+        <p>A graphic designer and digital creative, specializing in the creation
+          of visual identities and experiences with a strategic and contemporary approach.
+          I am passionate about transforming ideas into visual concepts that connect
+          with people, paying close attention to both the aesthetics and the intention
+          behind every detail.</p>
+        <p>In addition, I integrate artificial intelligence tools into creative and production
+          processes, from image and video generation to automations, workflows,
+          and integrations that optimize results and enhance creativity.</p>
+      </div>
+
+      <div class="about__sections">
+
+        <section class="about__sec" id="about-cv" data-about-sec="CV">
+          <hr class="about__line">
+          <div class="about__row about__row--cv">
+            <h3 class="about__label">[ Curriculum Vitae ]</h3>
+            <p class="about__body about__body--end">
+              <a class="about__dl" href="assets/cv/victor-chaves-cv.pdf" download>
+                <span>Download</span>
+                <img src="assets/icons/down-arrow-sm.svg" alt="" width="20" height="20" aria-hidden="true">
+              </a>
+            </p>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-events" data-about-sec="Events">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Events ]</h3>
+            <div class="about__body">
+              <p class="about__when">2026</p>
+              <p class="about__what">BRUT!</p>
+              <p>BareFolio presentation at BRUT!,<br>
+                Barcelona&rsquo;s design festival,<br>
+                at the Disseny Hub Barcelona.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-education" data-about-sec="Education">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Education ]</h3>
+            <div class="about__body">
+              <p class="about__when">2023&ndash;2026</p>
+              <p class="about__what">Bachelor&rsquo;s Degree in Graphic Design</p>
+              <p>LCI Barcelona</p>
+              <p class="about__when">2020</p>
+              <p class="about__what">High School</p>
+              <p>Escola Garbí Pere Vergés d&rsquo;Esplugues</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-employment" data-about-sec="Employment">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Employment ]</h3>
+            <div class="about__body">
+              <p class="about__when">2025 &ndash; 6 months (Internship)</p>
+              <p class="about__what">Glamm BCN</p>
+              <p>Social media management, website management, and creation of graphic elements for the brand.</p>
+              <p class="about__when">2023/2025 &ndash; 2 years</p>
+              <p class="about__what">MonEstilistes</p>
+              <p>Social media management and creation<br>of graphic elements for the brand.</p>
+              <p class="about__when">2022&ndash;2024 &ndash; 2 years</p>
+              <p class="about__what">Nonvero Society</p>
+              <p>Clothing brand project; served as a designer, sourced suppliers, developed marketing campaigns, created social media content,<br>and produced audiovisual content.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-skills" data-about-sec="Skills">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Skills ]</h3>
+            <ul class="about__body about__list">
+              <li>Creative Leadership</li>
+              <li>Empathy</li>
+              <li>Attention to Detail</li>
+              <li>Ownership</li>
+              <li>Curiosity</li>
+              <li>Innovation Mindset</li>
+              <li>Growth Mindset</li>
+              <li>Client Relationship Management</li>
+              <li>Presentation Skills</li>
+              <li>Negotiation</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-software" data-about-sec="Software">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Softwares ]</h3>
+            <!-- The grid keeps the comp's own x/y: the icons are different
+                 shapes and a flex row would not line them up the same way. -->
+            <div class="about__body about__soft">
+              <span class="soft" style="--sx:0;       --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/manus.svg" alt="Manus" width="24" height="24"></span>
+              <span class="soft" style="--sx:38.083;  --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/chatgpt.svg" alt="ChatGPT" width="24" height="24"></span>
+              <span class="soft" style="--sx:76.165;  --sy:0;      --sw:24.308; --sh:24.308"><img src="assets/icons/soft/claude.svg" alt="Claude" width="24" height="24"></span>
+              <span class="soft" style="--sx:115.868; --sy:2.026;  --sw:20.257; --sh:20.257"><img src="assets/icons/soft/shopify.svg" alt="Shopify" width="20" height="20"></span>
+              <span class="soft" style="--sx:151.520; --sy:0;      --sw:24.839; --sh:28.682"><img src="assets/icons/soft/figma.svg" alt="Figma" width="25" height="29"></span>
+              <span class="soft soft--inset" style="--sx:0;       --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:13.96; --ib:26.75; --il:16.89"><img src="assets/icons/soft/photoshop.svg" alt="Adobe Photoshop" width="17" height="11"></span>
+              <span class="soft soft--inset" style="--sx:38.083;  --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:8.56;  --ib:26.68; --il:8.57"><img src="assets/icons/soft/after-effects.svg" alt="Adobe After Effects" width="20" height="11"></span>
+              <span class="soft soft--inset" style="--sx:76.165;  --sy:30.303; --sw:24.308; --sh:24.308; --it:26.54; --ir:17.05; --ib:27.36; --il:20.54"><img src="assets/icons/soft/premiere-pro.svg" alt="Adobe Premiere Pro" width="15" height="11"></span>
+              <span class="soft soft--inset" style="--sx:114.248; --sy:30.303; --sw:24.308; --sh:24.308; --it:25.10; --ir:24.11; --ib:26.74; --il:24.11"><img src="assets/icons/soft/indesign.svg" alt="Adobe InDesign" width="13" height="12"></span>
+              <span class="soft soft--inset" style="--sx:152.330; --sy:30.303; --sw:24.308; --sh:24.308; --it:24.14; --ir:20.35; --ib:27.36; --il:16.85"><img src="assets/icons/soft/illustrator.svg" alt="Adobe Illustrator" width="15" height="12"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="about__sec" id="about-languages" data-about-sec="Languages">
+          <hr class="about__line">
+          <div class="about__row">
+            <h3 class="about__label">[ Languages ]</h3>
+            <ul class="about__body about__list">
+              <li>Spanish &mdash; Native</li>
+              <li>Catalan &mdash; Native</li>
+              <li>English &mdash; First</li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+  Contact — the second pop-up, on the same shell as About.
+  Traced from Figma · Contact View (468:2538) for the wide window and Mobile
+  Contact (468:3011) for the small one. The wide one is 1036 x 565.935 comp
+  pixels, with the display line and the two buttons in a 625 column and the
+  marks and the address held at the foot of a 239 one beside it. On the phone
+  the two columns become one and the address joins the paragraph, which is
+  where the comp puts it, so the order of the markup is the phone's and the
+  wide canvas lifts its right-hand pair out of the flow.
+-->
+<div class="sheet sheet--touch" id="get-in-touch" data-sheet-label="Contact">
+  <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
+
+  <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <h2 class="u-sr-only" id="contactTitle">Get in touch</h2>
+
+    <div class="sheet__head">
+      <a class="sheet__close" href="#top">
+        <span class="u-sr-only">Close</span>
+        <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
+      </a>
+    </div>
+
+    <div class="sheet__scroll touch__body">
+      <p class="touch__display">Brief me<br>Something.</p>
+
+      <div class="touch__note">
+        <p class="touch__label">[ Get in touch ]</p>
+        <p class="touch__copy">Please feel free to contact me<br>
+          to discuss your project.<br>
+          I&rsquo;ll make it sharper.</p>
+      </div>
+
+      <p class="touch__mail">
+        <span class="touch__mail-key">Mail</span>
+        <a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a>
+      </p>
+
+      <ul class="touch__social">
+        <li><a href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <img src="assets/icons/social/instagram.svg" alt="" width="44" height="44"></a></li>
+        <li><a href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+          <img src="assets/icons/social/tiktok.svg" alt="" width="44" height="44"></a></li>
+        <li><a href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <img src="assets/icons/social/linkedin.svg" alt="" width="44" height="44"></a></li>
+      </ul>
+
+      <div class="touch__actions">
+        <a class="touch__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
+          <span>Send an email</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
+        <a class="touch__btn" href="https://cal.com/itsvictxrchaves/30min"
+           data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
+           data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+          <span>Schedule A Call</span>
+          <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="assets/js/main.js" defer></script>
+
+<!-- Cal element-click embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "30min", {origin:"https://app.cal.com"});
+Cal.config = Cal.config || {};
+Cal.config.forwardQueryParams = true;
+Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+
+<!-- Cal element-click embed code ends -->
+
+</body>
+</html>

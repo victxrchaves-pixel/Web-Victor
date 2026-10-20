@@ -754,6 +754,66 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 }
 
 
+/* ---------- A project's own page ----------
+   A column of writing on the left and the work on the right, piece under
+   piece, butted edge to edge the way the comp has them. The writing holds
+   still while the work goes past: the block is given the mosaic's whole
+   height to live in and sticks to the top inside it, so it comes to rest
+   exactly as the last piece arrives. */
+
+.project__info {
+  position: absolute;
+  left: 0;
+  top: calc(var(--y) * var(--u));
+  width: calc(1728 * var(--u));
+  height: calc(var(--h) * var(--u));
+  pointer-events: none;
+}
+.project__info-in {
+  position: sticky;
+  /* clear of the bar, which is 26 to 72 */
+  top: calc(96 * var(--u));
+  height: calc(620 * var(--u));
+}
+.project__info-in > * { pointer-events: auto; }
+
+.project__title { font-family: 'Geist', system-ui, sans-serif; font-weight: 700; height: auto; }
+.project__kicker { font-family: 'Geist', system-ui, sans-serif; text-transform: uppercase; height: auto; }
+.project__body { font-family: 'Geist', system-ui, sans-serif; height: auto; }
+.project__meta { text-transform: uppercase; }
+.project__see {
+  display: inline-flex; align-items: center; gap: calc(14 * var(--u));
+  width: max-content; height: auto;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur-ui) ease, border-color var(--dur-ui) ease;
+}
+.project__see img { position: static; width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
+@media (hover: hover) and (pointer: fine) {
+  .project__see:hover { color: var(--live); border-color: var(--live); }
+}
+
+/* The comp's tag pills, at the size a project page gives them. */
+.tags--project .tag {
+  padding-top: calc(3 * var(--u));
+  font-size: calc(17.791 * var(--u));
+  line-height: calc(23 * var(--u));
+}
+
+/* "Back to work" points the way it goes. */
+.project__back-icon { transform: rotate(-135deg); }
+
+.piece {
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: calc(var(--h) * var(--u));
+  object-fit: cover;
+  display: block;
+  background: #d9d9d9;
+}
+
 /* ---------- Full-bleed image band ---------- */
 
 .marquee { overflow: hidden; }
@@ -1296,6 +1356,26 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   .btn__label, .card { height: auto; }
   /* Figma measured these boxes with its own metrics; the names are one line. */
   .row__name { white-space: nowrap; }
+
+  /* On a phone there is no second column for the work to pass, so the writing
+     is not pinned: it simply comes first and the mosaic follows it. */
+  .project__info {
+    top: calc(var(--my) * var(--u));
+    width: calc(402 * var(--u));
+    height: calc(var(--mh) * var(--u));
+  }
+  .project__info-in { position: static; height: auto; }
+  .piece {
+    left: calc(var(--mx) * var(--u));
+    top: calc(var(--my) * var(--u));
+    width: calc(var(--mw) * var(--u));
+    height: calc(var(--mh) * var(--u));
+  }
+  .tags--project .tag {
+    padding-top: calc(2.5 * var(--u));
+    font-size: calc(13 * var(--u));
+    line-height: calc(17 * var(--u));
+  }
 
   /* The comp puts the filter beside the heading, which only a wide canvas has
      room for. On the phone it wraps under it, laid out rather than placed. */

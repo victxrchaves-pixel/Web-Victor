@@ -32,7 +32,7 @@
         }
       });
     }, { rootMargin: '200px 0px' });
-    Array.prototype.forEach.call(document.querySelectorAll('.thumbs__video'), function (v) {
+    Array.prototype.forEach.call(document.querySelectorAll('.thumbs__video, .piece--film'), function (v) {
       seen.observe(v);
     });
   }

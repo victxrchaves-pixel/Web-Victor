@@ -319,6 +319,32 @@ the whole of it. Without JavaScript the same poster is what shows, which is why
 the films are addressed through `<source>` children rather than a `src`: the
 element can then be left entirely alone until something asks for it.
 
+## A project's own page
+
+`barefolio.html` is the first of fourteen, traced from node `330:2020`
+(1728 x 5204). It is the same canvas again - the same `--u`, the same bar, the
+same two pop-ups - laid out as a column of writing on the left and the work on
+the right, piece under piece with no gutter between them: the comp butts them
+edge to edge and so does this.
+
+**The writing holds still while the work goes past.** `.project__info` is given
+the mosaic's whole height to live in, and `.project__info-in` sticks to the top
+inside it, so the column travels with the reader and comes to rest exactly as
+the last piece arrives. Sticky needs a containing block to be bounded by, which
+is what that outer box is for; it also means the column's children are placed
+against the block rather than the frame, so their numbers are the comp's minus
+the block's own top. On a phone there is no second column to pass, so the
+pinning is dropped and the writing simply comes first.
+
+A piece is a film wherever the piece itself is a film - on this page eight of
+the ten are - and plays under the same rules as the strips: nothing fetched
+until it is near the screen, paused when it leaves, poster only under
+`prefers-reduced-motion` or without JavaScript.
+
+The thirteen other pages follow this one. `projects.html` points "View Project"
+at a page as soon as that page exists; until then it still points at the
+contact block.
+
 ## The two pop-ups
 
 About and Contact are windows over the landing, not pages: both sit at the end
