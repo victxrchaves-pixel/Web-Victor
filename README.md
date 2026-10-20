@@ -31,7 +31,7 @@ index.html              the landing
 projects.html           the full list of projects
 assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
-assets/img/*.webp       row thumbnails, exported from Figma (2× display size)
+assets/img/*.webp       row thumbnails, cut from the originals (2× display size)
 assets/img/large/*.webp the same shots at 705px tall, for an expanded row
 assets/img/about-portrait.webp  the portrait in the About window
 assets/icons/*.svg      logo, menu, arrow, status dot
@@ -290,6 +290,16 @@ rather more on a phone. That is the point of it.
 
 `assets/img/nuvra-0*.webp` are the four specimen posters the row used to show.
 Nothing points at them now; they are kept for the case study.
+
+### Where the pictures come from
+
+Every thumbnail and every expanded shot is cut from the project's own original,
+centred on the comp's box: the thumbnail at twice the box, the shot at 705 tall.
+Three slots in the BareFolio row and one in Fernet Branca have no still of their
+own, so they are frames lifted from that project's video.
+
+Nothing is exported from Figma any more. Figma's own renders were only ever a
+stand-in while the originals were out of reach.
 
 ## The two pop-ups
 
