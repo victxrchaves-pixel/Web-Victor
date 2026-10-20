@@ -773,7 +773,10 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   position: sticky;
   /* clear of the bar, which is 26 to 72 */
   top: calc(96 * var(--u));
-  height: calc(620 * var(--u));
+  /* the writing's own offset, as padding rather than a margin: a margin on the
+     first child would collapse through and take the whole block down with it,
+     carrying the title away from the top the comp gives it. */
+  padding-top: calc(190 * var(--u));
 }
 .project__info-in > * { pointer-events: auto; }
 /* The block states its own --h and --w, and custom properties inherit: without
@@ -784,17 +787,37 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 
 .project__title { font-family: 'Geist', system-ui, sans-serif; font-weight: 700; height: auto; }
 .project__kicker { font-family: 'Geist', system-ui, sans-serif; text-transform: uppercase; height: auto; }
-.project__body { font-family: 'Geist', system-ui, sans-serif; height: auto; }
+/* The writing and the line under it are one column in normal flow. The comp
+   sets that line 72 below the text, and a paragraph more or less has to push
+   it down rather than be written over it. */
+/* In normal flow, not placed: the block that holds it can then be as tall as
+   the writing turns out to be, and still stick. The comp's own numbers become
+   the margins that put it where it goes. */
+.project__text {
+  margin-left: calc(57 * var(--u));
+  width: calc(635 * var(--u));
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: calc(var(--fs) * var(--u));
+  line-height: calc(var(--lh) * var(--u));
+}
 .project__body p + p { margin-top: calc(var(--lh) * var(--u)); }
-.project__meta { text-transform: uppercase; }
+.project__foot {
+  position: relative;
+  margin-top: calc(72 * var(--u));
+  height: calc(25 * var(--u));
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: calc(20 * var(--u));
+  line-height: calc(25 * var(--u));
+}
+.project__meta { margin: 0; text-transform: uppercase; }
 .project__see {
+  position: absolute; left: calc(473 * var(--u)); top: 0;
   display: inline-flex; align-items: center; gap: calc(14 * var(--u));
-  width: max-content; height: auto;
   text-transform: uppercase;
   border-bottom: 1px solid transparent;
   transition: color var(--dur-ui) ease, border-color var(--dur-ui) ease;
 }
-.project__see img { position: static; width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
+.project__see img { width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
 @media (hover: hover) and (pointer: fine) {
   .project__see:hover { color: var(--live); border-color: var(--live); }
 }
@@ -1370,7 +1393,15 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     width: calc(402 * var(--u));
     height: calc(var(--mh) * var(--u));
   }
-  .project__info-in { position: static; height: auto; }
+  .project__info-in { position: static; padding-top: calc(var(--mtext, 150) * var(--u)); }
+  .project__text {
+    margin-left: calc(15 * var(--u));
+    width: calc(372 * var(--u));
+    font-size: calc(var(--mfs) * var(--u));
+    line-height: calc(var(--mlh) * var(--u));
+  }
+  .project__foot { margin-top: calc(40 * var(--u)); height: auto; font-size: calc(16.5 * var(--u)); line-height: calc(21 * var(--u)); }
+  .project__see { position: static; margin-top: calc(10 * var(--u)); }
   .piece {
     left: calc(var(--mx) * var(--u));
     top: calc(var(--my) * var(--u));
