@@ -1299,14 +1299,23 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 
   /* The comp puts the filter beside the heading, which only a wide canvas has
      room for. On the phone it wraps under it, laid out rather than placed. */
+  /* One line that scrolls rather than two that wrap: the second line costs
+     more room at the top of the page than the third row of projects can
+     spare, and a row of chips is a thing people already swipe. */
   .chips--filter {
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: calc(8 * var(--u));
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
   }
+  .chips--filter::-webkit-scrollbar { display: none; }
   .chips--filter li {
     position: static;
+    flex: none;
     width: auto;
     height: calc(36 * var(--u));
   }

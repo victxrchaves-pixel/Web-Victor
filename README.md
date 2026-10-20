@@ -493,11 +493,17 @@ large text needs). To fix it without touching any position, add to `styles.css`:
    3.3 is enough to wash the page out; on a phone the window covers nearly the
    whole screen and the display type behind it read straight through.
 6. The comp is a static frame, so the motion below is additional by request.
-7. Two thumbnails in the projects comp — Bruma's second and NOX's second — are
+7. The projects list sits 90 higher than the comp places it, and the filter's
+   chips become one scrolling line on the phone. The comp leaves nearly 300 of
+   air over the heading, which at a laptop's height ends the page exactly on
+   the second row: two rows, perfectly framed, and no sign that there are
+   twelve more. Taking 90 of that air back lets the third row show about a
+   quarter of itself above the fold, which is what tells the reader to scroll.
+8. Two thumbnails in the projects comp — Bruma's second and NOX's second — are
    drawn as empty boxes. The slot is kept rather than closed up, as a grey
    `.thumbs__slot` / `.shot--slot`, so the strip holds the comp's rhythm and the
    picture drops straight in when it is shot.
-8. Every row description except BareFolio's is placeholder copy, and every
+9. Every row description except BareFolio's is placeholder copy, and every
    "View Project" points at the contact block until the case studies exist.
 
 ## Motion
