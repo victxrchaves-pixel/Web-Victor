@@ -786,7 +786,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 .project__info-in > * { --h: initial; --mh: initial; --w: initial; --mw: initial; }
 
 .project__title { font-family: 'Geist', system-ui, sans-serif; font-weight: 700; height: auto; }
-.project__kicker { font-family: 'Geist', system-ui, sans-serif; text-transform: uppercase; height: auto; }
+.project__kicker { font-family: 'Geist', system-ui, sans-serif; height: auto; }
 /* The writing and the line under it are one column in normal flow. The comp
    sets that line 72 below the text, and a paragraph more or less has to push
    it down rather than be written over it. */
@@ -800,6 +800,10 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   font-size: calc(var(--fs) * var(--u));
   line-height: calc(var(--lh) * var(--u));
 }
+/* The first paragraph's own margin collapses out through the body and the
+   column and takes the whole block down with it, so the paragraphs carry no
+   margin of their own and a blank line between them is stated here. */
+.project__body p { margin: 0; }
 .project__body p + p { margin-top: calc(var(--lh) * var(--u)); }
 .project__foot {
   position: relative;
@@ -809,9 +813,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   font-size: calc(20 * var(--u));
   line-height: calc(25 * var(--u));
 }
-.project__meta { margin: 0; text-transform: uppercase; }
+/* The comp writes the age in the same hand as the writing above it; only the
+   link beside it is set in the monospace. */
+.project__meta { margin: 0; font-family: 'Geist', system-ui, sans-serif; }
 .project__see {
-  position: absolute; left: calc(473 * var(--u)); top: 0;
+  position: absolute; left: calc(var(--see-x, 473) * var(--u)); top: 0;
   display: inline-flex; align-items: center; gap: calc(14 * var(--u));
   text-transform: uppercase;
   border-bottom: 1px solid transparent;
@@ -842,6 +848,14 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 /* The project's own logotype sits in the mosaic as a piece of it, but it is a
    mark and not a picture: it keeps its whole self and the page's own ground. */
 .piece--logo { object-fit: contain; background: none; }
+/* A line the comp sets beside a logotype rather than inside it. */
+.piece--word {
+  display: flex; align-items: center; justify-content: center;
+  margin: 0; background: none;
+  font-family: 'Geist', system-ui, sans-serif; font-style: italic;
+  font-size: calc(23.22 * var(--u)); line-height: calc(30.65 * var(--u));
+  letter-spacing: -0.02em; white-space: nowrap;
+}
 
 /* ---------- Full-bleed image band ---------- */
 
