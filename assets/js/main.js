@@ -19,16 +19,37 @@
   var seen = null;
   var playIfSeen = function (el) { if (seen) seen.observe(el); };
 
+  /* Every clip is meant to be met at its first frame, so it is wound back
+     rather than picked up where it was left: a film that comes back on screen
+     starts again, not halfway through. currentTime cannot be set before the
+     file has a duration, so if nothing has arrived yet the rewind waits for
+     the metadata and happens then. */
+  var rewind = function (v) {
+    if (v.readyState >= 1) {
+      if (v.currentTime) { try { v.currentTime = 0; } catch (e) {} }
+      return;
+    }
+    v.addEventListener('loadedmetadata', function () {
+      try { v.currentTime = 0; } catch (e) {}
+    }, { once: true });
+  };
+
+  var replay = function (v) {
+    rewind(v);
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  };
+
   if (!reduced && 'IntersectionObserver' in window) {
     seen = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var v = entry.target;
         if (entry.isIntersecting) {
           if (v.preload === 'none') { v.preload = 'auto'; v.load(); }
-          var p = v.play();
-          if (p && p.catch) p.catch(function () {});
-        } else if (!v.paused) {
-          v.pause();
+          replay(v);
+        } else {
+          if (!v.paused) v.pause();
+          rewind(v);
         }
       });
     }, { rootMargin: '200px 0px' });
@@ -36,6 +57,21 @@
       seen.observe(v);
     });
   }
+
+  /* A click on a film takes it back to the top and runs it again. The strip is
+     a scroller, so a click that ends a drag is not a click: the pointer has to
+     have stayed put. A thumbnail in a closed row never gets here - it does not
+     answer the pointer at all, the row's own button does. */
+  var pressAt = null;
+  document.addEventListener('pointerdown', function (e) {
+    pressAt = { x: e.clientX, y: e.clientY };
+  }, true);
+  document.addEventListener('click', function (e) {
+    var v = e.target.closest && e.target.closest('video');
+    if (!v) return;
+    if (pressAt && Math.abs(e.clientX - pressAt.x) + Math.abs(e.clientY - pressAt.y) > 10) return;
+    replay(v);
+  });
 
   /* ---------- Holding the page still ----------
      Anything that takes over the screen - the menu, the About window - owns
@@ -294,7 +330,10 @@
 
   /* The large shots stay out of the initial payload; a row fetches its own the
      first time someone shows interest in it. */
-  var promote = function (scope) {
+  var films = function (scope) { return scope.querySelectorAll('video'); };
+  var halt = function (v) { if (!v.paused) v.pause(); rewind(v); };
+
+  var promote = function (scope, watch) {
     Array.prototype.forEach.call(scope.querySelectorAll('img[data-src]'), function (img) {
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
@@ -311,7 +350,7 @@
         });
         video.preload = 'auto';
         video.load();
-        playIfSeen(video);
+        if (watch !== false) playIfSeen(video);
       }
     });
   };
@@ -327,9 +366,12 @@
     if (shots.__seen) return shots.__seen;
     shots.__seen = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        shots.__seen.unobserve(e.target);
-        promote(e.target);
+        if (e.isIntersecting) {
+          promote(e.target, false);
+          if (!reduced) Array.prototype.forEach.call(films(e.target), replay);
+        } else {
+          Array.prototype.forEach.call(films(e.target), halt);
+        }
       });
     }, { root: shots, rootMargin: '0px 300px' });
     return shots.__seen;
@@ -403,6 +445,11 @@
       if (reduced) shots.scrollLeft = 0;
       else shots.scrollTo({ left: 0, behavior: 'smooth' });
     }
+    /* The strip stays laid out under the closed row, so nothing tells its films
+       they have left the screen: the fold does. They stop and wind back, and
+       the thumbnails coming up take over from their own first frame. */
+    Array.prototype.forEach.call(row.querySelectorAll('.row__track video'), halt);
+    if (!reduced) Array.prototype.forEach.call(row.querySelectorAll('.thumbs video'), replay);
   };
 
   var unfold = function (row) {
@@ -410,6 +457,14 @@
     var shots = row.querySelector('.row__shots');
     if (shots) shots.scrollLeft = 0;   /* the flight is measured from the strip's start */
     row.classList.add('is-open');
+    /* The same exchange the other way: the thumbnails go out under the shots,
+       so they stop, and every shot that has a thumbnail to fly from starts at
+       its first frame. The ones further along the strip wait for the reader to
+       scroll to them. */
+    Array.prototype.forEach.call(row.querySelectorAll('.thumbs video'), halt);
+    if (!reduced) {
+      Array.prototype.forEach.call(row.querySelectorAll('.row__track > li:not(.more) video'), replay);
+    }
     handOver(row);
     row.querySelector('.row__toggle').setAttribute('aria-expanded', 'true');
   };
