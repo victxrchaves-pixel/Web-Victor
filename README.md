@@ -295,7 +295,7 @@ Nothing points at them now; they are kept for the case study.
 
 Every thumbnail and every expanded shot is cut from the project's own original,
 centred on the comp's box: the thumbnail at twice the box, the shot at 705 tall.
-Three slots in the BareFolio row and one in Fernet Branca have no still of their
+Four slots in the BareFolio row and one in Fernet Branca have no still of their
 own, so they are frames lifted from that project's video.
 
 Nothing is exported from Figma any more. Figma's own renders were only ever a
