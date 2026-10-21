@@ -113,7 +113,11 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   font-size: 0.85rem; text-transform: uppercase;
   transition: transform var(--dur-ui) var(--ease-out);
 }
-.skip-link:focus-visible { transform: translate(-50%, 0); }
+/* The skip link is a keyboard affordance and nothing else: it comes down only
+   when someone is actually moving with Tab. A touch or a click never brings it
+   out - on a phone there is no Tab to skip with, and it was turning up on its
+   own over the top of the page. main.js says which hand is on the page. */
+html[data-input="key"] .skip-link:focus-visible { transform: translate(-50%, 0); }
 
 /* ---------- The traced canvas ----------
    Everything below is placed with the comp's own coordinates:
