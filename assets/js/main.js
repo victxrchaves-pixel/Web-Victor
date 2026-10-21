@@ -236,16 +236,64 @@
     bandWatch.observe(track.parentNode);
   }
 
-  if (track && !reduced) {
-    Array.prototype.slice.call(track.children).forEach(function (node) {
-      var clone = node.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      clone.setAttribute('alt', '');
-      track.appendChild(clone);
-    });
-    // Only start moving once the loop is seamless; at rest the band sits
-    // exactly where the comp puts it.
-    track.parentNode.classList.add('marquee--anim');
+  if (track) {
+    var band = track.parentNode;
+
+    /* Whatever the band holds, its films run like every other one here. */
+    var watchBand = function () {
+      Array.prototype.forEach.call(track.querySelectorAll('video'), function (v) {
+        if (v.__watched) return;
+        v.__watched = true;
+        playIfSeen(v);
+      });
+    };
+    watchBand();
+
+    if (!reduced) {
+      /* A second run of the same frames, so the wrap lands on an identical
+         picture and nobody sees the seam. */
+      Array.prototype.slice.call(track.children).forEach(function (node) {
+        var clone = node.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        if (clone.tagName === 'IMG') clone.setAttribute('alt', '');
+        track.appendChild(clone);
+      });
+      watchBand();
+
+      /* 36 of the comp's own pixels a second: the rate the band had before,
+         kept whatever the window's width and however many frames it holds. */
+      var SPEED = 36;
+      var onScreen = true, last = 0, started = false, pos = null;
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          onScreen = entries[0].isIntersecting;
+        }, { rootMargin: '200px 0px' }).observe(band);
+      }
+
+      var drift = function (now) {
+        window.requestAnimationFrame(drift);
+        var half = track.scrollWidth / 2;
+        if (!half || !onScreen) { last = now; return; }
+        if (!started) { band.scrollLeft = pos = half; started = true; last = now; return; }
+        /* One comp pixel is the band's own width over the width the comp gives
+           it, so the drift reads the same on every screen. */
+        var u = band.clientWidth / 2157;
+        var dt = Math.min(100, now - last);
+        last = now;
+        /* The place is kept here, to the fraction: a frame's worth of drift is
+           less than a pixel, and scrollLeft would round every one of them up
+           and run the band at a pixel a frame. A hand on the scroller changes
+           it by more than that, which is how the two are told apart. */
+        var cur = band.scrollLeft;
+        if (Math.abs(cur - pos) > 1.5) pos = cur;
+        pos += SPEED * u * dt / 1000;
+        if (pos >= half * 1.5) pos -= half;
+        else if (pos < half * 0.5) pos += half;
+        band.scrollLeft = pos;
+      };
+      window.requestAnimationFrame(drift);
+    }
   }
 
   /* ---------- The pill label names the section you are in ---------- */

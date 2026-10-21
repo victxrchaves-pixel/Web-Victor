@@ -884,16 +884,29 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 
 /* ---------- Full-bleed image band ---------- */
 
-.marquee { overflow: hidden; }
+/* The band drifts on its own and is a scroller at the same time: the drift is
+   scrollLeft rather than a transform, so a hand on it adds to the same number
+   instead of fighting an animation. The run is doubled and wrapped around its
+   middle, which leaves half a run of slack either way before the seam - more
+   than any flick - and the seam itself falls on identical frames. */
+.marquee {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  /* a finger that starts on the band can still take the page up or down */
+  touch-action: pan-x pan-y;
+}
+.marquee::-webkit-scrollbar { display: none; }
 .marquee__track { display: flex; width: max-content; height: 100%; }
-.marquee__track img {
+.marquee__track img,
+.marquee__track video {
   width: calc(var(--w) * var(--u));
   height: calc(var(--h) * var(--u));
   object-fit: cover; flex: none; background: #d9d9d9;
+  display: block;
 }
-.marquee--anim .marquee__track { animation: marquee 60s linear infinite; }
-@keyframes marquee { to { transform: translateX(-50%); } }
-@media (hover: hover) and (pointer: fine) { .marquee:hover .marquee__track { animation-play-state: paused; } }
 
 /* ---------- Contact ---------- */
 
