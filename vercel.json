@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "web-victor.vercel.app" }],
+      "destination": "https://www.chavescerrejon.com/:path*",
+      "permanent": true
+    }
+  ]
+}

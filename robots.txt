@@ -1,0 +1,5 @@
+# https://www.chavescerrejon.com
+User-agent: *
+Allow: /
+
+Sitemap: https://www.chavescerrejon.com/sitemap.xml
