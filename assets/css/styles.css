@@ -92,6 +92,11 @@ hr { border: 0; margin: 0; }
 
 ::selection { background: var(--live); color: #000; }
 :focus-visible { outline: 2px solid var(--live); outline-offset: 3px; }
+/* ...but only for the keyboard. A click already says where the reader is
+   looking, and the page moves the caret on their behalf when it opens the menu
+   or a window - which is what used to draw a ring nobody asked for. main.js
+   says which hand is on the page. */
+html[data-input="pointer"] :focus-visible { outline: none; }
 * { scrollbar-color: rgba(255, 255, 255, 0.28) transparent; scrollbar-width: thin; }
 *::-webkit-scrollbar { width: 10px; height: 10px; }
 *::-webkit-scrollbar-track { background: var(--bg); }

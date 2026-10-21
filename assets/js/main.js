@@ -5,6 +5,28 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Which hand is on the page ----------
+     The focus ring is for someone finding their way with the keyboard. It is
+     not for someone who has just clicked: there, what they clicked is already
+     what they are looking at. :focus-visible gets that right for focus the
+     reader moves, but not for focus the page moves for them - opening the menu
+     puts the caret on the first link, a window puts it on its close button -
+     and that is where the ring was turning up uninvited, on a click. So the
+     page says plainly which hand is on it and the ring is drawn for only one
+     of them. Tab is the only key that can start keyboard navigation from
+     nothing; every other key leaves the mode as it was, so closing a window
+     with Escape after clicking does not light anything up either. */
+  var inputMode = function (mode) {
+    if (document.documentElement.getAttribute('data-input') !== mode) {
+      document.documentElement.setAttribute('data-input', mode);
+    }
+  };
+  inputMode('pointer');
+  document.addEventListener('pointerdown', function () { inputMode('pointer'); }, true);
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Tab') inputMode('key');
+  }, true);
   var setLabel = function () {};
   var updateLabel = function () {};
 
