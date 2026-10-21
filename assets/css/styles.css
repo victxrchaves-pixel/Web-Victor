@@ -1452,18 +1452,34 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   }
   .project__info-in { position: static; padding-top: calc(var(--mtext, 150) * var(--u)); }
   .project__text {
-    margin-left: calc(15 * var(--u));
-    width: calc(372 * var(--u));
+    margin-left: calc(26 * var(--u));
+    width: calc(352 * var(--u));
     font-size: calc(var(--mfs) * var(--u));
     line-height: calc(var(--mlh) * var(--u));
   }
-  .project__foot { margin-top: calc(40 * var(--u)); height: auto; font-size: calc(16.5 * var(--u)); line-height: calc(21 * var(--u)); }
+  .project__foot {
+    margin-top: calc(39 * var(--u));
+    height: auto;
+    font-size: calc(13.632 * var(--u));
+    line-height: calc(15.83 * var(--u));
+  }
   .piece--spec {
     font-size: calc(var(--mfs) * var(--u));
     line-height: calc(var(--mlh) * var(--u));
     letter-spacing: calc(var(--mtr) * var(--u));
   }
-  .project__see { position: static; margin-top: calc(10 * var(--u)); }
+  /* The age and the link share a line here, the link hung from the right edge
+     rather than placed at a measured x: the writing's column is narrower than
+     the comp's and the two would otherwise run into each other. */
+  .project__see {
+    left: auto;
+    right: calc(18.088 * var(--u));
+    top: 0;
+    gap: calc(9.554 * var(--u));
+    font-size: calc(13.028 * var(--u));
+    line-height: calc(16 * var(--u));
+  }
+  .project__see img { width: calc(16.359 * var(--u)); height: calc(16.359 * var(--u)); }
   .piece {
     left: calc(var(--mx) * var(--u));
     top: calc(var(--my) * var(--u));
@@ -1471,9 +1487,9 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     height: calc(var(--mh) * var(--u));
   }
   .tags--project .tag {
-    padding-top: calc(2.5 * var(--u));
-    font-size: calc(13 * var(--u));
-    line-height: calc(17 * var(--u));
+    padding-top: calc(7.831 * var(--u));
+    font-size: calc(12.127 * var(--u));
+    line-height: calc(16 * var(--u));
   }
 
   /* The comp puts the filter beside the heading, which only a wide canvas has
