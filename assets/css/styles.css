@@ -1491,6 +1491,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
     font-size: calc(12.127 * var(--u));
     line-height: calc(16 * var(--u));
   }
+  /* A line set beside a mark belongs to it, so it is scaled with it. */
+  .piece--word {
+    font-size: calc(var(--mfs) * var(--u));
+    line-height: calc(var(--mlh) * var(--u));
+  }
 
   /* The comp puts the filter beside the heading, which only a wide canvas has
      room for. On the phone it wraps under it, laid out rather than placed. */
