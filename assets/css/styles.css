@@ -2107,8 +2107,14 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     align-items: flex-start;
   }
   .touch__display { width: 100%; font-size: calc(57.336 * var(--u)); }
-  /* The phone's column is 372 and the Spanish line wants 407 of it. */
+  /* The phone's column is 372 and the Spanish line wants 407 of it. The same
+     goes for the page's own contact heading, which would otherwise break TU
+     PROYECTO. in two and run into the address under it. */
   html[data-lang="es"] .touch__display { font-size: calc(52 * var(--u)); }
+  html[data-lang="es"] .contact .display {
+    font-size: calc(50 * var(--u));
+    line-height: calc(43 * var(--u));
+  }
   .touch__note { margin-top: calc(23 * var(--u)); width: 100%; }
   .touch__copy {
     margin-top: calc(23 * var(--u));
