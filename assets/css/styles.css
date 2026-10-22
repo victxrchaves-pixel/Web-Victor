@@ -86,11 +86,12 @@
   --fg-inv: #fafafa;
   --line: #111111;
   --stroke: #111111;
-  /* The panels are a grey veil rather than a white one: on the page they read
-     #e0e0e0 over #fafafa, and over the photograph they stay around #dedede,
-     which only a light grey at nine tenths does on both grounds. */
-  --glass: rgba(222, 222, 222, 0.88);
-  --glass-soft: rgba(222, 222, 222, 0.72);
+  /* The panels are white veils, not grey ones: the bar reads #fdfdfd over the
+     page and #f1f5f4 over the sky, which is white at three fifths on both
+     grounds. The soft one all but disappears on paper, which is what the comp
+     does with the filter chips - there they are words, not boxes. */
+  --glass: rgba(255, 255, 255, 0.60);
+  --glass-soft: rgba(255, 255, 255, 0.55);
   --glass-light: rgba(17, 17, 17, 0.03);
   --tag-bg: #f6f6f6;
   --placeholder: #ededed;
@@ -100,7 +101,7 @@
      thirds. */
   --scrim: rgba(250, 250, 250, 0.64);
   --scrim-deep: rgba(250, 250, 250, 0.78);
-  --sheet-bg: rgba(224, 224, 224, 0.94);
+  --sheet-bg: rgba(255, 255, 255, 0.86);
   /* The light comp carries no green at all. It is kept only for what the comp
      cannot draw - hover, focus, the selection - and taken down to a green that
      can be read on paper. */
