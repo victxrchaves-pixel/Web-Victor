@@ -929,9 +929,14 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
    a clipped element reports zero intersection area and would never reveal. */
 .js-anim [data-reveal="wipe"] { opacity: 1; transform: none; }
 
-.js-anim [data-reveal="wipe"] > * { display: block; clip-path: inset(0 100% 0 0); }
+/* The wipe runs left to right, so only the two side edges of the clip do any
+   work. The comp's line-height is shorter than the type (0.857 em), which puts
+   the tail of a p or a g below the line box - and an inset of zero would cut
+   it off. Hence the slack above and below: the clip still hides the line until
+   its turn, and the letters keep their tails. */
+.js-anim [data-reveal="wipe"] > * { display: block; clip-path: inset(-0.35em 100% -0.35em 0); }
 .js-anim [data-reveal="wipe"].is-in > * {
-  clip-path: inset(0 0 0 0);
+  clip-path: inset(-0.35em 0 -0.35em 0);
   transition: clip-path 900ms var(--ease-in-out);
 }
 
