@@ -1600,6 +1600,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
     font-size: calc(var(--mfs) * var(--u));
     line-height: calc(var(--mlh) * var(--u));
   }
+  /* The two languages are not the same length, and under the writing comes the
+     mosaic, which is placed rather than flowed. The block keeps the taller of
+     the two, so the foot and everything below it stay where they are put. */
+  .project__bodies { min-height: calc(var(--mbody, 0) * var(--u)); }
+
   .project__foot {
     margin-top: calc(39 * var(--u));
     height: auto;

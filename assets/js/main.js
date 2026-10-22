@@ -29,6 +29,10 @@
   }, true);
   var setLabel = function () {};
   var updateLabel = function () {};
+  var sheetLabel = function (el) {
+    var lang = document.documentElement.getAttribute('data-lang') === 'es' ? 'es' : 'en';
+    return el.getAttribute('data-sheet-label-' + lang) || el.getAttribute('data-sheet-label') || '';
+  };
 
   /* ---------- Films in the strips ----------
      A few of the pieces are films, not photographs, so their slot plays rather
@@ -167,6 +171,19 @@
   var root = document.documentElement;
   var KEY = { lang: 'vc-lang', theme: 'vc-theme' };
 
+  // The few words the script says on its own: the rest live in the markup.
+  var WORDS = {
+    menu:    { es: 'Men\u00fa',      en: 'Menu' },
+    work:    { es: 'Proyectos',  en: 'Work' },
+    what:    { es: 'Qu\u00e9 hago',  en: 'What I Do' },
+    contact: { es: 'Contacto',   en: 'Contact' }
+  };
+  var say = function (key) {
+    var w = WORDS[key];
+    if (!w) return key;
+    return w[root.getAttribute('data-lang') === 'es' ? 'es' : 'en'] || w.en;
+  };
+
   var remember = function (key, value) {
     try { window.localStorage.setItem(key, value); } catch (e) {}
   };
@@ -176,6 +193,22 @@
     Array.prototype.forEach.call(els, function (el) {
       var text = el.getAttribute('data-' + lang);
       if (text !== null) el.textContent = text;
+    });
+  };
+
+  // Un bloque que espera su turno no se dibuja, asi que nunca cruza el
+  // observador que descubre las cosas al llegar a ellas. Cuando le toca, toma
+  // el estado del que sustituye, que es su hermano en el marcado.
+  var mirrorReveal = function () {
+    var all = document.querySelectorAll('[data-only][data-reveal]');
+    Array.prototype.forEach.call(all, function (el) {
+      var mine = el.getAttribute('data-only');
+      var sides = [el.previousElementSibling, el.nextElementSibling];
+      for (var i = 0; i < sides.length; i++) {
+        var o = sides[i];
+        if (o && o.hasAttribute('data-only') && o.getAttribute('data-only') !== mine
+            && o.classList.contains('is-in')) { el.classList.add('is-in'); return; }
+      }
     });
   };
 
@@ -196,8 +229,15 @@
     root.setAttribute('data-lang', lang);
     root.setAttribute('lang', lang);
     sayLang(lang);
+    mirrorReveal();
     markSeg('lang', lang, 'data-set-lang');
     if (save) remember(KEY.lang, lang);
+    // The bar names the section you are in, and that name is the script's own.
+    if (save) {
+      if (menuOpen) setLabel(say('menu'));
+      else if (openSheetEl) setLabel(sheetLabel(openSheetEl));
+      else updateLabel();
+    }
   };
 
   var setTheme = function (theme, save) {
@@ -255,7 +295,7 @@
     scrim.hidden = false;
     requestAnimationFrame(function () { scrim.classList.add('is-visible'); });
     lockPage();
-    setLabel('Menu');
+    setLabel(say('menu'));
     var first = panel.querySelector('.pill__links a');
     if (first) first.focus({ preventScroll: true });
   }
@@ -271,7 +311,7 @@
     unlockPage();
     // The menu can be opened over a window, which is still there underneath;
     // the bar goes back to naming it rather than to naming the page.
-    if (openSheetEl) setLabel(openSheetEl.getAttribute('data-sheet-label') || '');
+    if (openSheetEl) setLabel(sheetLabel(openSheetEl));
     else updateLabel();
     var hide = function () { if (!menuOpen) scrim.hidden = true; };
     if (reduced) hide(); else window.setTimeout(hide, 320);
@@ -389,14 +429,23 @@
   if (navLabel) {
     // Measured from real elements, not comp coordinates: the two canvases put
     // these in very different places.
+    // The page's own opening name is whatever the markup says, in either
+    // language; the rest are the script's own words, asked for when needed.
+    var home = {
+      es: navLabel.getAttribute('data-es') || (navLabel.textContent || '').trim(),
+      en: navLabel.getAttribute('data-en') || (navLabel.textContent || '').trim()
+    };
     var SECTIONS = [
-      // The page's own opening label, so a traced page that is not the
-      // landing (the projects list) starts on its own name.
-      { el: null, text: (navLabel.textContent || '').trim() || 'ChavesCerrejon' },
-      { el: document.querySelector('.row__toggle'),      text: 'Work' },
-      { el: document.querySelector('.services .display'), text: 'What I Do' },
-      { el: document.querySelector('.contact .display'), text: 'Contact' }
+      { el: null, key: 'home' },
+      { el: document.querySelector('.row__toggle'),       key: 'work' },
+      { el: document.querySelector('.services .display'), key: 'what' },
+      { el: document.querySelector('.contact .display'),  key: 'contact' }
     ];
+    var textOf = function (section) {
+      if (section.key !== 'home') return say(section.key);
+      return home[document.documentElement.getAttribute('data-lang') === 'es' ? 'es' : 'en']
+             || 'ChavesCerrejon';
+    };
     var current = -1;
 
     var labelTarget = navLabel.textContent;
@@ -413,7 +462,7 @@
 
     var applyLabel = function (index) {
       current = index;
-      setLabel(SECTIONS[index].text);
+      setLabel(textOf(SECTIONS[index]));
     };
 
     updateLabel = function () {
@@ -809,7 +858,7 @@
     el.classList.add('is-open');
     document.documentElement.classList.add('sheet-is-open');
     lockPage();
-    setLabel(el.getAttribute('data-sheet-label') || 'Menu');
+    setLabel(sheetLabel(el) || say('menu'));
     // One forced reflow rather than a frame callback: it gives the transition
     // a start value to run from and any measuring a box to work on, both
     // synchronously. A requestAnimationFrame would do the same only once the
@@ -1007,16 +1056,24 @@
 
   var clock = document.getElementById('clock');
   if (clock) {
-    var dateFmt = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Europe/Madrid', month: 'long', day: 'numeric', year: 'numeric'
-    });
+    var dateFmt, dateLang;
+    var fmtFor = function () {
+      var l = document.documentElement.getAttribute('data-lang') === 'es' ? 'es-ES' : 'en-US';
+      if (l !== dateLang) {
+        dateLang = l;
+        dateFmt = new Intl.DateTimeFormat(l, {
+          timeZone: 'Europe/Madrid', month: 'long', day: 'numeric', year: 'numeric'
+        });
+      }
+      return dateFmt;
+    };
     var timeFmt = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
     });
 
     var tick = function () {
       var now = new Date();
-      clock.textContent = dateFmt.format(now) + '  ' + timeFmt.format(now);
+      clock.textContent = fmtFor().format(now) + '  ' + timeFmt.format(now);
       clock.setAttribute('datetime', now.toISOString());
     };
     tick();
