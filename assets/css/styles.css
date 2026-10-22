@@ -41,6 +41,7 @@
      is the colour of the writing as three numbers, so a hairline or a rail can
      ask for it at any strength and still turn over with the theme. */
   --bg: #111111;
+  --bg-rgb: 17, 17, 17;
   --fg: #ffffff;
   --ink-rgb: 255, 255, 255;
   --fg-inv: #000000;        /* what is written on top of a --fg fill */
@@ -81,6 +82,7 @@
    paper they are a touch darker too, not black boxes. */
 :root[data-theme="light"] {
   --bg: #fafafa;
+  --bg-rgb: 250, 250, 250;
   --fg: #111111;
   --ink-rgb: 17, 17, 17;
   --fg-inv: #fafafa;
@@ -180,6 +182,13 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   transition: height 0s linear var(--dur-fold);
 }
 .frame.has-open, .frame.is-untrimming { transition-delay: 0s; }
+/* The landing's opening is no longer drawn inside the canvas but above it, so
+   the canvas is pulled up by the 1117 the hero used to occupy and gives back
+   the same from its own height. Every --y below it is still the comp's. */
+.frame--after-hero {
+  margin-top: calc(-1117 * var(--u));
+  height: calc((var(--frame-h, 4484) + var(--push, 0) + var(--trim, 0) - 1117) * var(--u));
+}
 /* Hint the compositor only while a fold is in flight: these are large layers
    and promoting them for good would cost memory on a phone for nothing. */
 .frame.is-folding .row,
@@ -189,7 +198,7 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .btn, .btn__label, .btn__icon,
 .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
 .row__toggle, .row__shots,
-.rule, .hero__bg, .band, .card, .marquee, .footer__dot {
+.rule, .band, .card, .marquee, .footer__dot {
   position: absolute;
   left: calc(var(--x, 0) * var(--u));
   top: calc(var(--y, 0) * var(--u));
@@ -561,29 +570,100 @@ html[data-lang="es"] .btn--glass {
 
 /* ---------- Hero ---------- */
 
-.hero__bg {
-  object-fit: cover;
-  z-index: -2;
-  transform: scale(1.05);
-  animation: heroSettle 1400ms var(--ease-out) 80ms forwards;
-}
-@keyframes heroSettle { to { transform: scale(1); } }
-/* The cover photograph does not turn over with the page: it is the same dark
-   picture in either theme, so everything written on top of it keeps the ink it
-   was given. Inside the hero the tokens hold their dark values, and the colour
-   is asked for again here so that what hangs below inherits the white rather
-   than the page's. */
+/* The opening is a stage of its own, three screens tall, with everything in it
+   stuck to the top of the window while those three screens go by. What moves
+   in that time is the row of work, which is drawn on a canvas and driven from
+   the scroll; the page itself is not held back at any point, so a wheel, a
+   trackpad, a keyboard and a scrollbar all do what they always do. */
 .hero {
-  color: var(--fg);
-  --fg: #ffffff;
-  --icon-invert: 0;
-  --ink-rgb: 255, 255, 255;
-  --fg-inv: #000000;
-  --stroke: #fafafa;
-  --glass-soft: rgba(0, 0, 0, 0.48);
-  --glass-light: rgba(234, 234, 234, 0.31);
-  --tag-bg: #000000;
+  position: relative;
+  height: 300vh;
+  height: 300lvh;
 }
+.hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+}
+
+/* The row. The canvas is put inside this box by the script and the pictures
+   are taken away; until then - and for ever, where there is no WebGL2 - the
+   pictures are the row themselves, in a line too long for the screen and
+   centred on it, which is where the drawn row starts from. */
+.hero__row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(36 * var(--u));
+}
+.hero__row canvas { position: absolute; inset: 0; }
+.hero__row img {
+  flex: none;
+  height: 44%;
+  width: auto;
+  object-fit: cover;
+}
+.hero[data-gl] .hero__row img { display: none; }
+
+/* The words, in the middle of it. They step aside as soon as the row starts to
+   move and come back when it does: the number is written on the section by the
+   script and read here, so going back up undoes it exactly. */
+.hero__words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(26 * var(--u));
+  text-align: center;
+  opacity: var(--hero-words, 1);
+  pointer-events: none;
+}
+/* The row passes behind the words, and a photograph is no ground to read on.
+   What clears it is a breath of the page's own colour, widest where the lines
+   are and gone by the edges, and it belongs to the words rather than to the
+   screen: it leaves with them and comes back with them. */
+.hero__words::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(44% 32% at 50% 50%,
+    rgba(var(--bg-rgb), 0.92) 0%,
+    rgba(var(--bg-rgb), 0.74) 52%,
+    rgba(var(--bg-rgb), 0) 100%);
+}
+.hero__social {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(64 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(16 * var(--u));
+  opacity: var(--hero-words, 1);
+}
+/* The comp's coordinates are no use here - the opening is a column now, not a
+   tracing - so they are taken off everything inside it. Relative rather than
+   static so the writing paints over the veil behind it. */
+.hero__words > *,
+.hero__social > *,
+.hero__social .chips,
+.hero__social .chips li {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: auto;
+  height: auto;
+  text-align: center;
+}
+.hero__social .chips { display: flex; gap: calc(20 * var(--u)); }
+.hero__social .chip { padding: calc(6 * var(--u)) calc(16 * var(--u)); }
 
 /* The icons and the project logotypes are drawn in white, which is right on
    the dark page and invisible on the light one, so they turn over with it. The
@@ -616,15 +696,7 @@ html[data-lang="es"] [data-en="[ Featured work ]"] {
 }
 .intro { font-family: 'Geist', system-ui, sans-serif; font-weight: 400; }
 .hero__title { font-weight: 400; text-transform: uppercase; }
-.hero__sub { text-align: right; text-transform: uppercase; }
-/* The cover photograph is not cut off at the bottom: it is faded into the page
-   with a mask, so whatever colour the page is, that is what it fades into. The
-   mask hangs off the picture's own bottom edge, which is what makes it hold on
-   the phone, where the picture grows to fill the screen. */
-.hero__bg {
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 150 * var(--u)), transparent);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 150 * var(--u)), transparent);
-}
+.hero__sub { text-transform: uppercase; }
 
 .chips li { --y: 0; }
 .chips--hero li {
@@ -1624,10 +1696,21 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
      1.93x it was to 1.28x. */
   :root { --u: calc(min(100vw, 430px) / 402); }
 
-  .stage { display: flex; justify-content: center; }
+  /* The column is narrower than the screen, so it is centred rather than
+     pinned left. The opening stands above it and takes the whole width, which
+     is why the stacking is stated here: side by side is what a row would do. */
+  .stage { display: flex; flex-direction: column; align-items: center; }
+  .hero { width: 100%; }
   .frame {
     width: calc(402 * var(--u));
     height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0) + var(--trim, 0)) * var(--u));
+  }
+  /* The phone comp gives the opening 811 of its own - it drops the intro, so
+     what follows is the work itself, with its own air above it. The canvas
+     gives back exactly those 811. */
+  .frame--after-hero {
+    margin-top: calc(-811 * var(--u));
+    height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0) + var(--trim, 0) - 811) * var(--u));
   }
 
   /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
@@ -1640,7 +1723,7 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
   .row__toggle, .row__shots,
-  .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
+  .rule, .band, .card, .marquee, .footer__dot {
     --mx: initial; --my: initial; --mw: initial; --mh: initial;
     --mfs: initial; --mlh: initial;
   }
@@ -1652,7 +1735,7 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .btn, .btn__label, .btn__icon,
   .t, .chips, .chips li, .tags, .tag, .thumbs, .thumbs img, .thumbs__slot, .thumbs__video,
   .row__toggle, .row__shots,
-  .rule, .hero__bg, .band, .card, .marquee, .footer__dot {
+  .rule, .band, .card, .marquee, .footer__dot {
     left: calc(var(--mx, var(--x, 0)) * var(--u));
     top: calc(var(--my, var(--y, 0)) * var(--u));
     width: calc(var(--mw, var(--w)) * var(--u));
@@ -1667,17 +1750,6 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .btn__label, .card { height: auto; }
   /* Figma measured these boxes with its own metrics; the names are one line. */
   .row__name { white-space: nowrap; }
-
-  /* iOS gives and takes screen as its own chrome comes and goes, and a picture
-     cut to one height shows a band of page at the edge the moment it changes -
-     which is also what opens under the bar when the menu locks the page. Large
-     viewport units are the height the screen has with nothing on top of it, so
-     the picture is cut to that and covers whatever state Safari is in. Its top
-     stays where the comp puts it, above the frame, which is the headroom. */
-  .hero__bg {
-    height: max(calc(var(--mh) * var(--u)), calc(100vh - (var(--my) * var(--u))));
-    height: max(calc(var(--mh) * var(--u)), calc(100lvh - (var(--my) * var(--u))));
-  }
 
   /* On a phone there is no second column for the work to pass, so the writing
      is not pinned: it simply comes first and the mosaic follows it. */
@@ -1847,15 +1919,15 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
      panel; CSS does that rather than a second copy of the markup. */
   .pill__actions a:nth-child(2) { order: -1; }
 
-  /* Not in the phone comp: the hero photo runs straight into the dark, so it
-     is masked away over its last third rather than stopping on an edge. */
-  .band { display: none; }
-  .hero__bg {
-    -webkit-mask-image: linear-gradient(to bottom, #000 56%, rgba(0, 0, 0, 0) 100%);
-    mask-image: linear-gradient(to bottom, #000 56%, rgba(0, 0, 0, 0) 100%);
+  /* The lines run nearly the width of the screen here, so the column is given
+     the comp's own margin and the veil behind it is widened to match. */
+  .hero__words { padding-inline: calc(15 * var(--u)); gap: calc(22 * var(--u)); }
+  .hero__words::before {
+    background: radial-gradient(78% 26% at 50% 50%,
+      rgba(var(--bg-rgb), 0.94) 0%,
+      rgba(var(--bg-rgb), 0.8) 52%,
+      rgba(var(--bg-rgb), 0) 100%);
   }
-
-  .hero__title, .hero__sub { text-align: left; }
   .display { letter-spacing: calc(-2 * var(--u)); }
 
   /* Three discipline cards on a rail you push sideways. */
@@ -2210,7 +2282,6 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .pill { transition: none; }
   .pill__links li, .pill__actions { transform: none; transition: opacity 160ms ease; }
   .burger line { transition: opacity 160ms ease; }
-  .hero__bg { animation: none; transform: none; }
   .row:has(.row__toggle:hover) .thumbs { transform: none; }
   .row, .shift, .frame, .row__panel { transition: none; }
   .row__desc, .row__cta, .row__track li,

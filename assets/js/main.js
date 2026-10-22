@@ -148,12 +148,17 @@
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
 
     // Stagger the members of each group so nothing arrives all at once.
+    var opening = document.querySelector('.hero');
     var groups = {};
     revealables.forEach(function (el) {
       var key = el.closest('section, header, footer');
       var id = key ? (key.id || key.className) : 'root';
       groups[id] = (groups[id] || 0) + 1;
       el.style.setProperty('--reveal-delay', (groups[id] - 1) * 60 + 'ms');
+      // The opening is already on the screen when the page arrives, and parts
+      // of it sit low enough to fall outside what the observer counts as in
+      // view. It comes in on its own, still one after another.
+      if (opening && opening.contains(el)) { el.classList.add('is-in'); return; }
       revealObserver.observe(el);
     });
   }

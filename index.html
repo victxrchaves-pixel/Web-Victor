@@ -38,7 +38,56 @@
 -->
 
 <div class="stage">
-<div class="frame" style="--frame-h:4484; --mframe-h:4406">
+<!--
+  The opening. It is not a piece of the canvas below but a stage of its own,
+  as tall as three screens, with everything in it pinned to the top of the
+  window while those three screens go past. What moves in that time is the row
+  of work, not the page (see assets/js/hero.js). The canvas that follows is
+  pulled back up by the height the hero used to take inside it, so every
+  number in it is still the comp's own.
+-->
+<section class="hero" id="top">
+  <div class="hero__stage">
+
+    <!-- Written out here so the opening says something with no script and no
+         WebGL: then it is a still row. Once the row can be drawn, these step
+         aside and the drawing takes over. -->
+    <div class="hero__row" id="heroRow">
+      <img src="assets/img/hero/hero-01.webp" alt="IDLE CBD Oil on the moss" width="1400" height="1045" fetchpriority="high">
+      <img src="assets/img/hero/hero-02.webp" alt="A Nonvero Society sweatshirt" width="1045" height="1400">
+      <img src="assets/img/hero/hero-03.webp" alt="The Fernet Branca box" width="1400" height="776">
+      <img src="assets/img/hero/hero-05.webp" alt="The SplitWise app in the hand" width="1045" height="1400">
+      <img src="assets/img/hero/hero-07.webp" alt="The Nagori box" width="1077" height="1400">
+      <img src="assets/img/hero/hero-08.webp" alt="The Kinvo leggings" width="1088" height="1400">
+    </div>
+
+    <div class="hero__words">
+        <p class="t label" style="--fs:15.485; --lh:20; --mfs:12.375; --mlh:15" data-reveal data-t data-es="[ Soy Victor Chaves ]" data-en="[ I’m Victor Chaves ]">[ Soy Victor Chaves ]</p>
+        <h1 class="t hero__title" style="--fs:20; --lh:26; --mfs:15; --mlh:19.5" data-reveal data-only="es" lang="es">Un creativo en el mundo digital.<br>
+        De los que lo dan todo o no dan nada</h1>
+        <h1 class="t hero__title" style="--fs:20; --lh:26; --mfs:15; --mlh:19.5" data-reveal data-only="en" lang="en">A creative guy in the digital world.<br class="u-desk">
+        Someone who gives it their all or not at all</h1>
+        <p class="t hero__sub" style="--fs:20; --lh:24; --mfs:15; --mlh:19.5" data-reveal data-only="es" lang="es">Creo marcas, productos<br class="u-mob">
+        y experiencias que impactan<br>
+        de verdad y conectan más hondo.</p>
+        <p class="t hero__sub" style="--fs:20; --lh:24; --mfs:15; --mlh:19.5" data-reveal data-only="en" lang="en">I craft brands, products,<br class="u-mob">
+        and experiences<br class="u-desk"> that hit hard,<br class="u-mob">
+        and connect deeper.</p>
+    </div>
+
+    <div class="hero__social">
+      <p class="t label hero__social-label" style="--fs:15.485; --lh:20" data-reveal data-t data-es="[ Redes ]" data-en="[ Social media ]">[ Redes ]</p>
+      <ul class="chips chips--hero">
+        <li><a class="chip" href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        <li><a class="chip" href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        <li><a class="chip" href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="frame frame--after-hero" style="--frame-h:4484; --mframe-h:4406">
 
   <header class="nav" id="nav">
     <div class="nav__scrim" id="navScrim" hidden></div>
@@ -110,32 +159,8 @@
     </svg>
   </a>
 
-  <main id="top">
+  <main>
 
-    <section class="hero">
-      <img class="hero__bg" style="--x:-136; --y:0; --w:2001; --h:1117; --mx:-402; --my:-63; --mw:1567; --mh:874" src="assets/img/hero-bg.webp" alt="" width="1376" height="768" fetchpriority="high">
-
-      <p class="t label" style="--x:99; --y:490; --w:231; --fs:15.485; --lh:20; --mx:15; --my:317; --mw:184.5; --mfs:12.375; --mlh:15" data-reveal data-t data-es="[ Soy Victor Chaves ]" data-en="[ I’m Victor Chaves ]">[ Soy Victor Chaves ]</p>
-
-      <h1 class="t hero__title" style="--x:99; --y:518; --w:1137; --fs:20; --lh:26; --mx:15; --my:352; --mw:350; --mfs:15; --mlh:19.5" data-reveal data-only="es" lang="es">Un creativo en el mundo digital.<br>
-        De los que lo dan todo o no dan nada</h1><h1 class="t hero__title" style="--x:99; --y:518; --w:1137; --fs:20; --lh:26; --mx:15; --my:352; --mw:350; --mfs:15; --mlh:19.5" data-reveal data-only="en" lang="en">A creative guy in the digital world.<br class="u-desk">
-        Someone who gives it their all or not at all</h1>
-
-      <p class="t hero__sub" style="--x:-124; --y:570; --w:970; --fs:20; --lh:24; --mx:15; --my:391; --mw:350; --mfs:15; --mlh:19.5" data-reveal data-only="es" lang="es">Creo marcas, productos<br class="u-mob">
-        y experiencias que impactan<br>
-        de verdad y conectan más hondo.</p><p class="t hero__sub" style="--x:-124; --y:570; --w:970; --fs:20; --lh:24; --mx:15; --my:430; --mw:350; --mfs:15; --mlh:19.5" data-reveal data-only="en" lang="en">I craft brands, products,<br class="u-mob">
-        and experiences<br class="u-desk"> that hit hard,<br class="u-mob">
-        and connect deeper.</p>
-
-      <p class="t label hero__social-label" style="--x:790; --y:780; --w:149; --fs:15.485; --lh:20; --mx:127; --my:632" data-reveal data-t data-es="[ Redes ]" data-en="[ Social media ]">[ Redes ]</p>
-
-      <ul class="chips chips--hero" style="--x:725; --y:815; --w:278.09; --h:31.54; --mx:15; --my:667; --mw:372" data-reveal>
-        <li style="--x:0; --w:89.36; --mw:110.67"><a class="chip" href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-        <li style="--x:109.36; --w:67.36; --mx:130.67; --mw:110.67"><a class="chip" href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer">TikTok</a></li>
-        <li style="--x:196.73; --w:81.36; --mx:261.33; --mw:110.67"><a class="chip" href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-      </ul>
-
-    </section>
 
     <section class="work" id="work">
       <p class="t intro" style="--x:47; --y:1126; --w:917; --fs:30; --lh:34.75; --mx:15; --my:811; --mw:354; --mfs:27.064; --mlh:31" data-reveal data-only="es" lang="es">Colaboro con marcas que se atreven<br class="u-desk">
@@ -743,6 +768,9 @@
 </div>
 
 <script src="assets/js/main.js" defer></script>
+<!-- The opening's row of work. A module, so it waits for the document on its
+     own, and anything without WebGL2 simply keeps the pictures in the markup. -->
+<script src="assets/js/hero.js" type="module"></script>
 
 <!-- Cal element-click embed code begins -->
 <script type="text/javascript">
