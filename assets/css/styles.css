@@ -2062,9 +2062,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   }
   .thumbs--type {
     display: block;
-    /* The same line against the phone's taller band. It does not scroll on its
-       own: the strip is where the flight starts, so it always starts on the A. */
-    overflow: hidden;
+    /* The same line against the phone's taller band, and a scroller like every
+       other strip here: the alphabet runs to Z and a finger can follow it. It
+       is wound back to the A when the row opens, which is where the flight of
+       the big letters is measured from. */
+    overflow-x: auto;
+    overflow-y: hidden;
     font-size: calc(141.6 * var(--u));
     line-height: calc(156.5 * var(--u));
   }

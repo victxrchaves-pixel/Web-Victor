@@ -633,6 +633,13 @@
       if (reduced) shots.scrollLeft = 0;
       else shots.scrollTo({ left: 0, behavior: 'smooth' });
     }
+    /* And the closed strip with it, for the same reason: the alphabet of the
+       typeface row is a scroller too, and the next flight starts on its A. */
+    var closed = row.querySelector('.thumbs');
+    if (closed && closed.scrollLeft) {
+      if (reduced) closed.scrollLeft = 0;
+      else closed.scrollTo({ left: 0, behavior: 'smooth' });
+    }
     /* The strip stays laid out under the closed row, so nothing tells its films
        they have left the screen: the fold does. They stop and wind back, and
        the thumbnails coming up take over from their own first frame. */
@@ -644,6 +651,8 @@
     loadShots(row);
     var shots = row.querySelector('.row__shots');
     if (shots) shots.scrollLeft = 0;   /* the flight is measured from the strip's start */
+    var closed = row.querySelector('.thumbs');
+    if (closed) closed.scrollLeft = 0; /* and from the strip's own start, too */
     row.classList.add('is-open');
     /* The same exchange the other way: the thumbnails go out under the shots,
        so they stop, and every shot that has a thumbnail to fly from starts at
