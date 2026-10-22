@@ -781,7 +781,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   /* clear of the bar, which is 26 to 72. The two below it, the resting point
      and the comp's own top, move together: the writing has to sit the same
      whether the block is still at its place or already held against the bar. */
-  top: calc(98 * var(--u));
+  top: calc(100 * var(--u));
   /* the writing's own offset, as padding rather than a margin: a margin on the
      first child would collapse through and take the whole block down with it,
      carrying the title away from the top the comp gives it. */
