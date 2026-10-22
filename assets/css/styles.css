@@ -523,27 +523,32 @@ html[data-lang="en"] [data-only="es"] { display: none; }
    the inside of the button is laid out rather than placed: the word and the
    arrow sit in the middle of the box with the comp's own gap between them,
    which is what the comp's own numbers amount to anyway (its margins are
-   symmetrical). The box itself does not move. */
-html[data-lang="es"] .btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: calc(var(--gap, 14.02) * var(--u));
-}
-html[data-lang="es"] .btn > .btn__label { position: static; width: auto; }
-html[data-lang="es"] .btn > .btn__icon { position: static; flex: none; }
-html[data-lang="es"] .row__cta { --gap: 9.8; }
+   symmetrical). The box itself does not move.
 
-/* The one word that does not fit its box at any price: PROYECTOS where the
-   comp wrote WORK. The box takes the word's width and stays in the middle of
-   the canvas, which is where it is drawn. */
-html[data-lang="es"] .btn--glass {
-  width: max-content;
-  left: 0;
-  right: 0;
-  margin-inline: auto;
-  padding-inline: calc(25.48 * var(--u));
-  --gap: 11;
+   Only on the wide canvas: on the phone every button is rebuilt to one size
+   further down, which does the same job for both languages at once. */
+@media (min-width: 1280px) {
+  html[data-lang="es"] .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--gap, 14.02) * var(--u));
+  }
+  html[data-lang="es"] .btn > .btn__label { position: static; width: auto; }
+  html[data-lang="es"] .btn > .btn__icon { position: static; flex: none; }
+  html[data-lang="es"] .row__cta { --gap: 9.8; }
+
+  /* The one word that does not fit its box at any price: PROYECTOS where the
+     comp wrote WORK. The box takes the word's width and stays in the middle
+     of the canvas, which is where it is drawn. */
+  html[data-lang="es"] .btn--glass {
+    width: max-content;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    padding-inline: calc(25.48 * var(--u));
+    --gap: 11;
+  }
 }
 
 .btn--glass {
@@ -2293,13 +2298,50 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     flex-direction: column;
     gap: calc(18 * var(--u));
   }
+  /* Every button on the phone is the same button. The comp draws half a dozen
+     boxes, each measured to its own English word, and on a column 402 wide
+     that reads as half a dozen different buttons - a couple of them with the
+     word or the arrow hanging out of the box, since Spanish is longer than
+     what was measured. So the box is given one size for all of them, the word
+     and the arrow are laid out inside it rather than placed at the comp's own
+     coordinates, and the type comes down three points from the comp's. */
+  .btn,
   .touch__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(14.016 * var(--u));
     width: calc(227 * var(--u));
     height: calc(46 * var(--u));
-    padding-block: 0;
-    font-size: calc(17 * var(--u));
-    line-height: calc(22 * var(--u));
+    padding: 0 calc(16 * var(--u));
+    border-radius: calc(6.371 * var(--u));
+    font-size: calc(14 * var(--u));
+    line-height: calc(18 * var(--u));
   }
+  .btn__label,
+  .touch__btn span {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    font-size: calc(14 * var(--u));
+    line-height: calc(18 * var(--u));
+  }
+  .btn__icon,
+  .touch__btn img {
+    position: static;
+    left: auto;
+    top: auto;
+    width: calc(24 * var(--u));
+    height: calc(24 * var(--u));
+    flex: none;
+  }
+  /* They start where the writing of the column starts. The one exception is
+     the one the comp itself draws in the middle, under the list. */
+  .btn--outline,
+  .btn--outline-soft { left: calc(15 * var(--u)); }
+  .btn--glass { left: 0; right: 0; margin-inline: auto; }
 
   #about-cv         { order: 1; }
   #about-education  { order: 2; }
