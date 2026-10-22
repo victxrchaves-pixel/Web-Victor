@@ -103,10 +103,10 @@
   --scrim-deep: rgba(250, 250, 250, 0.78);
   --sheet-bg: rgba(255, 255, 255, 0.86);
   /* The light comp carries no green at all. It is kept only for what the comp
-     cannot draw - hover, focus, the selection - and taken down to a green that
-     can be read on paper. */
-  --live: #0a7d00;
-  --live-on: #ffffff;
+     cannot draw - hover, focus, the selection - and it is the same green as
+     the dark page: one mark, one tone, whichever way the page is turned. */
+  --live: #2bff00;
+  --live-on: #000000;
   --icon-invert: 1;
 }
 
@@ -736,9 +736,8 @@ html[data-lang="en"] [data-only="es"] { display: none; }
   img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo[src$=".svg"]) {
   filter: invert(var(--icon-invert));
 }
-/* The one green mark is not turned over - inverting green gives magenta - but
-   taken down to the darker green the light theme uses everywhere else. */
-:root[data-theme="light"] img[src$="dot.svg"] { filter: brightness(0.52) saturate(1.5); }
+/* The one green mark is left alone: inverting green gives magenta, and the
+   mark is the same green on paper as it is on the dark page. */
 
 .label { text-transform: uppercase; }
 
