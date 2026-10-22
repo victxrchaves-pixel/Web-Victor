@@ -245,6 +245,22 @@
     }
   };
 
+  /* The booking window is someone else's page opened inside ours, so it is
+     told which way this one is turned rather than left to read the system's
+     setting: every trigger carries the answer in its own configuration, which
+     is what the embed reads when it opens, and the embed itself is told again
+     once it has loaded. */
+  var CAL_NS = '30min';
+  var dressCal = function (theme) {
+    var config = '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"' + theme + '"}';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cal-link]'), function (el) {
+      el.setAttribute('data-cal-config', config);
+    });
+    try {
+      if (window.Cal && window.Cal.ns && window.Cal.ns[CAL_NS]) window.Cal.ns[CAL_NS]('ui', { theme: theme });
+    } catch (err) {}
+  };
+
   var setTheme = function (theme, save) {
     root.setAttribute('data-theme', theme);
     // The bar at the top of the phone's browser is painted by the page, and it
@@ -252,6 +268,7 @@
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f2ee' : '#111111');
     markSeg('theme', theme, 'data-set-theme');
+    dressCal(theme);
     if (save) remember(KEY.theme, theme);
   };
 
