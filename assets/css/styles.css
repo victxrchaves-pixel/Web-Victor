@@ -36,14 +36,28 @@
 :root {
   --u: calc(100vw / 1728);          /* one comp pixel */
 
+  /* Everything a theme can move lives here and nowhere else. The dark set is
+     the comp's; the light one is below, under [data-theme="light"]. --ink-rgb
+     is the colour of the writing as three numbers, so a hairline or a rail can
+     ask for it at any strength and still turn over with the theme. */
   --bg: #111111;
   --fg: #ffffff;
+  --ink-rgb: 255, 255, 255;
+  --fg-inv: #000000;        /* what is written on top of a --fg fill */
   --line: #ffffff;
+  --stroke: #fafafa;        /* the hairline round the outlined buttons */
   --glass: rgba(0, 0, 0, 0.62);
   --glass-soft: rgba(0, 0, 0, 0.48);
   --glass-light: rgba(234, 234, 234, 0.31);
   --tag-bg: #000000;
+  --placeholder: #d9d9d9;   /* what a picture rests on until it arrives */
+  --dim: #848484;
+  --scrim: rgba(0, 0, 0, 0.55);
+  --scrim-deep: rgba(0, 0, 0, 0.72);
+  --sheet-bg: rgba(10, 10, 10, 0.95);
   --live: #2bff00;
+  --live-on: #000000;       /* what is written on top of --live */
+  --icon-invert: 0;         /* the icons are drawn white: 1 turns them over */
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -57,6 +71,33 @@
   --ease-shut: cubic-bezier(0.4, 0, 0.9, 0.55);
   --dur-fast: 160ms;
   --dur-ui: 220ms;
+}
+
+/* The light theme. Nothing here is a new rule: it is the same tokens with the
+   other set of values, so every surface, hairline and rail turns over at once.
+   The green has to come down a long way - the comp's #2bff00 is unreadable on
+   paper - and the writing it carries turns white with it. The chips are not
+   inverted: on the dark canvas they are a touch darker than the page, so on
+   paper they are a touch darker too, not black boxes. */
+:root[data-theme="light"] {
+  --bg: #f4f2ee;
+  --fg: #111111;
+  --ink-rgb: 17, 17, 17;
+  --fg-inv: #f4f2ee;
+  --line: #111111;
+  --stroke: #141414;
+  --glass: rgba(244, 242, 238, 0.74);
+  --glass-soft: rgba(244, 242, 238, 0.58);
+  --glass-light: rgba(17, 17, 17, 0.10);
+  --tag-bg: #e6e3dd;
+  --placeholder: #e4e1da;
+  --dim: #6b6b6b;
+  --scrim: rgba(17, 17, 17, 0.42);
+  --scrim-deep: rgba(17, 17, 17, 0.58);
+  --sheet-bg: rgba(248, 246, 242, 0.96);
+  --live: #0a7d00;
+  --live-on: #ffffff;
+  --icon-invert: 1;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -93,17 +134,17 @@ ul { list-style: none; margin: 0; padding: 0; }
 a { color: inherit; text-decoration: none; }
 hr { border: 0; margin: 0; }
 
-::selection { background: var(--live); color: #000; }
+::selection { background: var(--live); color: var(--live-on); }
 :focus-visible { outline: 2px solid var(--live); outline-offset: 3px; }
 /* ...but only for the keyboard. A click already says where the reader is
    looking, and the page moves the caret on their behalf when it opens the menu
    or a window - which is what used to draw a ring nobody asked for. main.js
    says which hand is on the page. */
 html[data-input="pointer"] :focus-visible { outline: none; }
-* { scrollbar-color: rgba(255, 255, 255, 0.28) transparent; scrollbar-width: thin; }
+* { scrollbar-color: rgba(var(--ink-rgb), 0.28) transparent; scrollbar-width: thin; }
 *::-webkit-scrollbar { width: 10px; height: 10px; }
 *::-webkit-scrollbar-track { background: var(--bg); }
-*::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border: 3px solid var(--bg); border-radius: 99px; }
+*::-webkit-scrollbar-thumb { background: rgba(var(--ink-rgb), 0.22); border: 3px solid var(--bg); border-radius: 99px; }
 
 .u-sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -177,7 +218,7 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .nav__scrim {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--scrim);
   -webkit-backdrop-filter: blur(2.65px);
   backdrop-filter: blur(2.65px);
   opacity: 0;
@@ -293,7 +334,7 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .pill__links li { padding: calc(10 * var(--u)) calc(18 * var(--u)); }
 .pill__links li:not(:last-child) {
   padding-bottom: calc(16 * var(--u));   /* the 1px rule completes the comp's 50 */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.38);
 }
 .pill__links li + li { margin-top: calc(10 * var(--u)); }
 .pill__links a {
@@ -325,9 +366,9 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   justify-content: center;
   gap: calc(14.016 * var(--u));
   padding: calc(11.468 * var(--u)) calc(25.484 * var(--u));
-  border: 1px solid #fafafa;
+  border: 1px solid var(--stroke);
   border-radius: calc(6.371 * var(--u));
-  color: #fafafa;
+  color: var(--stroke);
   font-size: calc(15 * var(--u));
   line-height: calc(20 * var(--u));
   text-transform: uppercase;
@@ -338,23 +379,78 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .pill__btn img { width: calc(24 * var(--u)); height: calc(24 * var(--u)); flex: none; }
 .pill__btn:active { transform: scale(0.98); }
 
+/* The two settings, at the foot of the menu. A pair of options with a block
+   that slides from one to the other: the state is a position as much as a
+   weight, so you can read it before you read the words. */
+.pill__prefs {
+  display: flex;
+  gap: calc(10 * var(--u));
+  width: 100%;
+  flex: none;
+}
+.seg {
+  position: relative;
+  display: flex;
+  flex: 1;
+  padding: calc(3 * var(--u));
+  border: 1px solid var(--stroke);
+  border-radius: calc(6.371 * var(--u));
+}
+.seg__thumb {
+  position: absolute;
+  left: calc(3 * var(--u));
+  top: calc(3 * var(--u));
+  width: calc((100% - 6 * var(--u)) / 2);
+  height: calc(100% - 6 * var(--u));
+  border-radius: calc(4 * var(--u));
+  background: var(--fg);
+  transition: transform var(--dur-ui) var(--ease-out);
+}
+.seg[data-i="1"] .seg__thumb { transform: translateX(100%); }
+.seg__opt {
+  position: relative;          /* over the block, not under it */
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(7 * var(--u)) 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--stroke);
+  font-family: inherit;
+  font-size: calc(13 * var(--u));
+  line-height: calc(16 * var(--u));
+  letter-spacing: 0.02em;
+  transition: color var(--dur-ui) ease;
+}
+.seg__opt[aria-pressed="true"] { color: var(--fg-inv); }
+.seg__opt svg { width: calc(15 * var(--u)); height: calc(15 * var(--u)); display: block; }
+
+/* One language is written, the other waits. The attribute on <html> decides,
+   so it holds with the script off too - whatever the page was written in. */
+html[data-lang="es"] [data-only="en"],
+html[data-lang="en"] [data-only="es"] { display: none; }
+
 /* The contents arrive as the panel opens, and leave at once when it closes. */
-.pill__links li, .pill__actions {
+.pill__links li, .pill__actions, .pill__prefs {
   opacity: 0;
   transform: translateY(calc(10 * var(--u)));
   transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
 }
 .pill.is-open .pill__links li,
-.pill.is-open .pill__actions { opacity: 1; transform: none; }
+.pill.is-open .pill__actions,
+.pill.is-open .pill__prefs { opacity: 1; transform: none; }
 .pill.is-open .pill__links li:nth-child(1) { transition-delay: 130ms; }
 .pill.is-open .pill__links li:nth-child(2) { transition-delay: 175ms; }
 .pill.is-open .pill__links li:nth-child(3) { transition-delay: 220ms; }
 .pill.is-open .pill__actions { transition-delay: 265ms; }
+.pill.is-open .pill__prefs { transition-delay: 310ms; }
 
 @media (hover: hover) and (pointer: fine) {
   .pill__links a:hover { color: var(--live); }
-  .pill__btn:hover { background: var(--fg); color: #000; border-color: var(--fg); }
-  .pill__btn:hover img { filter: invert(1); }
+  .pill__btn:hover { background: var(--fg); color: var(--fg-inv); border-color: var(--fg); }
+  .pill__btn:hover img { filter: invert(calc(1 - var(--icon-invert))); }
 }
 
 /* Buttons keep the comp's box and the comp's inner coordinates. */
@@ -378,18 +474,18 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   backdrop-filter: blur(calc(4.205 * var(--u)));
 }
 .btn--outline { border-color: var(--fg); -webkit-backdrop-filter: blur(calc(4.205 * var(--u))); backdrop-filter: blur(calc(4.205 * var(--u))); }
-.btn--outline-soft { border-color: rgba(255, 255, 255, 0.46); -webkit-backdrop-filter: blur(calc(4.205 * var(--u))); backdrop-filter: blur(calc(4.205 * var(--u))); }
+.btn--outline-soft { border-color: rgba(var(--ink-rgb), 0.46); -webkit-backdrop-filter: blur(calc(4.205 * var(--u))); backdrop-filter: blur(calc(4.205 * var(--u))); }
 .btn:active { transform: scale(0.98); }
 
 @media (hover: hover) and (pointer: fine) {
   .pill__toggle:hover .burger line { stroke: var(--live); }
-  .btn--glass:hover { background: rgba(234, 234, 234, 0.44); }
+  .btn--glass:hover { background: rgba(var(--ink-rgb), 0.26); }
   /* Every outlined button here fills white and flips its ink, the way the
      row's View Project already did; a faint wash read as nothing. */
   .btn--outline:hover, .btn--outline-soft:hover {
-    background: var(--fg); color: #000; border-color: var(--fg);
+    background: var(--fg); color: var(--fg-inv); border-color: var(--fg);
   }
-  .btn--outline:hover .btn__icon, .btn--outline-soft:hover .btn__icon { filter: invert(1); }
+  .btn--outline:hover .btn__icon, .btn--outline-soft:hover .btn__icon { filter: invert(calc(1 - var(--icon-invert))); }
 }
 
 /* ---------- Hero ---------- */
@@ -401,6 +497,41 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   animation: heroSettle 1400ms var(--ease-out) 80ms forwards;
 }
 @keyframes heroSettle { to { transform: scale(1); } }
+/* The cover photograph does not turn over with the page: it is the same dark
+   picture in either theme, so everything written on top of it keeps the ink it
+   was given. Inside the hero the tokens hold their dark values, and the colour
+   is asked for again here so that what hangs below inherits the white rather
+   than the page's. */
+.hero {
+  color: var(--fg);
+  --fg: #ffffff;
+  --icon-invert: 0;
+  --ink-rgb: 255, 255, 255;
+  --fg-inv: #000000;
+  --stroke: #fafafa;
+  --glass-soft: rgba(0, 0, 0, 0.48);
+  --glass-light: rgba(234, 234, 234, 0.31);
+  --tag-bg: #000000;
+}
+
+/* The icons and the project logotypes are drawn in white, which is right on
+   the dark page and invisible on the light one, so they turn over with it. The
+   hover states below run the same number the other way, because a button that
+   fills with the ink colour needs the icon back as it was. */
+/* Only the light theme is named here. A filter of none and a filter of zero
+   are not the same thing to the browser - the second one still makes a layer
+   and redraws the icon through it - so the dark page, which needs no turning
+   over, is left without one. */
+:root[data-theme="light"] :is(
+  img[src$="/logo.svg"], img[src$="arrow-up-right.svg"], img[src$="dash.svg"],
+  img[src$="menu.svg"], img[src$="down-arrow-sm.svg"],
+  img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo) {
+  filter: invert(var(--icon-invert));
+}
+/* The one green mark is not turned over - inverting green gives magenta - but
+   taken down to the darker green the light theme uses everywhere else. */
+:root[data-theme="light"] img[src$="dot.svg"] { filter: brightness(0.52) saturate(1.5); }
+
 .label { text-transform: uppercase; }
 .intro { font-family: 'Geist', system-ui, sans-serif; font-weight: 400; }
 .hero__title { font-weight: 400; text-transform: uppercase; }
@@ -429,7 +560,7 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   text-transform: uppercase;
   transition: background var(--dur-fast) ease;
 }
-@media (hover: hover) and (pointer: fine) { .chip:hover { background: rgba(255, 255, 255, 0.16); } }
+@media (hover: hover) and (pointer: fine) { .chip:hover { background: rgba(var(--ink-rgb), 0.16); } }
 /* The filter's chips are buttons, not links, so they have to be told to look
    like the rest of their family. Pressed, one inverts: the page is showing that
    category and nothing else, which is worth more than a tint. */
@@ -446,7 +577,7 @@ button.chip {
   cursor: pointer;
   transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
 }
-button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
+button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); }
 @media (hover: hover) and (pointer: fine) {
   button.chip[aria-pressed="true"]:hover { background: var(--fg); }
 }
@@ -529,16 +660,16 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   line-height: calc(13 * var(--u));
   text-transform: uppercase;
 }
-.thumbs img { --y: 0; object-fit: cover; background: #d9d9d9; transition: opacity var(--dur-ui) ease; }
+.thumbs img { --y: 0; object-fit: cover; background: var(--placeholder); transition: opacity var(--dur-ui) ease; }
 /* A slot whose piece is a film plays it rather than showing one frame of it.
    The poster is that clip's own first frame, so the still and the loop agree
    and nothing jumps when the file arrives. */
-.thumbs__video { --y: 0; object-fit: cover; background: #d9d9d9; display: block; }
+.thumbs__video { --y: 0; object-fit: cover; background: var(--placeholder); display: block; }
 .row__track video { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* Two boxes in the projects comp are drawn empty - the picture for them has
    not been shot yet - so the slot is kept rather than closed up: the strip
    keeps the comp's rhythm and the image drops straight in when it arrives. */
-.thumbs__slot, .shot--slot { background: #d9d9d9; }
+.thumbs__slot, .shot--slot { background: var(--placeholder); }
 .thumbs { transition: transform var(--dur-ui) var(--ease-out), opacity 120ms ease 480ms; }
 
 /* ---------- A row, expanded ---------- */
@@ -719,8 +850,8 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   .row:not(.is-open):has(.row__toggle:hover) .thumbs { transform: translateX(calc(-18 * var(--u))); }
   .row:has(.row__toggle:hover) .row__name { color: var(--live); }
   /* Wins over .btn--outline:hover, which sits earlier in this file. */
-  .row__cta:hover { background: var(--fg); color: #000; border-color: var(--fg); }
-  .row__cta:hover .btn__icon { filter: invert(1); }
+  .row__cta:hover { background: var(--fg); color: var(--fg-inv); border-color: var(--fg); }
+  .row__cta:hover .btn__icon { filter: invert(calc(1 - var(--icon-invert))); }
 }
 
 /* ---------- Everything I can do ---------- */
@@ -852,7 +983,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   height: calc(var(--h) * var(--u));
   object-fit: cover;
   display: block;
-  background: #d9d9d9;
+  background: var(--placeholder);
 }
 /* The project's own logotype sits in the mosaic as a piece of it, but it is a
    mark and not a picture: it keeps its whole self and the page's own ground. */
@@ -872,7 +1003,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
      wherever they have to, the way the comp sets them */
   overflow-wrap: anywhere;
 }
-.piece--spec .dim { color: #848484; }
+.piece--spec .dim { color: var(--dim); }
 
 /* A line the comp sets beside a logotype rather than inside it. */
 .piece--word {
@@ -905,7 +1036,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 .marquee__track video {
   width: calc(var(--w) * var(--u));
   height: calc(var(--h) * var(--u));
-  object-fit: cover; flex: none; background: #d9d9d9;
+  object-fit: cover; flex: none; background: var(--placeholder);
   display: block;
 }
 
@@ -962,7 +1093,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   align-items: flex-start;
   justify-content: center;
   padding: calc(90 * var(--u)) 0 calc(24 * var(--u));
-  --ink: #fafafa;
+  --ink: var(--stroke);
 }
 /* :target is the no-JS way in: the menu's About link is a real fragment link,
    and both close controls point back out of it. With JS the class takes over
@@ -973,7 +1104,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 .sheet__scrim {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--scrim);
   -webkit-backdrop-filter: blur(2.65px);
   backdrop-filter: blur(2.65px);
   opacity: 0;
@@ -1010,8 +1141,8 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 /* Where the glass cannot be made, the window simply turns opaque: the page
    behind must not be readable through the information. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .sheet__scrim { background: rgba(0, 0, 0, 0.72); }
-  .sheet__dialog { background: rgba(10, 10, 10, 0.95); }
+  .sheet__scrim { background: var(--scrim-deep); }
+  .sheet__dialog { background: var(--sheet-bg); }
 }
 
 .sheet:target .sheet__scrim,
@@ -1088,7 +1219,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   width: calc(572 * var(--u));
   height: max(1px, calc(1 * var(--u)));
   margin-bottom: calc(7 * var(--u));
-  background: rgba(250, 250, 250, 0.34);
+  background: rgba(var(--ink-rgb), 0.34);
 }
 
 .about__row {
@@ -1244,13 +1375,13 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   width: 1px;
   margin-left: -0.5px;
 }
-.about__rail-track { bottom: 0; background: rgba(250, 250, 250, 0.13); }
+.about__rail-track { bottom: 0; background: rgba(var(--ink-rgb), 0.13); }
 /* Not a fill from the top but the window you are looking through: its length
    is how much of the information fits on screen, its place is where that is. */
 .about__rail-fill {
   top: calc(var(--p0, 0) * 100%);
   height: calc(var(--ph, 0) * 100%);
-  background: rgba(250, 250, 250, 0.55);
+  background: rgba(var(--ink-rgb), 0.55);
   transition: top 120ms linear;
 }
 
@@ -1276,12 +1407,12 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   width: max(5px, calc(7 * var(--u)));
   height: max(1px, calc(1 * var(--u)));
   transform: translate(-50%, -50%);
-  background: rgba(250, 250, 250, 0.22);
+  background: rgba(var(--ink-rgb), 0.22);
   transition: width var(--dur-ui) var(--ease-out), background var(--dur-ui) ease;
 }
-.about__tick.is-current::before { width: max(11px, calc(13 * var(--u))); background: rgba(250, 250, 250, 0.9); }
+.about__tick.is-current::before { width: max(11px, calc(13 * var(--u))); background: rgba(var(--ink-rgb), 0.9); }
 @media (hover: hover) and (pointer: fine) {
-  .about__tick:hover::before { width: max(11px, calc(13 * var(--u))); background: rgba(250, 250, 250, 0.7); }
+  .about__tick:hover::before { width: max(11px, calc(13 * var(--u))); background: rgba(var(--ink-rgb), 0.7); }
 }
 
 /* ---------- Contact: the second pop-up ----------
@@ -1375,8 +1506,8 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
 .touch__btn:active { transform: scale(0.98); }
 
 @media (hover: hover) and (pointer: fine) {
-  .touch__btn:hover { background: var(--fg); color: #000; border-color: var(--fg); }
-  .touch__btn:hover img { filter: invert(1); }
+  .touch__btn:hover { background: var(--fg); color: var(--fg-inv); border-color: var(--fg); }
+  .touch__btn:hover img { filter: invert(calc(1 - var(--icon-invert))); }
   .touch__mail a:hover { color: var(--live); }
   .touch__social a:hover { opacity: 1; transform: translateY(calc(-2 * var(--u))); }
 }
@@ -1625,7 +1756,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: #000; }
   .card {
     position: relative; left: auto; top: auto; flex: none;
     padding: calc(20.14 * var(--u)) calc(21.5 * var(--u));
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(var(--ink-rgb), 0.28);
     border-radius: calc(12 * var(--u));
   }
 

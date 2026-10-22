@@ -1,8 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The two settings are read before anything is drawn: a page that opened in
+     the dark and turned light a moment later would be worse than either. -->
+<script>(function(){try{var r=document.documentElement,s=localStorage,t=s.getItem('vc-theme'),l=s.getItem('vc-lang');if(t==='light'||t==='dark')r.setAttribute('data-theme',t);if(l==='es'||l==='en'){r.setAttribute('data-lang',l);r.setAttribute('lang',l);}}catch(e){}})();</script>
 <title>The Whale — Victor Chaves</title>
 <meta name="description" content="Breath on the page — a project by Victor Chaves Cerrejón.">
 <meta name="theme-color" content="#111111">
@@ -57,22 +60,41 @@
       </div>
 
       <ul class="pill__links" inert>
-        <li><a href="#about" data-sheet-open>About</a></li>
-        <li><a href="projects.html">Work</a></li>
-        <li><a href="#get-in-touch" data-sheet-open>Contact</a></li>
+        <li><a href="#about" data-sheet-open data-t data-es="Sobre mí" data-en="About">About</a></li>
+        <li><a href="projects.html" data-t data-es="Proyectos" data-en="Work">Work</a></li>
+        <li><a href="#get-in-touch" data-sheet-open data-t data-es="Contacto" data-en="Contact">Contact</a></li>
       </ul>
 
       <div class="pill__actions" inert>
         <a class="pill__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
-          <span>Start A Project</span>
+          <span data-t data-es="Empezar un proyecto" data-en="Start A Project">Start A Project</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
         <a class="pill__btn" href="https://cal.com/itsvictxrchaves/30min"
            data-cal-link="itsvictxrchaves/30min" data-cal-namespace="30min"
            data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
-          <span>Schedule A Call</span>
+          <span data-t data-es="Agendar una llamada" data-en="Schedule A Call">Schedule A Call</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
+      </div>
+
+      <!--
+        The two settings, at the foot of the menu. Each is a pair of options
+        with a block that slides between them, so which one is on reads as a
+        position as well as a weight. They do not put the menu away: you press
+        one to see what it does.
+      -->
+      <div class="pill__prefs" inert>
+        <div class="seg" data-seg="lang" role="group" aria-label="Idioma / Language">
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <button class="seg__opt" type="button" data-set-lang="es" aria-pressed="false">ES</button>
+          <button class="seg__opt" type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        </div>
+        <div class="seg" data-seg="theme" role="group" aria-label="Tema / Theme">
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <button class="seg__opt" type="button" data-set-theme="dark" aria-pressed="true" title="Oscuro / Dark"><span class="u-sr-only" data-t data-es="Oscuro" data-en="Dark">Dark</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg></button>
+          <button class="seg__opt" type="button" data-set-theme="light" aria-pressed="false" title="Claro / Light"><span class="u-sr-only" data-t data-es="Claro" data-en="Light">Light</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></button>
+        </div>
       </div>
     </nav>
   </header>

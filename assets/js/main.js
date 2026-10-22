@@ -156,13 +156,77 @@
 
   var nav = document.getElementById('nav');
 
+  /* ---------- Two settings that outlive the visit ----------
+     The language and the light. Both are written on <html>, where the stylesheet
+     can see them, and remembered in the browser; the little script in the head
+     puts them back before the first paint, so nothing is drawn twice. The words
+     are not fetched from anywhere: each piece of writing carries both, the one
+     in the markup and the other in an attribute, so the change is instant and
+     the page still says something with the script off. */
+
+  var root = document.documentElement;
+  var KEY = { lang: 'vc-lang', theme: 'vc-theme' };
+
+  var remember = function (key, value) {
+    try { window.localStorage.setItem(key, value); } catch (e) {}
+  };
+
+  var sayLang = function (lang) {
+    var els = document.querySelectorAll('[data-t]');
+    Array.prototype.forEach.call(els, function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+  };
+
+  var markSeg = function (name, value, attr) {
+    var seg = document.querySelector('.seg[data-seg="' + name + '"]');
+    if (!seg) return;
+    var opts = seg.querySelectorAll('.seg__opt');
+    var i = 0;
+    Array.prototype.forEach.call(opts, function (opt, n) {
+      var on = opt.getAttribute(attr) === value;
+      opt.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) i = n;
+    });
+    seg.setAttribute('data-i', i);
+  };
+
+  var setLang = function (lang, save) {
+    root.setAttribute('data-lang', lang);
+    root.setAttribute('lang', lang);
+    sayLang(lang);
+    markSeg('lang', lang, 'data-set-lang');
+    if (save) remember(KEY.lang, lang);
+  };
+
+  var setTheme = function (theme, save) {
+    root.setAttribute('data-theme', theme);
+    // The bar at the top of the phone's browser is painted by the page, and it
+    // has to turn over with everything else.
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f2ee' : '#111111');
+    markSeg('theme', theme, 'data-set-theme');
+    if (save) remember(KEY.theme, theme);
+  };
+
+  setLang(root.getAttribute('data-lang') || root.getAttribute('lang') || 'en', false);
+  setTheme(root.getAttribute('data-theme') || 'dark', false);
+
+  document.addEventListener('click', function (event) {
+    var opt = event.target.closest ? event.target.closest('[data-set-lang], [data-set-theme]') : null;
+    if (!opt) return;
+    var lang = opt.getAttribute('data-set-lang');
+    if (lang) setLang(lang, true); else setTheme(opt.getAttribute('data-set-theme'), true);
+  });
+
   /* ---------- The bar unfolds into the menu ---------- */
 
   var menuBtn = document.getElementById('menuBtn');
   var panel = document.getElementById('navPanel');
   var scrim = document.getElementById('navScrim');
   var menuOpen = false;
-  var folded = panel ? panel.querySelectorAll('.pill__links, .pill__actions') : [];
+  var folded = panel ? panel.querySelectorAll('.pill__links, .pill__actions, .pill__prefs') : [];
 
   // Clipped content stays out of the tab order until the panel is open.
   var setFolded = function (isInert) {
