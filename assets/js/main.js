@@ -1056,16 +1056,25 @@
 
   var clock = document.getElementById('clock');
   if (clock) {
-    var dateFmt, dateLang;
+    // The comp writes the date the same way in both languages - the month, the
+    // day and the year - so the line keeps its shape and only the month's name
+    // changes. Intl would write '11 de junio de 2027' in Spanish, which is
+    // right but not what the comp draws, so the three parts are asked for
+    // separately and put together here.
+    var parts = {};
     var fmtFor = function () {
       var l = document.documentElement.getAttribute('data-lang') === 'es' ? 'es-ES' : 'en-US';
-      if (l !== dateLang) {
-        dateLang = l;
-        dateFmt = new Intl.DateTimeFormat(l, {
-          timeZone: 'Europe/Madrid', month: 'long', day: 'numeric', year: 'numeric'
+      if (!parts[l]) {
+        parts[l] = ['month', 'day', 'year'].map(function (k) {
+          var o = { timeZone: 'Europe/Madrid' };
+          o[k] = k === 'month' ? 'long' : 'numeric';
+          return new Intl.DateTimeFormat(l, o);
         });
       }
-      return dateFmt;
+      return { format: function (d) {
+        var p = parts[l];
+        return p[0].format(d) + ' ' + p[1].format(d) + ', ' + p[2].format(d);
+      } };
     };
     var timeFmt = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false

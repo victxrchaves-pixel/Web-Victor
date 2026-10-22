@@ -511,6 +511,34 @@ html[data-lang="en"] [data-only="es"] { display: none; }
   text-transform: uppercase;
   white-space: nowrap;
 }
+/* The comp measures each of these boxes to its English word - START A PROJECT
+   is exactly the 172 its box is given - and Spanish is longer. So in Spanish
+   the inside of the button is laid out rather than placed: the word and the
+   arrow sit in the middle of the box with the comp's own gap between them,
+   which is what the comp's own numbers amount to anyway (its margins are
+   symmetrical). The box itself does not move. */
+html[data-lang="es"] .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--gap, 14.02) * var(--u));
+}
+html[data-lang="es"] .btn > .btn__label { position: static; width: auto; }
+html[data-lang="es"] .btn > .btn__icon { position: static; flex: none; }
+html[data-lang="es"] .row__cta { --gap: 9.8; }
+
+/* The one word that does not fit its box at any price: PROYECTOS where the
+   comp wrote WORK. The box takes the word's width and stays in the middle of
+   the canvas, which is where it is drawn. */
+html[data-lang="es"] .btn--glass {
+  width: max-content;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  padding-inline: calc(25.48 * var(--u));
+  --gap: 11;
+}
+
 .btn--glass {
   background: var(--glass-light);
   -webkit-backdrop-filter: blur(calc(4.205 * var(--u)));
@@ -576,6 +604,16 @@ html[data-lang="en"] [data-only="es"] { display: none; }
 :root[data-theme="light"] img[src$="dot.svg"] { filter: brightness(0.52) saturate(1.5); }
 
 .label { text-transform: uppercase; }
+
+/* [ PROYECTOS DESTACADOS ] is half as long again as [ FEATURED WORK ], and the
+   comp sets it on one line against the right margin. So in Spanish it takes
+   the width of its own words and hangs from that margin instead of from a
+   measured left edge. */
+html[data-lang="es"] [data-en="[ Featured work ]"] {
+  width: max-content;
+  left: auto;
+  right: calc(48 * var(--u));
+}
 .intro { font-family: 'Geist', system-ui, sans-serif; font-weight: 400; }
 .hero__title { font-weight: 400; text-transform: uppercase; }
 .hero__sub { text-align: right; text-transform: uppercase; }
@@ -1478,6 +1516,11 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
   padding: 0 0 calc(12 * var(--u)) calc(35 * var(--u));
 }
 
+/* The comp's own Spanish lets this line run wider than the English 625 - TU
+   PROYECTO. is longer than SOMETHING. - so in Spanish the column is given the
+   room the comp gives it rather than breaking the line a second time. */
+html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
+
 .touch__display {
   margin: 0;
   width: calc(625 * var(--u));
@@ -1747,6 +1790,8 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
   /* A var() that cannot resolve computes to the property's initial value, not
      to the declaration above it - so the pill has to restate its whole box. */
   .back { display: none; }
+  /* On the phone it hangs from the left margin, where the comp puts it. */
+  html[data-lang="es"] [data-en="[ Featured work ]"] { left: calc(15 * var(--u)); right: auto; }
   .pill { left: 50%; width: calc(354 * var(--u)); height: calc(46 * var(--u)); }
   /* Line breaks the wide comp needs and the narrow one does not. */
   .u-desk { display: none; }
@@ -2062,6 +2107,8 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
     align-items: flex-start;
   }
   .touch__display { width: 100%; font-size: calc(57.336 * var(--u)); }
+  /* The phone's column is 372 and the Spanish line wants 407 of it. */
+  html[data-lang="es"] .touch__display { font-size: calc(52 * var(--u)); }
   .touch__note { margin-top: calc(23 * var(--u)); width: 100%; }
   .touch__copy {
     margin-top: calc(23 * var(--u));
