@@ -1802,9 +1802,11 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .pill.is-open { width: calc(354 * var(--u)); }
   /* One above the other, each spanning the panel inside its padding. */
   /* The rules stop short of the panel's edge here rather than bleeding past
-     it, and the type comes down from 18 to 15. */
+     it, and the type comes down from 18 to 15. Everything inside the open
+     panel is the same width on the phone - the rules, the two buttons and the
+     two switches all run from one side of the padding to the other. */
   .pill__links {
-    width: calc(314 * var(--u));
+    width: 100%;
     margin-inline: 0;
     margin-top: calc(26 * var(--u));
   }
@@ -1816,9 +1818,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .pill__actions {
     flex-direction: column;
     gap: calc(10 * var(--u));
-    width: calc(282 * var(--u));
+    width: 100%;
     margin-top: calc(12 * var(--u));
   }
+  /* The switches sit under the buttons with the same air the two buttons keep
+     between them. */
+  .pill__prefs { margin-top: calc(10 * var(--u)); }
   .pill__btn { flex: none; width: 100%; padding-block: calc(8 * var(--u)); }
   /* The comp puts the call on top here, the other way round from the wide
      panel; CSS does that rather than a second copy of the markup. */
