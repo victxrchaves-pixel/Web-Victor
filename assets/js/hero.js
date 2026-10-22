@@ -35,7 +35,7 @@ if (hero && row && stage) {
   // whole thing is kept low either way - there is writing over it.
   const SKIES = {
     dark: { colorStops: ['#1c1c1c', '#5e5e5e', '#1c1c1c'], lightMode: false, brightness: 0.7 },
-    light: { colorStops: ['#d2d2d2', '#8c8c8c', '#d2d2d2'], lightMode: true, brightness: 0.7 }
+    light: { colorStops: ['#8a8a8a', '#2e2e2e', '#8a8a8a'], lightMode: true, brightness: 1 }
   };
   const look = () => SKIES[root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'];
 
