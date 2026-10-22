@@ -35,16 +35,16 @@ if (hero && row && stage) {
   // whole thing is kept low either way - there is writing over it.
   const SKIES = {
     dark: { colorStops: ['#1c1c1c', '#5e5e5e', '#1c1c1c'], lightMode: false, brightness: 0.7 },
-    light: { colorStops: ['#8a8a8a', '#2e2e2e', '#8a8a8a'], lightMode: true, brightness: 1 }
+    light: { colorStops: ['#a2a2a2', '#4e4e4e', '#a2a2a2'], lightMode: true, brightness: 1 }
   };
   const look = () => SKIES[root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'];
 
   const light = sky
     ? createAurora(sky, Object.assign({
-        amplitude: 1.4,
+        amplitude: 1.7,
         blend: 0.18,
         height: 0.36,
-        speed: 0.45,
+        speed: 1.1,
         scale: 1.2,
         glow: 0.25,
         layers: 3,
