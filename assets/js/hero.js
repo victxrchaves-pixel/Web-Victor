@@ -97,6 +97,20 @@ if (hero && row && stage) {
     hero.removeAttribute('data-trail');
   };
 
-  still.addEventListener?.('change', () => (still.matches ? stop() : start()));
+  still.addEventListener?.('change', () => {
+    if (still.matches) stop();
+    else start();
+    bare();
+  });
   start();
+
+  /* Neither a sky nor a trail - no WebGL 2 and a hand that has asked for less
+     movement - and the opening would be the writing on its own. That is when
+     the markup's own line of pictures is let through. */
+  const bare = () => {
+    const none = !light && !trail;
+    if (none) hero.setAttribute('data-bare', '');
+    else hero.removeAttribute('data-bare');
+  };
+  bare();
 }
