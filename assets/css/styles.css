@@ -587,6 +587,21 @@ html[data-lang="es"] .btn--glass {
   overflow: hidden;
 }
 
+/* The light behind the opening. First in the markup and so under everything
+   else in it; the canvas inside is put there by the script. */
+.hero__ascii {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ascii__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Where the trail is laid down. The frames the script builds are absolute
    children of this box and carry their own stacking order, so the box is made
    a layer of its own - without that, a frame would climb over the writing.
@@ -617,6 +632,10 @@ html[data-lang="es"] .btn--glass {
 /* Five of them are a line; sixteen are a wall. The rest are here for the
    trail, which deals them out one at a time. */
 .hero__row img:nth-child(n+6) { display: none; }
+/* The line is the opening of last resort. As soon as there is a sky behind -
+   or a trail to deal them out - it steps aside, so what is on the screen when
+   nothing is moving is the same for everyone. */
+.hero[data-ascii] .hero__row img,
 .hero[data-trail] .hero__row img { display: none; }
 
 /* A frame of the trail. The picture inside it is its own box, a little larger

@@ -48,6 +48,11 @@
 <section class="hero" id="top">
   <div class="hero__stage">
 
+    <!-- The light behind everything, drawn in characters. Empty on purpose:
+         the canvas is put here by assets/js/gradient-ascii.js, and without
+         WebGL 2 the opening simply keeps its own ground. -->
+    <div class="hero__ascii" id="heroAscii" aria-hidden="true"></div>
+
     <!-- The pictures of the trail, written out here so the opening says
          something with no script at all: then it is a quiet line of them.
          Once the trail can run, these step aside and it deals them out. -->
