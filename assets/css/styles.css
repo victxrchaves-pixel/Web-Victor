@@ -80,21 +80,30 @@
    inverted: on the dark canvas they are a touch darker than the page, so on
    paper they are a touch darker too, not black boxes. */
 :root[data-theme="light"] {
-  --bg: #f4f2ee;
+  --bg: #fafafa;
   --fg: #111111;
   --ink-rgb: 17, 17, 17;
-  --fg-inv: #f4f2ee;
+  --fg-inv: #fafafa;
   --line: #111111;
-  --stroke: #141414;
-  --glass: rgba(244, 242, 238, 0.74);
-  --glass-soft: rgba(244, 242, 238, 0.58);
-  --glass-light: rgba(17, 17, 17, 0.10);
-  --tag-bg: #e6e3dd;
-  --placeholder: #e4e1da;
+  --stroke: #111111;
+  /* The panels are a grey veil rather than a white one: on the page they read
+     #e0e0e0 over #fafafa, and over the photograph they stay around #dedede,
+     which only a light grey at nine tenths does on both grounds. */
+  --glass: rgba(222, 222, 222, 0.88);
+  --glass-soft: rgba(222, 222, 222, 0.72);
+  --glass-light: rgba(17, 17, 17, 0.03);
+  --tag-bg: #f6f6f6;
+  --placeholder: #ededed;
   --dim: #6b6b6b;
-  --scrim: rgba(17, 17, 17, 0.42);
-  --scrim-deep: rgba(17, 17, 17, 0.58);
-  --sheet-bg: rgba(248, 246, 242, 0.96);
+  /* A window does not darken the page here, it whitens it: the comp washes the
+     photograph from #0a0701 to #a4a3a0, which is paper at just under two
+     thirds. */
+  --scrim: rgba(250, 250, 250, 0.64);
+  --scrim-deep: rgba(250, 250, 250, 0.78);
+  --sheet-bg: rgba(224, 224, 224, 0.94);
+  /* The light comp carries no green at all. It is kept only for what the comp
+     cannot draw - hover, focus, the selection - and taken down to a green that
+     can be read on paper. */
   --live: #0a7d00;
   --live-on: #ffffff;
   --icon-invert: 1;
@@ -226,6 +235,34 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 }
 .nav__scrim[hidden] { display: none; }
 .nav__scrim.is-visible { opacity: 1; }
+
+/* Back to the list, at the top left of a project page. It rides in the bar's
+   own band and is fixed like the bar, so it is there whenever the bar is. The
+   phone comp has no room for it beside the bar, and does not draw it. */
+.back {
+  position: fixed;
+  z-index: 51;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  height: calc(var(--h) * var(--u));
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--u));
+  color: var(--fg);
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: calc(16 * var(--u));
+  line-height: calc(23 * var(--u));
+  transition: color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
+}
+.back svg {
+  width: calc(21 * var(--u));
+  height: calc(21 * var(--u));
+  display: block;
+  flex: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .back:hover { color: var(--live); transform: translateX(calc(-3 * var(--u))); }
+}
 
 /* White type in difference blending reads black on light ground and white on
    dark, so the CTA stays legible over the sky and over the page below it. */
@@ -427,6 +464,11 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .seg__opt[aria-pressed="true"] { color: var(--fg-inv); }
 .seg__opt svg { width: calc(15 * var(--u)); height: calc(15 * var(--u)); display: block; }
 
+/* A piece that exists once per theme: the other one waits, the way the other
+   language does. */
+html[data-theme="light"] [data-on-theme="dark"],
+html:not([data-theme="light"]) [data-on-theme="light"] { display: none; }
+
 /* One language is written, the other waits. The attribute on <html> decides,
    so it holds with the script off too - whatever the page was written in. */
 html[data-lang="es"] [data-only="en"],
@@ -525,7 +567,7 @@ html[data-lang="en"] [data-only="es"] { display: none; }
 :root[data-theme="light"] :is(
   img[src$="/logo.svg"], img[src$="arrow-up-right.svg"], img[src$="dash.svg"],
   img[src$="menu.svg"], img[src$="down-arrow-sm.svg"],
-  img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo) {
+  img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo[src$=".svg"]) {
   filter: invert(var(--icon-invert));
 }
 /* The one green mark is not turned over - inverting green gives magenta - but
@@ -536,7 +578,14 @@ html[data-lang="en"] [data-only="es"] { display: none; }
 .intro { font-family: 'Geist', system-ui, sans-serif; font-weight: 400; }
 .hero__title { font-weight: 400; text-transform: uppercase; }
 .hero__sub { text-align: right; text-transform: uppercase; }
-.band { object-fit: cover; }
+/* The cover photograph is not cut off at the bottom: it is faded into the page
+   with a mask, so whatever colour the page is, that is what it fades into. The
+   mask hangs off the picture's own bottom edge, which is what makes it hold on
+   the phone, where the picture grows to fill the screen. */
+.hero__bg {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 150 * var(--u)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 150 * var(--u)), transparent);
+}
 
 .chips li { --y: 0; }
 .chips--hero li {
@@ -1696,6 +1745,7 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
   .nav { width: calc(402 * var(--u)); left: calc(50% - 201 * var(--u)); }
   /* A var() that cannot resolve computes to the property's initial value, not
      to the declaration above it - so the pill has to restate its whole box. */
+  .back { display: none; }
   .pill { left: 50%; width: calc(354 * var(--u)); height: calc(46 * var(--u)); }
   /* Line breaks the wide comp needs and the narrow one does not. */
   .u-desk { display: none; }
