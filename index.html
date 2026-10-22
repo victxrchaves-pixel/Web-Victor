@@ -39,26 +39,35 @@
 
 <div class="stage">
 <!--
-  The opening. It is not a piece of the canvas below but a stage of its own,
-  as tall as three screens, with everything in it pinned to the top of the
-  window while those three screens go past. What moves in that time is the row
-  of work, not the page (see assets/js/hero.js). The canvas that follows is
-  pulled back up by the height the hero used to take inside it, so every
-  number in it is still the comp's own.
+  The opening. It is not a piece of the canvas below but a screen of its own,
+  where the work follows the cursor and falls behind it (see assets/js/hero.js
+  and assets/js/image-trail.js). The canvas that follows is pulled back up by
+  the height the opening used to take inside it, so every number in it is
+  still the comp's own.
 -->
 <section class="hero" id="top">
   <div class="hero__stage">
 
-    <!-- Written out here so the opening says something with no script and no
-         WebGL: then it is a still row. Once the row can be drawn, these step
-         aside and the drawing takes over. -->
+    <!-- The pictures of the trail, written out here so the opening says
+         something with no script at all: then it is a quiet line of them.
+         Once the trail can run, these step aside and it deals them out. -->
     <div class="hero__row" id="heroRow">
-      <img src="assets/img/hero/hero-01.webp" alt="IDLE CBD Oil on the moss" width="1400" height="1045" fetchpriority="high">
-      <img src="assets/img/hero/hero-02.webp" alt="A Nonvero Society sweatshirt" width="1045" height="1400">
-      <img src="assets/img/hero/hero-03.webp" alt="The Fernet Branca box" width="1400" height="776">
-      <img src="assets/img/hero/hero-05.webp" alt="The SplitWise app in the hand" width="1045" height="1400">
-      <img src="assets/img/hero/hero-07.webp" alt="The Nagori box" width="1077" height="1400">
-      <img src="assets/img/hero/hero-08.webp" alt="The Kinvo leggings" width="1088" height="1400">
+      <img src="assets/img/hero/trail-01.webp" alt="IDLE CBD Oil on the moss" width="750" height="560" decoding="async" fetchpriority="high">
+      <img src="assets/img/hero/trail-02.webp" alt="A talk, from the back of the room" width="560" height="840" decoding="async">
+      <img src="assets/img/hero/trail-03.webp" alt="A Nonvero Society sweatshirt on a chair" width="560" height="750" decoding="async">
+      <img src="assets/img/hero/trail-04.webp" alt="The ENOUGH vermouth box on stone" width="560" height="691" decoding="async">
+      <img src="assets/img/hero/trail-05.webp" alt="The Fernet Branca box, open" width="1010" height="560" decoding="async">
+      <img src="assets/img/hero/trail-06.webp" alt="A poster on the screen of a phone" width="560" height="747" decoding="async">
+      <img src="assets/img/hero/trail-07.webp" alt="The SplitWise app in the hand" width="560" height="750" decoding="async">
+      <img src="assets/img/hero/trail-08.webp" alt="A bottle in the dark" width="1006" height="560" decoding="async">
+      <img src="assets/img/hero/trail-09.webp" alt="The Archives of Japan box in two hands" width="560" height="728" decoding="async">
+      <img src="assets/img/hero/trail-10.webp" alt="Someone reading a wall of screens" width="560" height="840" decoding="async">
+      <img src="assets/img/hero/trail-11.webp" alt="The Kinvo leggings, phone in the pocket" width="560" height="720" decoding="async">
+      <img src="assets/img/hero/trail-12.webp" alt="An app running on a phone" width="560" height="750" decoding="async">
+      <img src="assets/img/hero/trail-13.webp" alt="A box of sweets on a table" width="560" height="780" decoding="async">
+      <img src="assets/img/hero/trail-14.webp" alt="The ENOUGH vermouth bottle" width="560" height="691" decoding="async">
+      <img src="assets/img/hero/trail-15.webp" alt="A phone passing from one hand to another" width="750" height="560" decoding="async">
+      <img src="assets/img/hero/trail-16.webp" alt="On stage, in front of the work" width="560" height="840" decoding="async">
     </div>
 
     <div class="hero__words">
@@ -768,8 +777,8 @@
 </div>
 
 <script src="assets/js/main.js" defer></script>
-<!-- The opening's row of work. A module, so it waits for the document on its
-     own, and anything without WebGL2 simply keeps the pictures in the markup. -->
+<!-- The opening's trail of pictures. A module, so it waits for the document
+     on its own, and anything without it keeps the pictures in the markup. -->
 <script src="assets/js/hero.js" type="module"></script>
 
 <!-- Cal element-click embed code begins -->

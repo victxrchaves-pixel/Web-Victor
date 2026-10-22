@@ -41,7 +41,6 @@
      is the colour of the writing as three numbers, so a hairline or a rail can
      ask for it at any strength and still turn over with the theme. */
   --bg: #111111;
-  --bg-rgb: 17, 17, 17;
   --fg: #ffffff;
   --ink-rgb: 255, 255, 255;
   --fg-inv: #000000;        /* what is written on top of a --fg fill */
@@ -82,7 +81,6 @@
    paper they are a touch darker too, not black boxes. */
 :root[data-theme="light"] {
   --bg: #fafafa;
-  --bg-rgb: 250, 250, 250;
   --fg: #111111;
   --ink-rgb: 17, 17, 17;
   --fg-inv: #fafafa;
@@ -570,75 +568,110 @@ html[data-lang="es"] .btn--glass {
 
 /* ---------- Hero ---------- */
 
-/* The opening is a stage of its own, three screens tall, with everything in it
-   stuck to the top of the window while those three screens go by. What moves
-   in that time is the row of work, which is drawn on a canvas and driven from
-   the scroll; the page itself is not held back at any point, so a wheel, a
-   trackpad, a keyboard and a scrollbar all do what they always do. */
+/* The opening is a screen of its own, above the canvas rather than inside it.
+   Nothing in it is tied to the scroll: it goes by like any other screenful.
+   What happens here happens under the hand - see assets/js/image-trail.js. */
 .hero {
   position: relative;
-  height: 300vh;
-  height: 300lvh;
-}
-.hero__stage {
-  position: sticky;
-  top: 0;
+  /* The canvas below is pulled up under this screen, so its empty top band
+     overlaps it. A layer of its own puts the opening over that band - which
+     is what lets a hand moving across it be seen at all - while the bar, at
+     60, still rides over everything. */
+  z-index: 1;
   height: 100vh;
   height: 100lvh;
+}
+.hero__stage {
+  position: relative;
+  height: 100%;
   overflow: hidden;
 }
 
-/* The row. The canvas is put inside this box by the script and the pictures
-   are taken away; until then - and for ever, where there is no WebGL2 - the
-   pictures are the row themselves, in a line too long for the screen and
-   centred on it, which is where the drawn row starts from. */
+/* Where the trail is laid down. The frames the script builds are absolute
+   children of this box and carry their own stacking order, so the box is made
+   a layer of its own - without that, a frame would climb over the writing.
+   Until the script runs, and wherever less movement has been asked for, the
+   same pictures are a quiet line across the middle instead. */
 .hero__row {
   position: absolute;
   inset: 0;
+  z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: calc(36 * var(--u));
+  --trail-size: calc(248 * var(--u));
+  --trail-aspect: 0.9;
+  --trail-radius: calc(4 * var(--u));
+  --trail-bleed: calc(14 * var(--u));
 }
-.hero__row canvas { position: absolute; inset: 0; }
+/* Standing still they are a ground for the writing rather than the subject,
+   so they are held back; under the hand they come out at full strength. */
 .hero__row img {
   flex: none;
   height: 44%;
   width: auto;
   object-fit: cover;
+  opacity: 0.4;
 }
-.hero[data-gl] .hero__row img { display: none; }
+/* Five of them are a line; sixteen are a wall. The rest are here for the
+   trail, which deals them out one at a time. */
+.hero__row img:nth-child(n+6) { display: none; }
+.hero[data-trail] .hero__row img { display: none; }
 
-/* The words, in the middle of it. They step aside as soon as the row starts to
-   move and come back when it does: the number is written on the section by the
-   script and read here, so going back up undoes it exactly. */
+/* A frame of the trail. The picture inside it is its own box, a little larger
+   than the frame on every side, so the zoom it arrives with has somewhere to
+   come from and never shows an edge. */
+.trail__img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--trail-size, 190px);
+  aspect-ratio: var(--trail-aspect, 1.1);
+  border-radius: var(--trail-radius, 15px);
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform, filter;
+}
+.trail__img-inner {
+  position: absolute;
+  top: calc(-1 * var(--trail-bleed, 10px));
+  left: calc(-1 * var(--trail-bleed, 10px));
+  width: calc(100% + 2 * var(--trail-bleed, 10px));
+  height: calc(100% + 2 * var(--trail-bleed, 10px));
+  background-position: 50% 50%;
+  background-size: cover;
+  background-color: var(--placeholder);
+}
+
+/* The words, in the middle of it, and over whatever passes behind them. */
 .hero__words {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: calc(26 * var(--u));
   text-align: center;
-  opacity: var(--hero-words, 1);
   pointer-events: none;
 }
-/* The row passes behind the words, and a photograph is no ground to read on.
-   What clears it is a breath of the page's own colour, widest where the lines
-   are and gone by the edges, and it belongs to the words rather than to the
-   screen: it leaves with them and comes back with them. */
-.hero__words::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(44% 32% at 50% 50%,
-    rgba(var(--bg-rgb), 0.92) 0%,
-    rgba(var(--bg-rgb), 0.74) 52%,
-    rgba(var(--bg-rgb), 0) 100%);
+/* The trail passes behind the words, and a photograph is no ground to read on.
+   Rather than wash the middle of the screen - which would take the pictures
+   out of it just where the eye is - the writing carries the page's own colour
+   around its letters, so it holds up over whatever goes by and the opening is
+   left clear when nothing does. */
+.hero__words :is(h1, p),
+.hero__social :is(p, .chip) {
+  text-shadow:
+    0 0 calc(10 * var(--u)) var(--bg),
+    0 0 calc(24 * var(--u)) var(--bg);
 }
 .hero__social {
   position: absolute;
+  z-index: 1;
   left: 0;
   right: 0;
   bottom: calc(64 * var(--u));
@@ -646,7 +679,6 @@ html[data-lang="es"] .btn--glass {
   flex-direction: column;
   align-items: center;
   gap: calc(16 * var(--u));
-  opacity: var(--hero-words, 1);
 }
 /* The comp's coordinates are no use here - the opening is a column now, not a
    tracing - so they are taken off everything inside it. Relative rather than
@@ -1919,15 +1951,10 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
      panel; CSS does that rather than a second copy of the markup. */
   .pill__actions a:nth-child(2) { order: -1; }
 
-  /* The lines run nearly the width of the screen here, so the column is given
-     the comp's own margin and the veil behind it is widened to match. */
+  /* Smaller frames for a smaller screen, and the lines run nearly its whole
+     width, so the column is given the comp's own margin. */
+  .hero__row { --trail-size: calc(150 * var(--u)); --trail-bleed: calc(8 * var(--u)); }
   .hero__words { padding-inline: calc(15 * var(--u)); gap: calc(22 * var(--u)); }
-  .hero__words::before {
-    background: radial-gradient(78% 26% at 50% 50%,
-      rgba(var(--bg-rgb), 0.94) 0%,
-      rgba(var(--bg-rgb), 0.8) 52%,
-      rgba(var(--bg-rgb), 0) 100%);
-  }
   .display { letter-spacing: calc(-2 * var(--u)); }
 
   /* Three discipline cards on a rail you push sideways. */
