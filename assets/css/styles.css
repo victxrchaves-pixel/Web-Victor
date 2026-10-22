@@ -181,11 +181,13 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 }
 .frame.has-open, .frame.is-untrimming { transition-delay: 0s; }
 /* The landing's opening is no longer drawn inside the canvas but above it, so
-   the canvas is pulled up by the 1117 the hero used to occupy and gives back
-   the same from its own height. Every --y below it is still the comp's. */
+   the canvas is pulled up by the 1117 the hero used to occupy. Only the box
+   moves: everything in it keeps the comp's own --y, which is why the height
+   is left alone - take the 1117 off that too and the canvas would end 1117
+   above its own footer, leaving the page to end on the last chip with no
+   ground under it. */
 .frame--after-hero {
   margin-top: calc(-1117 * var(--u));
-  height: calc((var(--frame-h, 4484) + var(--push, 0) + var(--trim, 0) - 1117) * var(--u));
 }
 /* Hint the compositor only while a fold is in flight: these are large layers
    and promoting them for good would cost memory on a phone for nothing. */
@@ -1264,6 +1266,13 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
 
 /* ---------- Footer ---------- */
 
+/* The comp draws the foot tight to the line above it - 28 between the two and
+   35 under the chips to the end of the page - which reads as a band pushed
+   against the bottom edge. The line is lifted so the air above the band is
+   the air below it. Nothing else moves: the line is the only thing in the
+   foot that is not holding a word. */
+.footer .rule { transform: translateY(calc(-7.5 * var(--u))); }
+
 .footer__item { text-transform: uppercase; white-space: nowrap; }
 .footer__dot { animation: pulse 2.4s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.25; } }
@@ -1762,11 +1771,10 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0) + var(--trim, 0)) * var(--u));
   }
   /* The phone comp gives the opening 811 of its own - it drops the intro, so
-     what follows is the work itself, with its own air above it. The canvas
-     gives back exactly those 811. */
+     what follows is the work itself, with its own air above it. The box is
+     pulled up by exactly those 811; its height, as above, is the comp's. */
   .frame--after-hero {
     margin-top: calc(-811 * var(--u));
-    height: calc((var(--mframe-h, var(--frame-h, 4406)) + var(--push, 0) + var(--trim, 0) - 811) * var(--u));
   }
 
   /* Custom properties inherit, so var(--mw, var(--w)) would pick up an
@@ -1924,6 +1932,9 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
      piece of its own and becomes part of the line, so it travels with it. */
   .footer__item { left: 0; right: 0; width: 100%; text-align: center; }
   .footer__dot { display: none; }
+  /* The phone comp stacks the foot, so the band is deeper and the lift with
+     it: 48 over the clock against 62 under the last line. */
+  .footer .rule { transform: translateY(calc(-14 * var(--u))); }
   #clock::before {
     content: "";
     display: inline-block;
