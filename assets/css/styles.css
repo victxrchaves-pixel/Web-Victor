@@ -2131,6 +2131,21 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     width: calc(var(--mw) * var(--u));
     height: calc(var(--mh) * var(--u));
   }
+
+  /* Both strips run the full width of the page, and the margin the comp gave
+     them is kept as padding rather than as a left edge.
+
+     At rest nothing has moved: the first picture still starts fifteen in, so
+     the shots still take off from exactly where their thumbnail sat. What
+     changes is the far side of it - the pictures now reach the edge of the
+     screen instead of stopping fifteen short, and a finger can pull them off
+     both edges rather than into a dead gutter the width of the margin. No
+     padding on the right: the last picture is meant to sit flush. */
+  .thumbs, .row__shots {
+    left: 0;
+    width: calc(402 * var(--u));
+    padding-left: calc(15 * var(--u));
+  }
   .thumbs--type {
     display: block;
     /* The same line against the phone's taller band, and a scroller like every
