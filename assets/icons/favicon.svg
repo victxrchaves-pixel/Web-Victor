@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 258 268.32" width="258" height="268.32">
+<!--
+  The mark as it appears in the browser's tab.
+
+  It is a separate file from logo.svg on purpose: that one is drawn white and
+  the page turns it over with the theme, so it cannot also be the tab's.
+
+  Black, which is what shows against the ordinary light tab strip. Where the
+  browser itself is dark the strip is dark too and a black mark would be as
+  invisible there as the white one was on a light strip, so it turns over.
+  Anything that does not read the query gets the black.
+-->
+<style>
+  .mark { fill: #111111; }
+  @media (prefers-color-scheme: dark) { .mark { fill: #F4F4F4; } }
+</style>
+<path class="mark" d="M108.529 144.269L131.356 156.755L24.3703 222.325L0 181.001L110.885 121.715V146.686L0 87.3188L24.3703 46.7204L131.356 111.485L108.529 124.776L105.361 0H152.558L149.39 124.776L127.375 111.485L234.361 46.7204L258 87.3188L147.846 146.605V121.634L258 180.921L234.361 222.244L127.375 156.755L149.39 144.269L152.558 268.32H105.361L108.529 144.269Z"/>
+</svg>
