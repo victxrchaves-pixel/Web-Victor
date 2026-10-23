@@ -303,6 +303,12 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   .nav__cta:hover::after { transform: scaleX(1); }
 }
 
+/* A booking button that has been pressed while its window is still coming.
+   The embed is only sent for when someone asks for it, so the first press of
+   the day has a download behind it; without this the button would sit there
+   saying nothing and read as broken. */
+[data-cal-waiting] { opacity: 0.55; cursor: progress; }
+
 .pill {
   left: 50%;
   top: calc(var(--y) * var(--u));

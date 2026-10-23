@@ -812,36 +812,120 @@
     });
   }
 
-  /* ---------- Cal.com: open the booking modal, never navigate ----------
-     Cal's own click handler opens the modal but does not prevent the link's
-     default action, so an <a> would navigate away underneath it. These
-     triggers keep their href purely as the no-JS fallback: with the script
-     present we stop the navigation, stop the event reaching Cal's delegated
-     handler (so only one modal opens) and call the API ourselves. The inline
-     snippet queues that call, so it also works if the embed is still loading. */
+  /* ---------- Cal.com: the booking window, fetched only when it is wanted ---
+     Cal's embed is ninety-odd kilobytes and the only thing on this site that
+     leaves a cookie behind, so it is no longer part of the opening load:
+     anyone who never goes near a booking button pays for none of it.
+
+     It is sent for at the first sign that someone wants it - a pointer coming
+     to rest on one of these buttons, a finger landing on one, a tab stopping
+     there - so that by the time the click arrives it is usually ready. The
+     click asks as well, for the hand that goes straight to it.
+
+     Cal's own click handler opens the window but does not stop the link, so an
+     <a> would navigate away underneath it. We stop the navigation, stop the
+     event reaching Cal's delegated handler, and call the API ourselves. The
+     href stays as the fallback: for no script at all, for a middle click, and
+     for the case where the embed never arrives. */
+
+  var CAL_SRC = 'https://app.cal.com/embed/embed.js';
+  var calBooted = false;
+  var calFailed = false;
+
+  var bootCal = function () {
+    if (calBooted) return;
+    calBooted = true;
+
+    /* Cal's own loader. It keeps a queue, so calls made while the script is
+       still coming are replayed the moment it lands - which is the whole
+       reason a click can be answered before the download has finished. */
+    (function (C, A, L) {
+      var p = function (a, ar) { a.q.push(ar); };
+      var d = C.document;
+      C.Cal = C.Cal || function () {
+        var cal = C.Cal, ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          var s = d.head.appendChild(d.createElement('script'));
+          s.src = A;
+          s.onerror = function () { calFailed = true; };
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          var api = function () { p(api, arguments); };
+          var namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === 'string') {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ['initNamespace', namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, CAL_SRC, 'init');
+
+    window.Cal('init', CAL_NS, { origin: 'https://app.cal.com' });
+    window.Cal.config = window.Cal.config || {};
+    window.Cal.config.forwardQueryParams = true;
+    /* Told in the same breath which way the page is turned, so the window
+       never opens white over a dark page. */
+    window.Cal.ns[CAL_NS]('ui', {
+      hideEventTypeDetails: false,
+      layout: 'month_view',
+      theme: root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+    });
+  };
+
+  var openCal = function (el) {
+    bootCal();
+
+    var ns = el.getAttribute('data-cal-namespace');
+    var api = (ns && window.Cal.ns && window.Cal.ns[ns]) ? window.Cal.ns[ns] : window.Cal;
+    var config = {};
+    try { config = JSON.parse(el.getAttribute('data-cal-config') || '{}'); } catch (err) {}
+    api('modal', { calLink: el.getAttribute('data-cal-link'), config: config });
+
+    /* The press has a download behind it now, so the button has to say it
+       heard: silence for a second reads as a dead button. */
+    el.setAttribute('data-cal-waiting', '');
+
+    /* And if the window never comes - blocked, offline, a network that gave
+       up - the booking page itself is where they go. The wait is long because
+       a slow connection is not a broken one: the three seconds this used to
+       allow sent people to the foot of the page while the window was still on
+       its way, and then opened it on top of them. */
+    var waited = 0;
+    (function waitForModal() {
+      if (document.querySelector('cal-modal-box')) {
+        el.removeAttribute('data-cal-waiting');
+        return;
+      }
+      waited += 200;
+      if (calFailed || waited > 15000) {
+        el.removeAttribute('data-cal-waiting');
+        if (el.href) window.location.href = el.href;
+        return;
+      }
+      window.setTimeout(waitForModal, 200);
+    })();
+  };
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-cal-link]'), function (el) {
+    /* Intent, in the three ways it shows. None of these opens anything: they
+       only start the download early. */
+    el.addEventListener('pointerenter', bootCal);
+    el.addEventListener('touchstart', bootCal, { passive: true });
+    el.addEventListener('focus', bootCal);
+
     el.addEventListener('click', function (event) {
-      if (typeof window.Cal !== 'function') return;   // no snippet: follow the href
       event.preventDefault();
       event.stopPropagation();
-
-      var ns = el.getAttribute('data-cal-namespace');
-      var api = (ns && window.Cal.ns && window.Cal.ns[ns]) ? window.Cal.ns[ns] : window.Cal;
-      var config = {};
-      try { config = JSON.parse(el.getAttribute('data-cal-config') || '{}'); } catch (err) {}
-      api('modal', { calLink: el.getAttribute('data-cal-link'), config: config });
-
+      openCal(el);
       // Stopping propagation also stops the panel's own close handler.
       if (el.closest('#navPanel')) closeMenu(false);
-
-      // If the embed never arrives (blocked, offline), fall back to the page.
-      var tries = 0;
-      (function waitForModal() {
-        if (document.querySelector('cal-modal-box')) return;
-        if (++tries > 15) { window.location.href = el.href; return; }
-        window.setTimeout(waitForModal, 200);
-      })();
     });
   });
 
