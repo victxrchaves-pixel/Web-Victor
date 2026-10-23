@@ -282,6 +282,22 @@
     if (lang) setLang(lang, true); else setTheme(opt.getAttribute('data-set-theme'), true);
   });
 
+  /* ---------- The mark goes home ----------
+     On any other page that is a plain link to the landing. On the landing
+     itself it is the top of this page, and the scroll is done here rather
+     than left to the browser so that the address stays the address: a
+     fragment in the bar would be a worse answer than none. */
+
+  document.addEventListener('click', function (event) {
+    var home = event.target.closest ? event.target.closest('[data-home]') : null;
+    if (!home) return;
+    if (root.getAttribute('data-page') !== 'home') return;
+    event.preventDefault();
+    closeMenu(false);
+    try { window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); }
+    catch (err) { window.scrollTo(0, 0); }
+  });
+
   /* ---------- The bar unfolds into the menu ---------- */
 
   var menuBtn = document.getElementById('menuBtn');

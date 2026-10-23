@@ -1108,6 +1108,69 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
 }
 
 
+/* ---------- The page that is not there ----------
+   No canvas and no comp: this one is served under whatever address was asked
+   for, so it is a column in the middle of the screen, in the page's own
+   colours and its own two faces. */
+
+.err {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(24 * var(--u));
+  padding: calc(60 * var(--u)) calc(24 * var(--u));
+  text-align: center;
+}
+.err__label {
+  margin: 0;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: calc(15.485 * var(--u));
+  line-height: calc(20 * var(--u));
+  text-transform: uppercase;
+}
+.err__display {
+  margin: 0;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: calc(92 * var(--u));
+  line-height: 0.92;
+  letter-spacing: calc(-2 * var(--u));
+  text-transform: uppercase;
+}
+.err__copy {
+  margin: 0;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: calc(17 * var(--u));
+  line-height: calc(24 * var(--u));
+  text-transform: uppercase;
+}
+.err__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(14.016 * var(--u));
+  margin-top: calc(16 * var(--u));
+  padding: calc(13 * var(--u)) calc(26 * var(--u));
+  border: 1px solid var(--fg);
+  border-radius: calc(6.371 * var(--u));
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: calc(16 * var(--u));
+  line-height: calc(22 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--dur-ui) ease, color var(--dur-ui) ease,
+              transform var(--dur-fast) var(--ease-out);
+}
+.err__btn img { width: calc(22 * var(--u)); height: calc(22 * var(--u)); flex: none; filter: invert(var(--icon-invert)); }
+.err__btn:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .err__btn:hover { background: var(--fg); color: var(--fg-inv); }
+  .err__btn:hover img { filter: invert(calc(1 - var(--icon-invert))); }
+}
+
 /* ---------- A project's own page ----------
    A column of writing on the left and the work on the right, piece under
    piece, butted edge to edge the way the comp has them. The writing holds
@@ -2354,6 +2417,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .btn--outline,
   .btn--outline-soft { left: calc(15 * var(--u)); }
   .btn--glass { left: 0; right: 0; margin-inline: auto; }
+
+  /* The page that is not there, on a column: the display comes down so the
+     two lines the markup breaks stay two lines. */
+  .err { gap: calc(20 * var(--u)); }
+  .err__display { font-size: calc(52 * var(--u)); letter-spacing: calc(-1 * var(--u)); }
+  .err__copy { font-size: calc(15 * var(--u)); line-height: calc(21 * var(--u)); }
 
   #about-cv         { order: 1; }
   #about-education  { order: 2; }
