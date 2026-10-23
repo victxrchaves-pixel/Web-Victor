@@ -1,82 +1,259 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.chavescerrejon.com/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/"/>
     <lastmod>2026-10-23</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/projects</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/projects"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/projects"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/projects"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/projects</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/projects"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/projects"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/projects"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/barefolio</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/barefolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/barefolio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/barefolio"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/barefolio</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/barefolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/barefolio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/barefolio"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/idle</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/idle"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/idle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/idle"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/idle</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/idle"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/idle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/idle"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/fernet</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/fernet"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/fernet"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/fernet"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/fernet</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/fernet"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/fernet"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/fernet"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/atlas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/atlas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/atlas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/atlas"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.chavescerrejon.com/nonvero</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/kinvo</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/nuvra</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/finissimo</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/bruma</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/nox</loc>
-    <lastmod>2026-10-23</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.chavescerrejon.com/splitwise</loc>
+    <loc>https://www.chavescerrejon.com/en/atlas</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/atlas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/atlas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/atlas"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/nagori</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nagori"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nagori"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nagori"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.chavescerrejon.com/whale</loc>
+    <loc>https://www.chavescerrejon.com/en/nagori</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nagori"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nagori"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nagori"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/nuvra</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nuvra"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nuvra"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nuvra"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/nuvra</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nuvra"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nuvra"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nuvra"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/kinvo</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/kinvo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/kinvo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/kinvo"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/kinvo</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/kinvo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/kinvo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/kinvo"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/bruma</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/bruma"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/bruma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/bruma"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/bruma</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/bruma"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/bruma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/bruma"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/nonvero</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nonvero"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nonvero"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nonvero"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/nonvero</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nonvero"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nonvero"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nonvero"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/finissimo</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/finissimo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/finissimo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/finissimo"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/finissimo</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/finissimo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/finissimo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/finissimo"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/splitwise</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/splitwise"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/splitwise"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/splitwise"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/splitwise</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/splitwise"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/splitwise"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/splitwise"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.chavescerrejon.com/thresh</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/thresh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/thresh"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/thresh"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/thresh</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/thresh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/thresh"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/thresh"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/whale</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/whale"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/whale"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/whale"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/whale</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/whale"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/whale"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/whale"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/nox</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nox"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nox"/>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.chavescerrejon.com/en/nox</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/nox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/nox"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/nox"/>
     <lastmod>2026-10-23</lastmod>
     <priority>0.8</priority>
   </url>

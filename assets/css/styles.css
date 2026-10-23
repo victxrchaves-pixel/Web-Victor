@@ -471,18 +471,14 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   letter-spacing: 0.02em;
   transition: color var(--dur-ui) ease;
 }
-.seg__opt[aria-pressed="true"] { color: var(--fg-inv); }
+.seg__opt[aria-pressed="true"],
+.seg__opt[aria-current="true"] { color: var(--fg-inv); }
 .seg__opt svg { width: calc(15 * var(--u)); height: calc(15 * var(--u)); display: block; }
 
 /* A piece that exists once per theme: the other one waits, the way the other
    language does. */
 html[data-theme="light"] [data-on-theme="dark"],
 html:not([data-theme="light"]) [data-on-theme="light"] { display: none; }
-
-/* One language is written, the other waits. The attribute on <html> decides,
-   so it holds with the script off too - whatever the page was written in. */
-html[data-lang="es"] [data-only="en"],
-html[data-lang="en"] [data-only="es"] { display: none; }
 
 /* The contents arrive as the panel opens, and leave at once when it closes. */
 .pill__links li, .pill__actions, .pill__prefs {
@@ -1112,6 +1108,12 @@ button.chip[aria-pressed="true"] { background: var(--fg); color: var(--fg-inv); 
    No canvas and no comp: this one is served under whatever address was asked
    for, so it is a column in the middle of the screen, in the page's own
    colours and its own two faces. */
+
+/* The one page that still carries its two languages: it answers for every
+   address that has none, in either tree, so which one it speaks is decided
+   when it is asked for and not when it is built. */
+html[data-lang="es"] .err [data-only="en"],
+html[data-lang="en"] .err [data-only="es"] { display: none; }
 
 .err {
   min-height: 100vh;

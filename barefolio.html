@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The two settings are read before anything is drawn: a page that opened in
      the dark and turned light a moment later would be worse than either. -->
-<script>(function(){try{var r=document.documentElement,s=localStorage,t=s.getItem('vc-theme'),l=s.getItem('vc-lang');if(t==='light'||t==='dark')r.setAttribute('data-theme',t);if(l==='es'||l==='en'){r.setAttribute('data-lang',l);r.setAttribute('lang',l);}}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('vc-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <title>Barefolio — Victor Chaves</title>
 <meta name="description" content="Sistema de entorno creativo — un proyecto de Victor Chaves Cerrejón.">
 <meta name="theme-color" content="#111111">
+<link rel="alternate" hreflang="es" href="https://www.chavescerrejon.com/barefolio">
+<link rel="alternate" hreflang="en" href="https://www.chavescerrejon.com/en/barefolio">
+<link rel="alternate" hreflang="x-default" href="https://www.chavescerrejon.com/barefolio">
 <link rel="canonical" href="https://www.chavescerrejon.com/barefolio">
 <meta property="og:url" content="https://www.chavescerrejon.com/barefolio">
 <meta property="og:site_name" content="Victor Chaves Cerrejón">
@@ -42,7 +45,7 @@
 <div class="frame" style="--frame-h:5204; --mframe-h:5872.358">
 
   <header class="nav" id="nav">
-    <a class="back" style="--x:54; --y:32.5; --w:78; --h:31" href="/projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg><span data-t data-es="Volver" data-en="Back">Volver</span></a>
+    <a class="back" style="--x:54; --y:32.5; --w:78; --h:31" href="/projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg><span>Volver</span></a>
     <div class="nav__scrim" id="navScrim" hidden></div>
 
     <nav class="pill" id="navPanel" style="--y:26" aria-label="Main">
@@ -52,7 +55,7 @@
         </a>
         <span class="pill__current" style="--fs:15; --lh:20" id="navLabel" aria-live="polite">Barefolio</span>
         <button class="pill__toggle" type="button" id="menuBtn" aria-expanded="false" aria-controls="navPanel">
-          <span class="u-sr-only" data-t data-es="Menú" data-en="Menu">Menú</span>
+          <span class="u-sr-only">Menú</span>
           <svg class="burger" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <line class="burger__top" x1="4" y1="6" x2="20" y2="6"/>
             <line class="burger__mid" x1="4" y1="12" x2="20" y2="12"/>
@@ -62,20 +65,20 @@
       </div>
 
       <ul class="pill__links" inert>
-        <li><a href="#about" data-sheet-open data-t data-es="Sobre mí" data-en="About">Sobre mí</a></li>
-        <li><a href="/projects" data-t data-es="Proyectos" data-en="Work">Proyectos</a></li>
-        <li><a href="#get-in-touch" data-sheet-open data-t data-es="Contacto" data-en="Contact">Contacto</a></li>
+        <li><a href="#about" data-sheet-open>Sobre mí</a></li>
+        <li><a href="/projects">Proyectos</a></li>
+        <li><a href="#get-in-touch" data-sheet-open>Contacto</a></li>
       </ul>
 
       <div class="pill__actions" inert>
         <a class="pill__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
-          <span data-t data-es="Empezar proyecto" data-en="Start A Project">Empezar proyecto</span>
+          <span>Empezar proyecto</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
         <a class="pill__btn" href="https://cal.com/victor-chaves-syvrlk/30min"
            data-cal-link="victor-chaves-syvrlk/30min" data-cal-namespace="30min"
            data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"dark"}'>
-          <span data-t data-es="Agendar llamada" data-en="Schedule A Call">Agendar llamada</span>
+          <span>Agendar llamada</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
       </div>
@@ -87,15 +90,15 @@
         one to see what it does.
       -->
       <div class="pill__prefs" inert>
-        <div class="seg" data-seg="lang" role="group" aria-label="Idioma / Language">
+        <div class="seg" data-seg="lang" data-i="0" role="group" aria-label="Idioma / Language">
           <span class="seg__thumb" aria-hidden="true"></span>
-          <button class="seg__opt" type="button" data-set-lang="es" aria-pressed="false">ES</button>
-          <button class="seg__opt" type="button" data-set-lang="en" aria-pressed="true">EN</button>
+          <a class="seg__opt" href="/barefolio" hreflang="es" lang="es" aria-current="true">ES</a>
+          <a class="seg__opt" href="/en/barefolio" hreflang="en" lang="en">EN</a>
         </div>
         <div class="seg" data-seg="theme" role="group" aria-label="Tema / Theme">
           <span class="seg__thumb" aria-hidden="true"></span>
-          <button class="seg__opt" type="button" data-set-theme="dark" aria-pressed="true" title="Oscuro / Dark"><span class="u-sr-only" data-t data-es="Oscuro" data-en="Dark">Oscuro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg></button>
-          <button class="seg__opt" type="button" data-set-theme="light" aria-pressed="false" title="Claro / Light"><span class="u-sr-only" data-t data-es="Claro" data-en="Light">Claro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></button>
+          <button class="seg__opt" type="button" data-set-theme="dark" aria-pressed="true" title="Oscuro / Dark"><span class="u-sr-only">Oscuro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg></button>
+          <button class="seg__opt" type="button" data-set-theme="light" aria-pressed="false" title="Claro / Light"><span class="u-sr-only">Claro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></button>
         </div>
       </div>
     </nav>
@@ -114,7 +117,7 @@
       <div class="project__info" style="--y:232; --h:4348; --my:121; --mh:4697.358; --mtext:129.875">
        <div class="project__info-in">
         <h1 class="t project__title" style="--x:54; --y:0; --w:1137; --fs:80; --lh:68.56; --mx:24; --my:0; --mw:354; --mfs:54.529; --mlh:46.73" data-reveal="wipe"><span>Barefolio</span></h1>
-        <p class="t project__kicker" style="--x:57; --y:75; --w:577; --fs:30; --lh:37; --mx:26; --my:51.121; --mw:352; --mfs:21.812; --mlh:25.33" data-reveal data-t data-es="Sistema de entorno creativo" data-en="Creative environment system">Sistema de entorno creativo</p>
+        <p class="t project__kicker" style="--x:57; --y:75; --w:577; --fs:30; --lh:37; --mx:26; --my:51.121; --mw:352; --mfs:21.812; --mlh:25.33" data-reveal>Sistema de entorno creativo</p>
         <span class="tags tags--project" style="--x:54; --y:133; --w:427.957; --h:46.452; --mx:24; --my:90.654; --mw:291.712; --mh:31.662">
           <span class="tag" style="--x:0.0; --w:141.409; --mx:0.0; --mw:96.39">WEB design</span>
           <span class="tag" style="--x:144.85; --w:88.409; --mx:98.735; --mw:60.263">UX/UI</span>
@@ -123,26 +126,16 @@
         </span>
         <div class="project__text" style="--x:57; --y:190; --w:635; --fs:20; --lh:23.22; --mx:26; --my:129.875; --mw:352; --mfs:15.632; --mlh:18.154">
           <div class="project__bodies" style="--mbody:336.938" data-reveal>
-          <div class="project__body" data-only="es" lang="es">
+          <div class="project__body">
             <p>BareFolio es un Creative Environment System que reúne inspiración, proceso, portfolio y contactos profesionales en un mismo espacio. Más que una red social, un portfolio o un directorio, los combina los tres en un solo ecosistema.</p>
             <p>Pensado para creadores, estudios, marcas y comunidades, BareFolio simplifica la manera de descubrir, presentar y conectar el trabajo creativo, y reúne las identidades profesionales sin el ruido de las plataformas de siempre.</p>
             <p>Con acceso curado, sin métricas públicas ni algoritmos de interacción y con clasificación mediante inteligencia artificial, BareFolio propone una forma más centrada y con más sentido de recorrer el mundo creativo.</p>
           </div>
-          <div class="project__body" data-only="en" lang="en">
-            <p>BareFolio is a Creative Environment System that brings inspiration, process, portfolio, and professional connections together in one unified space. More than a social network, portfolio, or directory,<br class="u-desk">
-              it combines all three into one ecosystem.</p>
-            <p>Designed for creators, studios, brands, and communities,<br class="u-desk">
-              BareFolio simplifies how creative work is discovered, presented,<br class="u-desk">
-              and connected, bringing professional identities together without<br class="u-desk">
-              the noise of traditional platforms.</p>
-            <p>With curated access, no public metrics or engagement algorithms, and AI-powered classification, BareFolio offers a more focused<br class="u-desk">
-              and meaningful way to experience the creative world.</p>
-          </div>
           </div>
           <div class="project__foot" style="--see-x:473">
-            <p class="project__meta" data-t data-es="Año: 2026" data-en="Age: 2026">Año: 2026</p>
+            <p class="project__meta">Año: 2026</p>
             <a class="project__see" href="https://barefolio.com" target="_blank" rel="noopener noreferrer">
-              <span data-t data-es="Ver web" data-en="See Web">Ver web</span>
+              <span>Ver web</span>
               <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24" aria-hidden="true">
             </a>
           </div>
@@ -197,23 +190,21 @@
       </div>
     </section>
     <section class="contact shift shift-layer" id="contact">
-      <h2 class="t display" style="--x:37; --y:4736; --w:1137; --fs:122.31; --lh:105; --mx:15; --my:4888.358; --mw:372; --mfs:57.336; --mlh:49" data-reveal="wipe"><span data-only="es" lang="es">Cuéntame<br>tu proyecto.</span><span data-only="en" lang="en">Brief me<br>Something.</span></h2>
+      <h2 class="t display" style="--x:37; --y:4736; --w:1137; --fs:122.31; --lh:105; --mx:15; --my:4888.358; --mw:372; --mfs:57.336; --mlh:49" data-reveal="wipe"><span>Cuéntame<br>tu proyecto.</span></h2>
 
       <a class="t contact__email" style="--x:1110; --y:4736; --w:233; --fs:15.485; --lh:20; --mx:15; --my:5007.358" href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a>
-      <p class="t label" style="--x:1110; --y:4927; --w:149; --fs:15.485; --lh:20; --mx:15; --my:5125.358" data-reveal data-t data-es="[ Contáctame ]" data-en="[ Get in touch ]">[ Contáctame ]</p>
-      <p class="t contact__copy" style="--x:1110; --y:4974; --w:1137; --fs:22.31; --lh:29; --mx:15; --my:5153.358; --mw:372; --mfs:17; --mlh:22" data-reveal data-only="es" lang="es">Escríbeme sin compromiso<br>
+      <p class="t label" style="--x:1110; --y:4927; --w:149; --fs:15.485; --lh:20; --mx:15; --my:5125.358" data-reveal>[ Contáctame ]</p>
+      <p class="t contact__copy" style="--x:1110; --y:4974; --w:1137; --fs:22.31; --lh:29; --mx:15; --my:5153.358; --mw:372; --mfs:17; --mlh:22" data-reveal>Escríbeme sin compromiso<br>
         y hablamos de tu proyecto.<br>
-        Lo dejaremos más afilado.</p><p class="t contact__copy" style="--x:1110; --y:4974; --w:1137; --fs:22.31; --lh:29; --mx:15; --my:5153.358; --mw:372; --mfs:17; --mlh:22" data-reveal data-only="en" lang="en">Please feel free to contact me<br>
-        to discuss your project.<br>
-        I’ll make it sharper.</p>
+        Lo dejaremos más afilado.</p>
 
       <a class="btn btn--outline" style="--x:57; --y:5006; --w:262.98; --h:49.94; --mx:117; --my:5338.358; --mw:262.98; --mh:49.94" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
-        <span class="btn__label" style="--x:26.48; --y:12.47; --w:172; --fs:19.113; --lh:25; --mx:26.48; --my:12.47; --mw:172; --mfs:19.113; --mlh:25" data-t data-es="Empezar proyecto" data-en="Start A Project">Empezar proyecto</span>
+        <span class="btn__label" style="--x:26.48; --y:12.47; --w:172; --fs:19.113; --lh:25; --mx:26.48; --my:12.47; --mw:172; --mfs:19.113; --mlh:25">Empezar proyecto</span>
         <img class="btn__icon" style="--x:212.5; --y:12.97; --w:24; --h:24; --mx:212.5; --my:12.97; --mw:24; --mh:24" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
       </a>
       <a class="btn btn--outline" style="--x:353; --y:5006; --w:251.98; --h:49.94; --mx:128; --my:5267.358; --mw:251.98; --mh:49.94"
          href="https://cal.com/victor-chaves-syvrlk/30min" data-cal-link="victor-chaves-syvrlk/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"dark"}'>
-        <span class="btn__label" style="--x:26.48; --y:12.47; --w:161; --fs:19.113; --lh:25; --mx:26.48; --my:12.47; --mw:161; --mfs:19.113; --mlh:25" data-t data-es="Agendar llamada" data-en="Schedule A Call">Agendar llamada</span>
+        <span class="btn__label" style="--x:26.48; --y:12.47; --w:161; --fs:19.113; --lh:25; --mx:26.48; --my:12.47; --mw:161; --mfs:19.113; --mlh:25">Agendar llamada</span>
         <img class="btn__icon" style="--x:201.5; --y:12.97; --w:24; --h:24; --mx:201.5; --my:12.97; --mw:24; --mh:24" src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
       </a>
     </section>
@@ -222,10 +213,10 @@
   <footer class="footer shift shift-layer">
     <hr class="rule" style="--y:5108; --my:5451.358">
     <span class="t footer__item" style="--x:37; --y:5143; --w:205; --fs:15.485; --lh:20; --mx:98; --my:5770.358">Victor Chaves Cerrejón</span>
-    <span class="t footer__item" style="--x:353; --y:5143; --w:168; --fs:15.485; --lh:20; --mx:117; --my:5793.358" data-t data-es="Desde Barcelona" data-en="Based in Barcelona">Desde Barcelona</span>
+    <span class="t footer__item" style="--x:353; --y:5143; --w:168; --fs:15.485; --lh:20; --mx:117; --my:5793.358">Desde Barcelona</span>
     <img class="footer__dot" style="--x:743; --y:5151; --w:4; --h:4; --mx:87; --my:5507.358" src="assets/icons/dot.svg" alt="" width="4" height="4">
     <time class="t footer__item" style="--x:756; --y:5143; --w:214; --fs:15.485; --lh:20; --mx:100; --my:5499.358" id="clock" datetime="">—</time>
-    <span class="t label footer__item" style="--x:1275; --y:5143; --w:93; --fs:15.485; --lh:20; --mx:154; --my:5550.358" data-t data-es="[ Sígueme ]" data-en="[ Follow ]">[ Sígueme ]</span>
+    <span class="t label footer__item" style="--x:1275; --y:5143; --w:93; --fs:15.485; --lh:20; --mx:154; --my:5550.358">[ Sígueme ]</span>
     <ul class="chips" style="--x:1400; --y:5137; --w:278.09; --h:31.54; --mx:75; --my:5586.358; --mw:252; --mh:153">
       <li style="--x:0; --w:89.36; --mw:252; --mh:44"><a class="chip" href="https://www.instagram.com/chavescerrejon" target="_blank" rel="noopener noreferrer">Instagram</a></li>
       <li style="--x:109.36; --w:67.36; --mx:0; --my:54; --mw:252; --mh:45"><a class="chip" href="https://www.tiktok.com/@chavescerrejon" target="_blank" rel="noopener noreferrer">TikTok</a></li>
@@ -247,15 +238,15 @@
   and the quick way to jump. Without JS, :target still opens it and the two
   close links still shut it.
 -->
-<div class="sheet about" id="about" data-sheet-label="About" data-sheet-label-es="Sobre mí">
+<div class="sheet about" id="about" data-sheet-label="Sobre mí">
   <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
 
   <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
-    <h2 class="u-sr-only" id="aboutTitle" data-t data-es="Sobre Victor Chaves" data-en="About Victor Chaves">Sobre Victor Chaves</h2>
+    <h2 class="u-sr-only" id="aboutTitle">Sobre Victor Chaves</h2>
 
     <div class="sheet__head">
       <a class="sheet__close" href="#top">
-        <span class="u-sr-only" data-t data-es="Cerrar" data-en="Close">Cerrar</span>
+        <span class="u-sr-only">Cerrar</span>
         <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
       </a>
     </div>
@@ -287,118 +278,110 @@
               <li><a href="https://www.linkedin.com/in/chavescerrejon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <img src="assets/icons/social/linkedin.svg" alt="" width="25" height="25"></a></li>
             </ul>
-            <p class="about__key" data-t data-es="Correo" data-en="Mail">Correo</p>
+            <p class="about__key">Correo</p>
             <p class="about__val"><a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a></p>
           </div>
         </div>
       </aside>
 
-      <div class="about__intro" id="about-intro" data-about-sec="Intro" data-about-sec-es="Intro">
-        <p data-t data-es="Hola, soy Victor" data-en="Hey I&rsquo;m Victor">Hola, soy Victor</p>
-        <p data-only="es" lang="es">Diseñador gráfico y creativo digital, especializado en crear identidades
+      <div class="about__intro" id="about-intro" data-about-sec="Intro">
+        <p>Hola, soy Victor</p>
+        <p>Diseñador gráfico y creativo digital, especializado en crear identidades
           visuales y experiencias con un enfoque estratégico y contemporáneo.
           Me apasiona convertir ideas en conceptos visuales que conecten con
           las personas, cuidando tanto la estética como la intención que hay
-          detrás de cada detalle.</p><p data-only="en" lang="en">A graphic designer and digital creative, specializing in the creation
-          of visual identities and experiences with a strategic and contemporary approach.
-          I am passionate about transforming ideas into visual concepts that connect
-          with people, paying close attention to both the aesthetics and the intention
-          behind every detail.</p>
-        <p data-only="es" lang="es">Además, integro herramientas de inteligencia artificial en los procesos
+          detrás de cada detalle.</p>
+        <p>Además, integro herramientas de inteligencia artificial en los procesos
           creativos y de producción, de la generación de imagen y vídeo a las
           automatizaciones, los flujos de trabajo y las integraciones que
-          mejoran los resultados y amplían la creatividad.</p><p data-only="en" lang="en">In addition, I integrate artificial intelligence tools into creative and production
-          processes, from image and video generation to automations, workflows,
-          and integrations that optimize results and enhance creativity.</p>
+          mejoran los resultados y amplían la creatividad.</p>
       </div>
 
       <div class="about__sections">
 
-        <section class="about__sec" id="about-cv" data-about-sec="CV" data-about-sec-es="CV">
+        <section class="about__sec" id="about-cv" data-about-sec="CV">
           <hr class="about__line">
           <div class="about__row about__row--cv">
-            <h3 class="about__label" data-t data-es="[ Currículum ]" data-en="[ Curriculum Vitae ]">[ Currículum ]</h3>
+            <h3 class="about__label">[ Currículum ]</h3>
             <p class="about__body about__body--end">
               <a class="about__dl" href="assets/cv/victor-chaves-cv.pdf" download>
-                <span data-t data-es="Descargar" data-en="Download">Descargar</span>
+                <span>Descargar</span>
                 <img src="assets/icons/down-arrow-sm.svg" alt="" width="20" height="20" aria-hidden="true">
               </a>
             </p>
           </div>
         </section>
 
-        <section class="about__sec" id="about-events" data-about-sec="Events" data-about-sec-es="Eventos">
+        <section class="about__sec" id="about-events" data-about-sec="Eventos">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Eventos ]" data-en="[ Events ]">[ Eventos ]</h3>
+            <h3 class="about__label">[ Eventos ]</h3>
             <div class="about__body">
               <p class="about__when">2026</p>
               <p class="about__what">BRUT!</p>
-              <p data-only="es" lang="es">Presentación de BareFolio en BRUT!,<br>
+              <p>Presentación de BareFolio en BRUT!,<br>
                 el festival de diseño de Barcelona,<br>
-                en el Disseny Hub Barcelona.</p><p data-only="en" lang="en">BareFolio presentation at BRUT!,<br>
-                Barcelona&rsquo;s design festival,<br>
-                at the Disseny Hub Barcelona.</p>
+                en el Disseny Hub Barcelona.</p>
             </div>
           </div>
         </section>
 
-        <section class="about__sec" id="about-education" data-about-sec="Education" data-about-sec-es="Formación">
+        <section class="about__sec" id="about-education" data-about-sec="Formación">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Formación ]" data-en="[ Education ]">[ Formación ]</h3>
+            <h3 class="about__label">[ Formación ]</h3>
             <div class="about__body">
               <p class="about__when">2023&ndash;2026</p>
-              <p class="about__what" data-t data-es="Grado en Diseño Gráfico" data-en="Bachelor&rsquo;s Degree in Graphic Design">Grado en Diseño Gráfico</p>
+              <p class="about__what">Grado en Diseño Gráfico</p>
               <p>LCI Barcelona</p>
               <p class="about__when">2020</p>
-              <p class="about__what" data-t data-es="Bachillerato" data-en="High School">Bachillerato</p>
+              <p class="about__what">Bachillerato</p>
               <p>Escola Garbí Pere Vergés d&rsquo;Esplugues</p>
             </div>
           </div>
         </section>
 
-        <section class="about__sec" id="about-employment" data-about-sec="Employment" data-about-sec-es="Experiencia">
+        <section class="about__sec" id="about-employment" data-about-sec="Experiencia">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Experiencia ]" data-en="[ Employment ]">[ Experiencia ]</h3>
+            <h3 class="about__label">[ Experiencia ]</h3>
             <div class="about__body">
-              <p class="about__when" data-t data-es="2025 &ndash; 6 meses (prácticas)" data-en="2025 &ndash; 6 months (Internship)">2025 &ndash; 6 meses (prácticas)</p>
+              <p class="about__when">2025 &ndash; 6 meses (prácticas)</p>
               <p class="about__what">Glamm BCN</p>
-              <p data-t data-es="Gestión de redes, gestión de la web y creación de piezas gráficas para la marca." data-en="Social media management, website management, and creation of graphic elements for the brand.">Gestión de redes, gestión de la web y creación de piezas gráficas para la marca.</p>
-              <p class="about__when" data-t data-es="2023/2025 &ndash; 2 años" data-en="2023/2025 &ndash; 2 years">2023/2025 &ndash; 2 años</p>
+              <p>Gestión de redes, gestión de la web y creación de piezas gráficas para la marca.</p>
+              <p class="about__when">2023/2025 &ndash; 2 años</p>
               <p class="about__what">MonEstilistes</p>
-              <p data-only="es" lang="es">Gestión de redes y creación<br>de piezas gráficas para la marca.</p><p data-only="en" lang="en">Social media management and creation<br>of graphic elements for the brand.</p>
-              <p class="about__when" data-t data-es="2022&ndash;2024 &ndash; 2 años" data-en="2022&ndash;2024 &ndash; 2 years">2022&ndash;2024 &ndash; 2 años</p>
+              <p>Gestión de redes y creación<br>de piezas gráficas para la marca.</p>
+              <p class="about__when">2022&ndash;2024 &ndash; 2 años</p>
               <p class="about__what">Nonvero Society</p>
-              <p data-only="es" lang="es">Proyecto de marca de ropa; trabajé como diseñador, busqué proveedores, desarrollé campañas de marketing, creé contenido para redes<br>y produje piezas audiovisuales.</p><p data-only="en" lang="en">Clothing brand project; served as a designer, sourced suppliers, developed marketing campaigns, created social media content,<br>and produced audiovisual content.</p>
+              <p>Proyecto de marca de ropa; trabajé como diseñador, busqué proveedores, desarrollé campañas de marketing, creé contenido para redes<br>y produje piezas audiovisuales.</p>
             </div>
           </div>
         </section>
 
-        <section class="about__sec" id="about-skills" data-about-sec="Skills" data-about-sec-es="Aptitudes">
+        <section class="about__sec" id="about-skills" data-about-sec="Aptitudes">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Aptitudes ]" data-en="[ Skills ]">[ Aptitudes ]</h3>
+            <h3 class="about__label">[ Aptitudes ]</h3>
             <ul class="about__body about__list">
-              <li data-t data-es="Liderazgo creativo" data-en="Creative Leadership">Liderazgo creativo</li>
-              <li data-t data-es="Empatía" data-en="Empathy">Empatía</li>
-              <li data-t data-es="Atención al detalle" data-en="Attention to Detail">Atención al detalle</li>
-              <li data-t data-es="Responsabilidad" data-en="Ownership">Responsabilidad</li>
-              <li data-t data-es="Curiosidad" data-en="Curiosity">Curiosidad</li>
-              <li data-t data-es="Mentalidad innovadora" data-en="Innovation Mindset">Mentalidad innovadora</li>
-              <li data-t data-es="Mentalidad de crecimiento" data-en="Growth Mindset">Mentalidad de crecimiento</li>
-              <li data-t data-es="Trato con el cliente" data-en="Client Relationship Management">Trato con el cliente</li>
-              <li data-t data-es="Presentaciones" data-en="Presentation Skills">Presentaciones</li>
-              <li data-t data-es="Negociación" data-en="Negotiation">Negociación</li>
+              <li>Liderazgo creativo</li>
+              <li>Empatía</li>
+              <li>Atención al detalle</li>
+              <li>Responsabilidad</li>
+              <li>Curiosidad</li>
+              <li>Mentalidad innovadora</li>
+              <li>Mentalidad de crecimiento</li>
+              <li>Trato con el cliente</li>
+              <li>Presentaciones</li>
+              <li>Negociación</li>
             </ul>
           </div>
         </section>
 
-        <section class="about__sec" id="about-software" data-about-sec="Software" data-about-sec-es="Software">
+        <section class="about__sec" id="about-software" data-about-sec="Software">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Software ]" data-en="[ Softwares ]">[ Software ]</h3>
+            <h3 class="about__label">[ Software ]</h3>
             <!-- The grid keeps the comp's own x/y: the icons are different
                  shapes and a flex row would not line them up the same way. -->
             <div class="about__body about__soft">
@@ -416,14 +399,14 @@
           </div>
         </section>
 
-        <section class="about__sec" id="about-languages" data-about-sec="Languages" data-about-sec-es="Idiomas">
+        <section class="about__sec" id="about-languages" data-about-sec="Idiomas">
           <hr class="about__line">
           <div class="about__row">
-            <h3 class="about__label" data-t data-es="[ Idiomas ]" data-en="[ Languages ]">[ Idiomas ]</h3>
+            <h3 class="about__label">[ Idiomas ]</h3>
             <ul class="about__body about__list">
-              <li data-t data-es="Español &mdash; nativo" data-en="Spanish &mdash; Native">Español &mdash; nativo</li>
-              <li data-t data-es="Catalán &mdash; nativo" data-en="Catalan &mdash; Native">Catalán &mdash; nativo</li>
-              <li data-t data-es="Inglés &mdash; First" data-en="English &mdash; First">Inglés &mdash; First</li>
+              <li>Español &mdash; nativo</li>
+              <li>Catalán &mdash; nativo</li>
+              <li>Inglés &mdash; First</li>
             </ul>
           </div>
         </section>
@@ -443,33 +426,31 @@
   where the comp puts it, so the order of the markup is the phone's and the
   wide canvas lifts its right-hand pair out of the flow.
 -->
-<div class="sheet sheet--touch" id="get-in-touch" data-sheet-label="Contact" data-sheet-label-es="Contacto">
+<div class="sheet sheet--touch" id="get-in-touch" data-sheet-label="Contacto">
   <a class="sheet__scrim" href="#top" tabindex="-1" aria-hidden="true"></a>
 
   <div class="sheet__dialog" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
-    <h2 class="u-sr-only" id="contactTitle" data-t data-es="Contacto" data-en="Get in touch">Contacto</h2>
+    <h2 class="u-sr-only" id="contactTitle">Contacto</h2>
 
     <div class="sheet__head">
       <a class="sheet__close" href="#top">
-        <span class="u-sr-only" data-t data-es="Cerrar" data-en="Close">Cerrar</span>
+        <span class="u-sr-only">Cerrar</span>
         <img src="assets/icons/dash.svg" alt="" width="24" height="24" aria-hidden="true">
       </a>
     </div>
 
     <div class="sheet__scroll touch__body">
-      <p class="touch__display" data-only="es" lang="es">Cuéntame<br>algo.</p><p class="touch__display" data-only="en" lang="en">Brief me<br>Something.</p>
+      <p class="touch__display">Cuéntame<br>algo.</p>
 
       <div class="touch__note">
-        <p class="touch__label" data-t data-es="[ Contacto ]" data-en="[ Get in touch ]">[ Contacto ]</p>
-        <p class="touch__copy" data-only="es" lang="es">Escríbeme sin compromiso<br>
+        <p class="touch__label">[ Contacto ]</p>
+        <p class="touch__copy">Escríbeme sin compromiso<br>
           y hablamos de tu proyecto.<br>
-          Lo dejaremos más afilado.</p><p class="touch__copy" data-only="en" lang="en">Please feel free to contact me<br>
-          to discuss your project.<br>
-          I&rsquo;ll make it sharper.</p>
+          Lo dejaremos más afilado.</p>
       </div>
 
       <p class="touch__mail">
-        <span class="touch__mail-key" data-t data-es="Correo" data-en="Mail">Correo</span>
+        <span class="touch__mail-key">Correo</span>
         <a href="mailto:chavescerrejon@gmail.com">chavescerrejon@gmail.com</a>
       </p>
 
@@ -484,13 +465,13 @@
 
       <div class="touch__actions">
         <a class="touch__btn" href="mailto:chavescerrejon@gmail.com?subject=Project%20enquiry">
-          <span data-t data-es="Enviar un correo" data-en="Send an email">Enviar un correo</span>
+          <span>Enviar un correo</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
         <a class="touch__btn" href="https://cal.com/victor-chaves-syvrlk/30min"
            data-cal-link="victor-chaves-syvrlk/30min" data-cal-namespace="30min"
            data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"dark"}'>
-          <span data-t data-es="Agendar una llamada" data-en="Schedule A Call">Agendar una llamada</span>
+          <span>Agendar una llamada</span>
           <img src="assets/icons/arrow-up-right.svg" alt="" width="24" height="24">
         </a>
       </div>

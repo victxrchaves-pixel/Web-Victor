@@ -30,8 +30,7 @@
   var setLabel = function () {};
   var updateLabel = function () {};
   var sheetLabel = function (el) {
-    var lang = document.documentElement.getAttribute('data-lang') === 'es' ? 'es' : 'en';
-    return el.getAttribute('data-sheet-label-' + lang) || el.getAttribute('data-sheet-label') || '';
+    return el.getAttribute('data-sheet-label') || '';
   };
 
   /* ---------- Films in the strips ----------
@@ -168,13 +167,15 @@
   /* ---------- Two settings that outlive the visit ----------
      The language and the light. Both are written on <html>, where the stylesheet
      can see them, and remembered in the browser; the little script in the head
-     puts them back before the first paint, so nothing is drawn twice. The words
-     are not fetched from anywhere: each piece of writing carries both, the one
-     in the markup and the other in an attribute, so the change is instant and
-     the page still says something with the script off. */
+     puts it back before the first paint, so nothing is drawn twice.
+
+     The language is not one of them any more: each language has its own
+     address, so the page arrives in the language it is, says so on <html>,
+     and the selector in the menu is a pair of links rather than a switch.
+     What is left here are the few words this script says on its own. */
 
   var root = document.documentElement;
-  var KEY = { lang: 'vc-lang', theme: 'vc-theme' };
+  var KEY = { theme: 'vc-theme' };
 
   // The few words the script says on its own: the rest live in the markup.
   var WORDS = {
@@ -193,30 +194,6 @@
     try { window.localStorage.setItem(key, value); } catch (e) {}
   };
 
-  var sayLang = function (lang) {
-    var els = document.querySelectorAll('[data-t]');
-    Array.prototype.forEach.call(els, function (el) {
-      var text = el.getAttribute('data-' + lang);
-      if (text !== null) el.textContent = text;
-    });
-  };
-
-  // Un bloque que espera su turno no se dibuja, asi que nunca cruza el
-  // observador que descubre las cosas al llegar a ellas. Cuando le toca, toma
-  // el estado del que sustituye, que es su hermano en el marcado.
-  var mirrorReveal = function () {
-    var all = document.querySelectorAll('[data-only][data-reveal]');
-    Array.prototype.forEach.call(all, function (el) {
-      var mine = el.getAttribute('data-only');
-      var sides = [el.previousElementSibling, el.nextElementSibling];
-      for (var i = 0; i < sides.length; i++) {
-        var o = sides[i];
-        if (o && o.hasAttribute('data-only') && o.getAttribute('data-only') !== mine
-            && o.classList.contains('is-in')) { el.classList.add('is-in'); return; }
-      }
-    });
-  };
-
   var markSeg = function (name, value, attr) {
     var seg = document.querySelector('.seg[data-seg="' + name + '"]');
     if (!seg) return;
@@ -230,20 +207,6 @@
     seg.setAttribute('data-i', i);
   };
 
-  var setLang = function (lang, save) {
-    root.setAttribute('data-lang', lang);
-    root.setAttribute('lang', lang);
-    sayLang(lang);
-    mirrorReveal();
-    markSeg('lang', lang, 'data-set-lang');
-    if (save) remember(KEY.lang, lang);
-    // The bar names the section you are in, and that name is the script's own.
-    if (save) {
-      if (menuOpen) setLabel(say('menu'));
-      else if (openSheetEl) setLabel(sheetLabel(openSheetEl));
-      else updateLabel();
-    }
-  };
 
   /* The booking window is someone else's page opened inside ours, so it is
      told which way this one is turned rather than left to read the system's
@@ -272,14 +235,12 @@
     if (save) remember(KEY.theme, theme);
   };
 
-  setLang(root.getAttribute('data-lang') || root.getAttribute('lang') || 'en', false);
   setTheme(root.getAttribute('data-theme') || 'dark', false);
 
   document.addEventListener('click', function (event) {
-    var opt = event.target.closest ? event.target.closest('[data-set-lang], [data-set-theme]') : null;
+    var opt = event.target.closest ? event.target.closest('[data-set-theme]') : null;
     if (!opt) return;
-    var lang = opt.getAttribute('data-set-lang');
-    if (lang) setLang(lang, true); else setTheme(opt.getAttribute('data-set-theme'), true);
+    setTheme(opt.getAttribute('data-set-theme'), true);
   });
 
   /* ---------- The mark goes home ----------

@@ -27,8 +27,12 @@ configuration.
 ## Structure
 
 ```
-index.html              the landing
-projects.html           the full list of projects
+index.html              the landing, in Spanish
+projects.html           the full list of projects, in Spanish
+<project>.html          one page per project, in Spanish
+en/                     the same sixteen pages in English
+404.html                answers for every address that has none
+tools/                  the two scripts that split the languages, once
 assets/css/styles.css   tokens, layout, motion
 assets/js/main.js       reveals, menu, marquee, clock
 assets/img/*.webp       row thumbnails, cut from the originals (2× display size)
@@ -44,9 +48,30 @@ assets/fonts/*.woff2    Geist + Geist Mono, self-hosted (latin subset),
                         and Nuvra, the typeface the Nuvra row is set in
 ```
 
+## Two languages, two trees
+
+Each language has its own address: the Spanish pages at the root and the
+English ones under `/en/`. A page carries one language and says so on
+`<html>`; the selector in the menu is a pair of links to the same page on
+the other side, and each page names its twin with `hreflang`.
+
+It was not always so. Until October 2026 both languages travelled in the
+same markup — the Spanish written out, the English waiting in a twin block
+or in an attribute — and one address served both. That reads well in a
+browser and badly in a search engine, where there was no English address at
+all. `tools/split_languages.py` and `tools/build_english.py` are the two
+scripts that cut it in two, kept here as the record of how. **They are not
+meant to be run again**: they read a bilingual page, and there are none
+left.
+
+What that means day to day: **a change to the content has to be made on
+both sides**. The two trees have the same shape file for file, so the same
+edit applies twice.
+
 ## Editing the content
 
-Everything editable lives in `index.html` and `projects.html`:
+Everything editable lives in `index.html` and `projects.html` (and their
+English twins under `en/`):
 
 - **Projects** — each one is an `<li class="row">` inside `.work__list`: the
   name, its `<span class="tag">` labels, the thumbnails in `.thumbs` and the

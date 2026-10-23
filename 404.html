@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The two settings are read before anything is drawn: a page that opened in
      the dark and turned light a moment later would be worse than either. -->
-<script>(function(){try{var r=document.documentElement,s=localStorage,t=s.getItem('vc-theme'),l=s.getItem('vc-lang');if(t==='light'||t==='dark')r.setAttribute('data-theme',t);if(l==='es'||l==='en'){r.setAttribute('data-lang',l);r.setAttribute('lang',l);}}catch(e){}})();</script>
+<script>(function(){var r=document.documentElement;try{var t=localStorage.getItem('vc-theme');if(t==='light'||t==='dark')r.setAttribute('data-theme',t);}catch(e){}
+/* This one page answers for every address that has none, so its language is
+   the language of the address that was asked for. */
+if(location.pathname.indexOf('/en/')===0||location.pathname==='/en'){r.setAttribute('data-lang','en');r.setAttribute('lang','en');}})();</script>
 <title>Página no encontrada — Victor Chaves</title>
 <meta name="description" content="La página que buscabas no existe o se ha movido.">
 <meta name="robots" content="noindex, follow">
@@ -47,6 +50,8 @@
       var said = words[i].getAttribute('data-' + lang);
       if (said !== null) words[i].textContent = said;
     }
+    // Home is the landing of the language that was asked for.
+    if (lang === 'en') document.querySelector('.err__btn').setAttribute('href', '/en');
   })();
 </script>
 
