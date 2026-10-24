@@ -732,7 +732,13 @@ html:not([data-theme="light"]) [data-on-theme="light"] { display: none; }
    are not the same thing to the browser - the second one still makes a layer
    and redraws the icon through it - so the dark page, which needs no turning
    over, is left without one. */
-:root[data-theme="light"] :is(
+/* Written with :where() so the whole selector weighs nothing. It used to be
+   :root[data-theme="light"] :is(...), which counts for more than any of the
+   hover rules below that turn an icon back over when its button fills with
+   ink - so on the light page those rules were being outvoted and the arrow
+   stayed black while the button went black behind it. Nothing else sets a
+   filter on these icons at rest, so the rule has no one to beat. */
+:where(:root[data-theme="light"]) :where(
   img[src$="/logo.svg"], img[src$="arrow-up-right.svg"], img[src$="dash.svg"],
   img[src$="menu.svg"],
   img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo[src$=".svg"]) {
