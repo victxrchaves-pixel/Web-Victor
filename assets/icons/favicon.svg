@@ -2,17 +2,20 @@
 <!--
   The mark as it appears in the browser's tab.
 
-  It is a separate file from logo.svg on purpose: that one is drawn white and
-  the page turns it over with the theme, so it cannot also be the tab's.
+  A filled black tile with the mark in white, the same as the .ico and the
+  PNGs beside it, so every surface that shows this site shows one icon. It
+  was drawn on nothing before and turned over with the browser's own light
+  or dark, which left it to disappear into whatever it happened to land on.
+  A tile carries its own contrast wherever it goes.
 
-  Black, which is what shows against the ordinary light tab strip. Where the
-  browser itself is dark the strip is dark too and a black mark would be as
-  invisible there as the white one was on a light strip, so it turns over.
-  Anything that does not read the query gets the black.
+  Separate from logo.svg on purpose: that one is drawn white and the page
+  turns it over with the theme, so it cannot also be the tab's.
+
+  The mark is 62% of the tile's height and centred on it, which is the same
+  proportion the .ico and the PNGs are built to.
 -->
-<style>
-  .mark { fill: #111111; }
-  @media (prefers-color-scheme: dark) { .mark { fill: #F4F4F4; } }
-</style>
-<path class="mark" transform="translate(5.16 0)" d="M108.529 144.269L131.356 156.755L24.3703 222.325L0 181.001L110.885 121.715V146.686L0 87.3188L24.3703 46.7204L131.356 111.485L108.529 124.776L105.361 0H152.558L149.39 124.776L127.375 111.485L234.361 46.7204L258 87.3188L147.846 146.605V121.634L258 180.921L234.361 222.244L127.375 156.755L149.39 144.269L152.558 268.32H105.361L108.529 144.269Z"/>
+<rect width="268.32" height="268.32" fill="#111111"/>
+<g transform="translate(54.18 50.98) scale(0.62)">
+  <path fill="#F4F4F4" d="M108.529 144.269L131.356 156.755L24.3703 222.325L0 181.001L110.885 121.715V146.686L0 87.3188L24.3703 46.7204L131.356 111.485L108.529 124.776L105.361 0H152.558L149.39 124.776L127.375 111.485L234.361 46.7204L258 87.3188L147.846 146.605V121.634L258 180.921L234.361 222.244L127.375 156.755L149.39 144.269L152.558 268.32H105.361L108.529 144.269Z"/>
+</g>
 </svg>
