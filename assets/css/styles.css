@@ -734,7 +734,7 @@ html:not([data-theme="light"]) [data-on-theme="light"] { display: none; }
    over, is left without one. */
 :root[data-theme="light"] :is(
   img[src$="/logo.svg"], img[src$="arrow-up-right.svg"], img[src$="dash.svg"],
-  img[src$="menu.svg"], img[src$="down-arrow-sm.svg"],
+  img[src$="menu.svg"],
   img[src*="/icons/social/"], img[src*="/icons/soft/"], .piece--logo[src$=".svg"]) {
   filter: invert(var(--icon-invert));
 }
@@ -1554,24 +1554,6 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
   justify-content: flex-end;
   align-items: flex-start;
 }
-.about__dl {
-  display: inline-flex;
-  align-items: center;
-  gap: calc(2 * var(--u));
-  font-family: 'Geist Mono', ui-monospace, monospace;
-  font-weight: 500;
-  text-transform: uppercase;
-  transition: color var(--dur-ui) ease;
-}
-.about__dl img {
-  width: calc(20 * var(--u));
-  height: calc(20 * var(--u));
-  transition: transform var(--dur-ui) var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .about__dl:hover { color: var(--live); }
-  .about__dl:hover img { transform: translateY(calc(3 * var(--u))); }
-}
 
 /* The ten marks are different shapes, so they keep the comp's own x and y
    rather than being handed to a flex row that would align them its way. */
@@ -2333,7 +2315,6 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     grid-template-columns: 1fr;
     row-gap: calc(10 * var(--u));
   }
-  .about__row--cv { grid-template-columns: 1fr; }
   .about__body { width: calc(312 * var(--u)); max-width: 100%; }
   .about__body--end { width: calc(320 * var(--u)); max-width: 100%; }
   .about__soft { width: calc(181.5 * var(--u)); }
@@ -2447,13 +2428,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .err__display { font-size: calc(52 * var(--u)); letter-spacing: calc(-1 * var(--u)); }
   .err__copy { font-size: calc(15 * var(--u)); line-height: calc(21 * var(--u)); }
 
-  #about-cv         { order: 1; }
-  #about-education  { order: 2; }
-  #about-employment { order: 3; }
-  #about-events     { order: 4; }
-  #about-skills     { order: 5; }
-  #about-software   { order: 6; }
-  #about-languages  { order: 7; }
+  #about-education  { order: 1; }
+  #about-employment { order: 2; }
+  #about-events     { order: 3; }
+  #about-skills     { order: 4; }
+  #about-software   { order: 5; }
+  #about-languages  { order: 6; }
 }
 /* Between the phone column and the desktop canvas there is nothing to
    interpolate: the two comps are different layouts, so they simply swap. */

@@ -1124,24 +1124,7 @@
 
     aboutScroll.addEventListener('scroll', drawRail, { passive: true });
 
-    /* The CV row is in the design, but the PDF is Victor's to drop in. Rather
-       than hand a visitor a 404, the row asks for the file once and takes
-       itself out of the window if it is not there yet; the day it lands, the
-       row comes back on its own. */
-    var cvAsked = false;
-    function checkCv() {
-      var dl = about.querySelector('.about__dl');
-      if (cvAsked || !dl || !window.fetch) return;
-      cvAsked = true;
-      var sec = dl.closest('.about__sec');
-      window.fetch(dl.getAttribute('href'), { method: 'HEAD' }).then(function (res) {
-        if (res.ok) return;
-        sec.hidden = true;
-        if (openSheetEl === about) layoutRail();
-      }).catch(function () {});
-    }
-
-    onSheetOpen.about = function () { layoutRail(); checkCv(); };
+    onSheetOpen.about = function () { layoutRail(); };
 
     window.addEventListener('resize', function () { if (openSheetEl === about) layoutRail(); });
     if (document.fonts && document.fonts.ready) {
