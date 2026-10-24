@@ -467,10 +467,7 @@
     updateLabel = function () {
       // A window over the landing names itself in the bar, and locking the
       // page fires one last scroll event that would otherwise undo that.
-      // A page that IS one of those windows names itself in the markup, and
-      // has no sections to walk: its panel is fixed, so the page never
-      // scrolls and the end-of-page rule below would hand it the last one.
-      if (menuOpen || openSheetEl || root.hasAttribute('data-sheet-page')) return;
+      if (menuOpen || openSheetEl) return;
       // A section takes over once its top passes three quarters down the
       // viewport; at the very bottom the last one always wins, since a short
       // page can never scroll its threshold past the probe.
@@ -988,20 +985,14 @@
     sheetReturn = null;
   }
 
-  /* On a page that is itself one of these panels the script keeps out of it:
-     the panel is open in the markup and its way out is a real link home, so
-     intercepting the click would close it onto an empty screen. */
-  if (sheets.length && !root.hasAttribute('data-sheet-page')) {
+  if (sheets.length) {
     document.addEventListener('click', function (event) {
       var target = event.target;
       if (!target || !target.closest) return;
 
       var opener = target.closest('[data-sheet-open]');
       if (opener) {
-        /* The href is the page's real address, for a crawler and for anyone
-           opening it in a new tab; the fragment says which panel to open here. */
-        var want = opener.getAttribute('data-sheet-open') || opener.getAttribute('href');
-        var wanted = want && want.charAt(0) === '#' ? document.querySelector(want) : null;
+        var wanted = document.querySelector(opener.getAttribute('href'));
         if (wanted && wanted.classList.contains('sheet')) {
           event.preventDefault();
           closeMenu(false);
