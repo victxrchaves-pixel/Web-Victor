@@ -2343,6 +2343,16 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
      it is born off the top of the screen either way. */
   .about__stage {
     top: calc(-60 * var(--u));
+    /* The 360 of bleed each side is a desktop measurement: there the window is
+       1036 of a 1728 canvas and there is screen to spare beside it. Here the
+       window IS the screen, so it asked for a drawing buffer 2.8 times the
+       width of the phone - five megapixels, multisampled - to show a card 250
+       wide down the middle. That is what left it drawing pieces of itself
+       astray: not the picture, but a buffer at the edge of what the phone will
+       give. The card is given the room it actually swings through. */
+    left: calc(-120 * var(--u));
+    right: calc(-120 * var(--u));
+    height: calc(700 * var(--u));
   }
   /* The comp leaves 116 between the name and the contact, which on a phone
      reads as a hole rather than as air; the contact comes up under the name
