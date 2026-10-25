@@ -224,7 +224,10 @@ const loadImage = (cache, url) => {
   const viaBitmap = typeof createImageBitmap === 'function' && typeof fetch === 'function'
     ? fetch(url, { mode: 'cors', credentials: 'omit' })
         .then(answer => (answer.ok ? answer.blob() : Promise.reject(new Error(answer.status))))
-        .then(blob => createImageBitmap(blob))
+        /* three ignores Texture.flipY when the source is an ImageBitmap - the
+           orientation has to be asked for here instead, or the portrait
+           arrives on the card upside down. */
+        .then(blob => createImageBitmap(blob, { imageOrientation: 'flipY' }))
     : Promise.reject(new Error('no bitmap'));
   /* Where that is missing or refused, the old road, with decode() at least. */
   const promise = viaBitmap.catch(() => new Promise(resolve => {
