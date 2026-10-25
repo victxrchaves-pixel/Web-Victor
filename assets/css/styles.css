@@ -383,7 +383,21 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   flex: none;
 }
 .pill__logo, .pill__toggle { position: static; flex: none; }
-.pill__logo img { width: 100%; height: 100%; }
+/* The mark turns half a circle under the hand. Its six arms are 60 apart, so
+   half a turn is three of those and it lands exactly on itself: what reads is
+   the movement, not a mark left sitting crooked. */
+.pill__logo img {
+  width: 100%;
+  height: 100%;
+  transition: transform 520ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pill__logo:hover img { transform: rotate(180deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pill__logo img { transition: none; }
+  .pill__logo:hover img { transform: none; }
+}
 
 .pill__current {
   position: static;
