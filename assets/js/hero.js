@@ -39,25 +39,43 @@ if (hero && row && stage) {
   };
   const look = () => SKIES[root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'];
 
-  const light = sky
-    ? createAurora(sky, Object.assign({
-        amplitude: 1.7,
-        blend: 0.18,
-        height: 0.36,
-        speed: 1.1,
-        scale: 1.2,
-        glow: 0.25,
-        layers: 3,
-        direction: 'top'
-      }, look()))
-    : null;
+  const SKY = {
+    amplitude: 1.7,
+    blend: 0.18,
+    height: 0.36,
+    speed: 1.1,
+    scale: 1.2,
+    glow: 0.25,
+    layers: 3,
+    direction: 'top'
+  };
+
+  let light = sky ? createAurora(sky, Object.assign({}, SKY, look())) : null;
 
   if (light) {
     hero.setAttribute('data-sky', '');
     // The theme is written on <html> by main.js, so that is what is watched:
     // no second place to remember which one is on.
-    new MutationObserver(() => light.set(look()))
+    new MutationObserver(() => light && light.set(look()))
       .observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+    /* A phone has one pool of graphics memory and this page asks a lot of it:
+       this sky, the badge in the About window, and the films. Asking for all
+       of it at once is what leaves the badge drawing pieces of itself in the
+       wrong places, and on a phone the window covers the screen, so while it
+       is open the sky is behind it and nobody can see it anyway. It is given
+       back for that time - destroy() releases the context, where pausing
+       would only stop the drawing and keep the memory - and built again on
+       the way out. */
+    const narrow = window.matchMedia('(max-width: 1279px)');
+    document.addEventListener('vc:sheet', event => {
+      if (!narrow.matches) return;
+      if (event.detail && event.detail.open) {
+        if (light) { light.destroy(); light = null; }
+      } else if (!light && sky) {
+        light = createAurora(sky, Object.assign({}, SKY, look()));
+      }
+    });
   }
 
   /* ---------- The pictures, under the hand ---------- */

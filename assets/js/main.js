@@ -961,14 +961,24 @@
     void el.offsetWidth;
     el.classList.add('is-visible');
     if (onSheetOpen[el.id]) onSheetOpen[el.id]();
+    /* Said out loud so the hero can give its sky's graphics memory back while
+       this window is over it - on a phone the badge inside needs it more. */
+    tellSheet(true);
     var close = el.querySelector('.sheet__close');
     if (close) close.focus({ preventScroll: true });
+  }
+
+  function tellSheet(open) {
+    try {
+      document.dispatchEvent(new CustomEvent('vc:sheet', { detail: { open: open } }));
+    } catch (e) {}
   }
 
   function closeSheet(returnFocus) {
     var el = openSheetEl;
     if (!el) return;
     openSheetEl = null;
+    tellSheet(false);
     el.classList.remove('is-visible');
     document.documentElement.classList.remove('sheet-is-open');
     // The hash would hold it open through :target, so it goes with it.
