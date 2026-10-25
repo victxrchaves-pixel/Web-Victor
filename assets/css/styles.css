@@ -2337,11 +2337,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     height: 100%;
   }
   /* The card hangs a fixed way down from the stage's top edge, and on a phone
-     that lands its foot over the name. The whole rig rides up instead, so the
-     card ends where the column's gap begins and the name keeps its air. The
-     band loses nothing a reader sees: it is born off-screen either way. */
+     that lands its foot across the name. The whole rig rides up instead, by
+     just enough to leave the name its air and no more: the card is meant to
+     sit close to the words under it. The band loses nothing a reader sees -
+     it is born off the top of the screen either way. */
   .about__stage {
-    top: calc(-75 * var(--u));
+    top: calc(-60 * var(--u));
   }
   /* The comp leaves 116 between the name and the contact, which on a phone
      reads as a hole rather than as air; the contact comes up under the name

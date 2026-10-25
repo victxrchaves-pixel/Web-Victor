@@ -216,7 +216,16 @@ const loadImage = (cache, url) => {
     const image = new Image();
     image.crossOrigin = 'anonymous';
     image.decoding = 'async';
-    image.onload = () => resolve(image);
+    /* onload only says the bytes arrived. With decoding left to the browser
+       the bitmap behind them can still be half built, and drawing it into the
+       face canvas at that moment is what tore the portrait into diagonal
+       blocks - in a different place on every load, because it is a race.
+       decode() hands back an image that is safe to draw. */
+    const ready = () => {
+      if (typeof image.decode !== 'function') { resolve(image); return; }
+      image.decode().then(() => resolve(image), () => resolve(image));
+    };
+    image.onload = ready;
     image.onerror = () => resolve(null);
     image.src = url;
   });
