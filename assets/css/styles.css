@@ -2322,7 +2322,7 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     max-height: none;
     flex-direction: column;
     align-items: stretch;
-    gap: calc(26 * var(--u));
+    gap: calc(18 * var(--u));
   }
   /* The room the badge is given. Nothing is drawn in it - the card is on the
      stage over the whole screen - but it holds this much of the column open,
@@ -2330,7 +2330,7 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .about__badge {
     flex: none;
     width: 100%;
-    height: calc(430 * var(--u));
+    height: calc(312 * var(--u));
   }
   .about__photo {
     width: 100%;

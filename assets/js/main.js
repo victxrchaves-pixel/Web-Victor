@@ -1216,11 +1216,28 @@
         } : {
           /* Down the middle of the screen, from the very top of it. */
           anchor: 0.5,
-          size: 0.33,
+          size: 0.3,
           strapLength: 0.04
         }));
         if (hung) badge.classList.add('is-hung');
         else stage.remove();
+
+        /* On the phone the badge travels with the page. Its stage hangs off
+           the window, which does not scroll, so it would otherwise sit there
+           while the writing went by underneath; moved by as much as the
+           column has scrolled, it rides up and off the top with everything
+           else. The desktop keeps it still, because the column it hangs over
+           is still too. */
+        if (hung && !wide) {
+          var scroller = about.querySelector('.sheet__scroll');
+          if (scroller) {
+            var ride = function () {
+              stage.style.transform = 'translateY(' + -scroller.scrollTop + 'px)';
+            };
+            scroller.addEventListener('scroll', ride, { passive: true });
+            ride();
+          }
+        }
       }).catch(function () {
         // Nothing to say: the photograph is already there.
       });
