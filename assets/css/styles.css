@@ -1590,10 +1590,12 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
 .about__side {
   position: absolute;
   left: calc(717 * var(--u));
-  top: calc(61 * var(--u));
+  /* Up to the window's own top edge: the band is meant to come in over it
+     rather than to start inside a box further down. */
+  top: 0;
   width: calc(239 * var(--u));
-  height: calc(469.63 * var(--u));
-  max-height: calc(100% - 72 * var(--u));
+  height: calc(100% - 26 * var(--u));
+  max-height: none;
   display: flex;
   flex-direction: column;
 }
@@ -1612,25 +1614,46 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
    asked for less movement. */
 .about__badge {
   position: relative;
-  width: calc(237 * var(--u));
-  height: calc(318 * var(--u));
-  flex: 0 1 auto;
+  width: calc(239 * var(--u));
+  height: calc(412 * var(--u));
+  flex: none;
   min-height: 0;
-  overflow: hidden;
 }
 .about__badge .about__photo { width: 100%; height: 100%; }
-/* Out of the flow, so the canvas cannot add to the box it is measured from. */
-.about__badge .lanyard-canvas {
+/* Where the badge is really drawn, and it is not the little box the portrait
+   sits in. It covers the whole window and spills past every edge of it, so the
+   card can swing over the writing and out of the frame without being cut - a
+   canvas only draws inside itself, so letting it overflow means making it
+   bigger, not turning clipping off.
+
+   It takes no pointer events. A canvas this size would otherwise swallow every
+   click on the words beneath it; the sheet listens instead, and the module
+   answers only a pointer that lands on the card itself, so everything else
+   passes straight through. */
+.about__stage {
+  position: absolute;
+  /* Wide of the window on both sides and long past its foot, so the card can
+     swing out of the frame; but flush with its top edge, because that is where
+     the band is born. It comes out of the window's own border, not from
+     somewhere above it. */
+  left: calc(-110 * var(--u));
+  right: calc(-110 * var(--u));
+  top: 0;
+  height: calc(100% + 170 * var(--u));
+  pointer-events: none;
+  z-index: 6;
+}
+.lanyard-canvas {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
-  z-index: 1;
 }
 /* Hidden rather than removed: it goes on holding the box open. */
 .about__badge.is-hung .about__photo { visibility: hidden; }
-.about__card { flex: none; margin-top: calc(19 * var(--u)); }
+/* Pushed to the foot of the column, which is what opens the air above it. */
+.about__card { flex: none; margin-top: auto; }
 .about__card p { margin: 0; font-size: calc(15 * var(--u)); line-height: calc(20 * var(--u)); }
 .about__name {
   font-family: 'Geist Mono', ui-monospace, monospace;
@@ -2302,7 +2325,10 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     flex: none;
     width: calc(156 * var(--u));
     height: calc(210 * var(--u));
+    /* The card hangs inside its box here, so the box keeps its edges. */
+    overflow: hidden;
   }
+  .about__badge .lanyard-canvas { position: absolute; inset: 0; }
   /* The comp leaves 116 between the name and the contact, which on a phone
      reads as a hole rather than as air; the contact comes up under the name
      instead and the column is free to end above the portrait. */

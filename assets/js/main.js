@@ -1169,7 +1169,7 @@
          this script's - and under /en/ that is a different folder. */
       import('/assets/js/lanyard.js').then(function (module) {
         var look = badgeLook();
-        hung = module.createLanyard(badge, {
+        var common = {
           frontImage: badge.getAttribute('data-portrait'),
           imageFit: 'cover',
           cardColor: look.cardColor,
@@ -1177,16 +1177,45 @@
           orientation: 'portrait',
           finish: 'glossy',
           cornerRadius: 0.26,
-          size: 0.5,
-          anchor: 'center',
-          strapLength: 0.3,
           strapWidth: 0.6,
           metal: 'silver',
           breeze: 0.35,
           interactive: true,
           intro: true
-        });
+        };
+
+        /* On the desktop canvas the card is drawn on a sheet of its own, laid
+           over the window and hanging past its edges, so it can swing over the
+           writing and out of the frame. The portrait's box stays where it is,
+           holding the column's shape.
+
+           The phone cannot have that. There the window IS the screen, so a
+           card free to cross it would simply bury the page; it hangs inside
+           the portrait's box instead, at the size that box can hold. */
+        var wide = window.matchMedia('(min-width: 1280px)').matches;
+        var stage = null;
+        if (wide) {
+          var dialog = about.querySelector('.sheet__dialog');
+          if (!dialog) return;
+          stage = document.createElement('div');
+          stage.className = 'about__stage';
+          dialog.appendChild(stage);
+        }
+
+        hung = module.createLanyard(stage || badge, Object.assign(common, wide ? {
+          /* The sheet hears the pointer, because the drawing surface must not:
+             it lies over the writing, and would swallow every click. */
+          surface: about,
+          anchor: 0.775,
+          size: 0.4,
+          strapLength: 0.3
+        } : {
+          anchor: 'center',
+          size: 0.5,
+          strapLength: 0.3
+        }));
         if (hung) badge.classList.add('is-hung');
+        else if (stage) stage.remove();
       }).catch(function () {
         // Nothing to say: the photograph is already there.
       });

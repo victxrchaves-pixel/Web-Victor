@@ -763,6 +763,9 @@ export function createLanyard(container, options = {}) {
   }
   if (!renderer) return null;
 
+  /* Pointer events can be heard somewhere other than the canvas - see the
+     listeners further down for why. */
+  const surface = options.surface || renderer.domElement;
   container.classList.add('lanyard');
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -924,7 +927,10 @@ export function createLanyard(container, options = {}) {
     foilUniforms.foilKey.value.set(-2.5, 4, 6).normalize().transformDirection(camera.matrixWorldInverse);
     foilUniforms.foilFill.value.set(3, -1, 4).normalize().transformDirection(camera.matrixWorldInverse);
     foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
-    const anchorX = ((ANCHORS[s.anchor] ?? 0.5) - 0.5) * viewWidth;
+    /* A number places the band anywhere across the top; the three names
+       are kept for what the component already understood. */
+    const anchorAt = typeof s.anchor === 'number' ? s.anchor : (ANCHORS[s.anchor] ?? 0.5);
+    const anchorX = (clamp(anchorAt, 0, 1) - 0.5) * viewWidth;
     const anchorY = viewHeight / 2 + 0.2;
     const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
     const hangTop = cardTop + (layout.hangY - layout.height / 2);
@@ -1007,7 +1013,7 @@ export function createLanyard(container, options = {}) {
       clampMesh.geometry.dispose();
       clampMesh.geometry = buildClampGeometry(strapScale);
     }
-    canvas.style.touchAction = s.interactive ? 'pan-y' : 'auto';
+    if (surface === canvas) canvas.style.touchAction = s.interactive ? 'pan-y' : 'auto';
 
     applied = { layoutKey, framingKey, imageKey, faceKey, strapColor: s.strapColor, strapScale };
     start();
@@ -1169,8 +1175,10 @@ export function createLanyard(container, options = {}) {
     return hits[0] || null;
   };
 
+  /* The cursor goes on whatever is listening: a canvas that takes no pointer
+     events cannot show one. */
   const setCursor = value => {
-    if (canvas.style.cursor !== value) canvas.style.cursor = value;
+    if (surface.style.cursor !== value) surface.style.cursor = value;
   };
 
   const flip = point => {
@@ -1198,7 +1206,7 @@ export function createLanyard(container, options = {}) {
       target: hit.point.clone()
     };
     press = { x: event.clientX, y: event.clientY, time: performance.now(), point: hit.point.clone() };
-    canvas.setPointerCapture?.(event.pointerId);
+    surface.setPointerCapture?.(event.pointerId);
     setCursor('grabbing');
     event.preventDefault();
     start();
@@ -1223,7 +1231,7 @@ export function createLanyard(container, options = {}) {
     sim.grab = null;
     if (press && event.type === 'pointerup' && performance.now() - press.time < 450) flip(press.point);
     press = null;
-    canvas.releasePointerCapture?.(event.pointerId);
+    surface.releasePointerCapture?.(event.pointerId);
     setCursor(hovering && event.pointerType !== 'touch' ? 'grab' : '');
     start();
   };
@@ -1234,12 +1242,12 @@ export function createLanyard(container, options = {}) {
     if (pickCard()) event.preventDefault();
   };
 
-  canvas.addEventListener('pointerdown', onPointerDown);
-  canvas.addEventListener('pointermove', onPointerMove);
-  canvas.addEventListener('pointerup', onPointerUp);
-  canvas.addEventListener('pointercancel', onPointerUp);
-  canvas.addEventListener('lostpointercapture', onPointerUp);
-  canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+  surface.addEventListener('pointerdown', onPointerDown);
+  surface.addEventListener('pointermove', onPointerMove);
+  surface.addEventListener('pointerup', onPointerUp);
+  surface.addEventListener('pointercancel', onPointerUp);
+  surface.addEventListener('lostpointercapture', onPointerUp);
+  surface.addEventListener('touchstart', onTouchStart, { passive: false });
 
   const resize = () => {
     view.width = Math.max(1, container.clientWidth);
@@ -1280,12 +1288,12 @@ export function createLanyard(container, options = {}) {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('pointercancel', onPointerUp);
-      canvas.removeEventListener('lostpointercapture', onPointerUp);
-      canvas.removeEventListener('touchstart', onTouchStart);
+      surface.removeEventListener('pointerdown', onPointerDown);
+      surface.removeEventListener('pointermove', onPointerMove);
+      surface.removeEventListener('pointerup', onPointerUp);
+      surface.removeEventListener('pointercancel', onPointerUp);
+      surface.removeEventListener('lostpointercapture', onPointerUp);
+      surface.removeEventListener('touchstart', onTouchStart);
       [bodyMesh, frontMesh, backMesh, ring, clampMesh, eyelet, band].forEach(mesh => mesh.geometry?.dispose());
       [frontMaterial, backMaterial, edgeMaterial, metalMaterial, bandMaterial].forEach(material => material.dispose());
       [frontTexture, backTexture, strapTexture, grain, weave].forEach(texture => texture.dispose());
