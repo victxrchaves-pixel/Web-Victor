@@ -763,7 +763,16 @@ html:not([data-theme="light"]) [data-on-theme="light"] { display: none; }
   text-align: center;
 }
 .hero__social .chips { display: flex; gap: calc(20 * var(--u)); }
-.hero__social .chip { padding: calc(6 * var(--u)) calc(16 * var(--u)); }
+/* Larger than the chips elsewhere: these three sit alone at the foot of the
+   opening with nothing to compete with, and at the family's usual size they
+   read as a footnote rather than as the invitation they are. The type, the
+   padding and the corner all grow together, so the shape stays itself. */
+.hero__social .chip {
+  padding: calc(9 * var(--u)) calc(22 * var(--u));
+  font-size: calc(16 * var(--u));
+  line-height: calc(21 * var(--u));
+  border-radius: calc(6.2 * var(--u));
+}
 
 /* The icons and the project logotypes are drawn in white, which is right on
    the dark page and invisible on the light one, so they turn over with it. The
@@ -1945,6 +1954,12 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   /* .tag keeps inheriting --mh from .tags, the way it inherits --h on the
      desktop canvas, but must not inherit its left or width with it. */
   .tag { --my: 0; --mx: initial; --mw: initial; }
+
+  /* The three keep the larger type on a phone, but give back the padding and
+     the air between them: at the desktop figures the row reaches to within
+     five of each edge, where everything else on the page stands eighteen in. */
+  .hero__social .chips { gap: calc(12 * var(--u)); }
+  .hero__social .chip { padding: calc(9 * var(--u)) calc(13 * var(--u)); }
 
   .pill, .pill__logo, .pill__current,
   .btn, .btn__label, .btn__icon,
