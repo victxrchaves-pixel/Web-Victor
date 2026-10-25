@@ -818,7 +818,9 @@ export function createLanyard(container, options = {}) {
 
   const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   const scene = new THREE.Scene();
-  const environment = buildEnvironment(renderer);
+  /* Not const: the lighting lives on the graphics card, so it dies with the
+     context and has to be built again on the way back. */
+  let environment = buildEnvironment(renderer);
   scene.environment = environment.texture;
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200);
   const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
@@ -1342,7 +1344,12 @@ export function createLanyard(container, options = {}) {
   };
   const onContextRestored = () => {
     /* Nothing the old context held survives, so the record of what had been
-       sent to it is thrown away and everything is applied from scratch. */
+       sent to it is thrown away and everything is applied from scratch. The
+       lighting goes with it: without it the card comes back dark and its
+       metal, having only reflections to be seen by, comes back black. */
+    environment.dispose();
+    environment = buildEnvironment(renderer);
+    scene.environment = environment.texture;
     applied = {};
     apply();
     start();
