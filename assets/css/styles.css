@@ -1604,6 +1604,32 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
   min-height: 0;
   object-fit: cover;
 }
+
+/* The badge hangs where the portrait was and keeps its box to the pixel, so
+   the column below it does not move whether the card arrives or not. The
+   photograph stays underneath: it is what shows while three.js is on its way
+   down the wire, and what stays if it never comes - no WebGL, or a hand that
+   asked for less movement. */
+.about__badge {
+  position: relative;
+  width: calc(237 * var(--u));
+  height: calc(318 * var(--u));
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.about__badge .about__photo { width: 100%; height: 100%; }
+/* Out of the flow, so the canvas cannot add to the box it is measured from. */
+.about__badge .lanyard-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+/* Hidden rather than removed: it goes on holding the box open. */
+.about__badge.is-hung .about__photo { visibility: hidden; }
 .about__card { flex: none; margin-top: calc(19 * var(--u)); }
 .about__card p { margin: 0; font-size: calc(15 * var(--u)); line-height: calc(20 * var(--u)); }
 .about__name {
@@ -2268,6 +2294,11 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
     gap: calc(19 * var(--u));
   }
   .about__photo {
+    flex: none;
+    width: calc(156 * var(--u));
+    height: calc(210 * var(--u));
+  }
+  .about__badge {
     flex: none;
     width: calc(156 * var(--u));
     height: calc(210 * var(--u));

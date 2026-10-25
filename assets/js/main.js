@@ -214,6 +214,8 @@
      is what the embed reads when it opens, and the embed itself is told again
      once it has loaded. */
   var CAL_NS = '30min';
+  /* Set once the badge exists; until then there is nothing to re-dress. */
+  var dressBadge = function () {};
   var dressCal = function (theme) {
     var config = '{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"' + theme + '"}';
     Array.prototype.forEach.call(document.querySelectorAll('[data-cal-link]'), function (el) {
@@ -232,6 +234,7 @@
     if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f2ee' : '#111111');
     markSeg('theme', theme, 'data-set-theme');
     dressCal(theme);
+    dressBadge();
     if (save) remember(KEY.theme, theme);
   };
 
@@ -1125,6 +1128,77 @@
     // layout, where it sits in the flow and moves every section below it.
     var portrait = about.querySelector('.about__photo');
     if (portrait) portrait.addEventListener('load', function () { if (openSheetEl === about) layoutRail(); });
+  }
+
+  /* ---------- The badge on its lanyard ----------
+     Victor's photograph, printed on a card that hangs from a strap and can be
+     pulled about and flipped over.
+
+     It is drawn with three.js, which is half a megabyte even cut to the parts
+     this needs, so nothing is sent for until the About panel is actually
+     opened - and then only once. Until it arrives, and if it never does, the
+     photograph that was always there is what shows: no WebGL, a slow line, a
+     file that fails, and the panel is exactly as it was.
+
+     A hand that has asked for less movement is not given a swinging card at
+     all, and is not made to download one either. */
+
+  var badge = document.querySelector('[data-lanyard]');
+  if (badge) {
+    var hung = null;
+    var sentFor = false;
+
+    // The strap reads against the panel it hangs on, so it turns over with it.
+    var badgeLook = function () {
+      var light = root.getAttribute('data-theme') === 'light';
+      return {
+        cardColor: light ? '#f4f4f4' : '#141414',
+        strapColor: light ? '#111111' : '#e8e8e8'
+      };
+    };
+
+    var hangBadge = function () {
+      if (sentFor) {
+        if (hung) hung.wake();
+        return;
+      }
+      if (reduced) return;
+      sentFor = true;
+      /* Addressed from the root: this file is a classic script, so a relative
+         specifier would be resolved against the page's address rather than
+         this script's - and under /en/ that is a different folder. */
+      import('/assets/js/lanyard.js').then(function (module) {
+        var look = badgeLook();
+        hung = module.createLanyard(badge, {
+          frontImage: badge.getAttribute('data-portrait'),
+          imageFit: 'cover',
+          cardColor: look.cardColor,
+          strapColor: look.strapColor,
+          orientation: 'portrait',
+          finish: 'glossy',
+          cornerRadius: 0.26,
+          size: 0.5,
+          anchor: 'center',
+          strapLength: 0.3,
+          strapWidth: 0.6,
+          metal: 'silver',
+          breeze: 0.35,
+          interactive: true,
+          intro: true
+        });
+        if (hung) badge.classList.add('is-hung');
+      }).catch(function () {
+        // Nothing to say: the photograph is already there.
+      });
+    };
+
+    dressBadge = function () { if (hung) hung.set(badgeLook()); };
+
+    var openedAbout = onSheetOpen.about;
+    onSheetOpen.about = function () {
+      if (openedAbout) openedAbout();
+      hangBadge();
+    };
   }
 
   /* ---------- Footer clock, in Barcelona time ---------- */
