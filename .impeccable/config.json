@@ -2,6 +2,16 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "diagnostico.html"
+        ],
+        "createdAt": "2026-10-25T18:28:14.896Z",
+        "reason": "Claude, comprobado en el render y no por suposicion: el <img> se crea desde JS con el src asignado antes de insertarlo. Medido en la pagina servida: 0 imgs al cargar, 1 cargada a 1100x1547 tras el modo 3, 0 de nuevo al salir. (Un aviso anterior en este mismo archivo SI era real: display:block vencia a [hidden]; aquel se arreglo, no se suprimio.)"
+      }
+    ]
   }
 }
