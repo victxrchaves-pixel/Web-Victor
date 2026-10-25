@@ -17,7 +17,11 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https://app.cal.com https://cal.com; media-src 'self'; font-src 'self' https://app.cal.com; style-src 'self' 'unsafe-inline' https://app.cal.com; script-src 'self' 'sha256-kLP38KfA0zkhjZJ1g3ORO2CM/9aNKblVpLNdAksg4+E=' 'sha256-kN+Z7JuG0PesIEkxAIb7W35l6Eh2J/6NfzVM0Kzlcdw=' 'sha256-7iqflKvu6SBqPjVNhSVZz4J/j5D3CMNMkhhaP1Fbi3M=' https://app.cal.com; connect-src 'self' https://app.cal.com; frame-src https://app.cal.com; upgrade-insecure-requests"
+        }
       ]
     }
   ]
