@@ -1217,11 +1217,10 @@
           /* Down the middle of the screen, from the very top of it. */
           anchor: 0.5,
           /* The band is cut off at the top of the screen, so what a reader
-             sees of it is just the drop to the card's head: lengthening it
-             and keeping the card the same size would push the foot back down
-             over the name. The card gives up 8% so the band can have that
-             drop, and the foot stays where the column's room ends. */
-          size: 0.263,
+             sees of it is just the drop to the card's head. The card keeps
+             that drop and grows downward instead; the room the column holds
+             open grows with it, so the name keeps its distance. */
+          size: 0.302,
           strapLength: 0.115
         }));
         if (hung) badge.classList.add('is-hung');

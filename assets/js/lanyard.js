@@ -212,23 +212,31 @@ const loadImage = (cache, url) => {
   if (!url) return Promise.resolve(null);
   const cached = cache.get(url);
   if (cached) return cached;
-  const promise = new Promise(resolve => {
+  /* An <img> is a promise of a bitmap, not a bitmap. onload only says the
+     bytes arrived, decode() can hand it back before Safari has finished, and
+     even after that the browser is free to throw the decoded copy away and
+     build it again later. Draw it in any of those moments and the rows that
+     are not there yet paint as black stripes - which is why the tear landed
+     somewhere different on every load, and why it only started once the
+     portrait grew large enough for decoding to take real time.
+     createImageBitmap decodes once, up front, into something that stays
+     decoded, so drawImage can never catch it mid-flight. */
+  const viaBitmap = typeof createImageBitmap === 'function' && typeof fetch === 'function'
+    ? fetch(url, { mode: 'cors', credentials: 'omit' })
+        .then(answer => (answer.ok ? answer.blob() : Promise.reject(new Error(answer.status))))
+        .then(blob => createImageBitmap(blob))
+    : Promise.reject(new Error('no bitmap'));
+  /* Where that is missing or refused, the old road, with decode() at least. */
+  const promise = viaBitmap.catch(() => new Promise(resolve => {
     const image = new Image();
     image.crossOrigin = 'anonymous';
-    image.decoding = 'async';
-    /* onload only says the bytes arrived. With decoding left to the browser
-       the bitmap behind them can still be half built, and drawing it into the
-       face canvas at that moment is what tore the portrait into diagonal
-       blocks - in a different place on every load, because it is a race.
-       decode() hands back an image that is safe to draw. */
-    const ready = () => {
+    image.onload = () => {
       if (typeof image.decode !== 'function') { resolve(image); return; }
       image.decode().then(() => resolve(image), () => resolve(image));
     };
-    image.onload = ready;
     image.onerror = () => resolve(null);
     image.src = url;
-  });
+  }));
   cache.set(url, promise);
   return promise;
 };
