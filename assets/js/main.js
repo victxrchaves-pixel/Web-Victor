@@ -1230,8 +1230,11 @@
              sees of it is just the drop to the card's head. The card keeps
              that drop and grows downward instead; the room the column holds
              open grows with it, so the name keeps its distance. */
-          size: 0.302,
-          strapLength: 0.175
+          /* Both are fractions of the stage, and the stage is now 700 tall
+             rather than 1114, so they are scaled to match: the card and its
+             drop stay exactly where they were on screen. */
+          size: 0.491,
+          strapLength: 0.529
         }));
         if (hung) badge.classList.add('is-hung');
         else stage.remove();
