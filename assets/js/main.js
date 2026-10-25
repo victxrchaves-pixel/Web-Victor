@@ -1184,28 +1184,29 @@
           intro: true
         };
 
-        /* On the desktop canvas the card is drawn on a sheet of its own, laid
-           over the window and hanging past its edges, so it can swing over the
-           writing and out of the frame. The portrait's box stays where it is,
-           holding the column's shape.
+        /* The card is drawn on a sheet of its own, laid over the window and
+           reaching the edges of the screen, so it can swing over the writing
+           and out of the frame. The portrait's box stays where it is, holding
+           the column's shape and the photograph that shows if none of this
+           arrives.
 
-           The phone cannot have that. There the window IS the screen, so a
-           card free to cross it would simply bury the page; it hangs inside
-           the portrait's box instead, at the size that box can hold. */
+           Where it hangs differs with the canvas. On the desktop one the
+           window is a panel on the page and the badge falls over the column
+           to its right. On the phone the window IS the screen: the band comes
+           from the very top of it and the card hangs large down the middle,
+           with the name, the links and the mail beneath it. */
         var wide = window.matchMedia('(min-width: 1280px)').matches;
-        var stage = null;
-        if (wide) {
-          var dialog = about.querySelector('.sheet__dialog');
-          if (!dialog) return;
-          stage = document.createElement('div');
-          stage.className = 'about__stage';
-          dialog.appendChild(stage);
-        }
+        var dialog = about.querySelector('.sheet__dialog');
+        if (!dialog) return;
+        var stage = document.createElement('div');
+        stage.className = 'about__stage';
+        dialog.appendChild(stage);
 
-        hung = module.createLanyard(stage || badge, Object.assign(common, wide ? {
+        hung = module.createLanyard(stage, Object.assign(common, {
           /* The sheet hears the pointer, because the drawing surface must not:
              it lies over the writing, and would swallow every click. */
-          surface: about,
+          surface: about
+        }, wide ? {
           /* The band falls over the right-hand column. The stage is the window
              plus 360 units of screen on each side, so the column's middle -
              717 across the window, 239 wide - sits at this fraction of it. */
@@ -1213,12 +1214,13 @@
           size: 0.4,
           strapLength: 0.12
         } : {
-          anchor: 'center',
-          size: 0.5,
-          strapLength: 0.3
+          /* Down the middle of the screen, from the very top of it. */
+          anchor: 0.5,
+          size: 0.33,
+          strapLength: 0.04
         }));
         if (hung) badge.classList.add('is-hung');
-        else if (stage) stage.remove();
+        else stage.remove();
       }).catch(function () {
         // Nothing to say: the photograph is already there.
       });

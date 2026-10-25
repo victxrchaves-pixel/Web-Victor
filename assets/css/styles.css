@@ -2311,35 +2311,38 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
 
   /* ---------- The head of the column ---------- */
 
+  /* The head of the column stacks on the phone: the badge hanging large down
+     the middle, and under it the name, the three links and the mail, before
+     the writing starts. The comp set them side by side, but a card small
+     enough to sit beside the name is too small to read as a photograph. */
   .about__side {
     position: static;
     width: 100%;
-    height: calc(210 * var(--u));
+    height: auto;
     max-height: none;
-    flex-direction: row;
-    align-items: flex-end;
-    gap: calc(19 * var(--u));
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(26 * var(--u));
   }
-  .about__photo {
-    flex: none;
-    width: calc(156 * var(--u));
-    height: calc(210 * var(--u));
-  }
+  /* The room the badge is given. Nothing is drawn in it - the card is on the
+     stage over the whole screen - but it holds this much of the column open,
+     and it is what the portrait fills if the card never comes. */
   .about__badge {
     flex: none;
-    width: calc(156 * var(--u));
-    height: calc(210 * var(--u));
-    /* The card hangs inside its box here, so the box keeps its edges. */
-    overflow: hidden;
+    width: 100%;
+    height: calc(430 * var(--u));
   }
-  .about__badge .lanyard-canvas { position: absolute; inset: 0; }
+  .about__photo {
+    width: 100%;
+    height: 100%;
+  }
   /* The comp leaves 116 between the name and the contact, which on a phone
      reads as a hole rather than as air; the contact comes up under the name
      instead and the column is free to end above the portrait. */
   .about__card {
-    flex: 1 1 auto;
+    flex: none;
     min-width: 0;
-    height: 100%;
+    height: auto;
     margin-top: 0;
     display: flex;
     flex-direction: column;
