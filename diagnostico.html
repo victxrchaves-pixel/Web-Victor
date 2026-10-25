@@ -29,6 +29,7 @@
   }
   #escena canvas { display: block; width: 100%; height: 100%; }
   #foto { width: 100%; display: block; border-radius: 12px; }
+  #escena[hidden] { display: none; }
   #datos {
     white-space: pre-wrap; word-break: break-word; font-size: 12px; line-height: 1.6;
     background: #111; border: 1px solid #262626; border-radius: 10px; padding: 12px;
@@ -58,14 +59,12 @@
 </div>
 
 <div id="escena"></div>
-<img id="foto" alt="retrato" hidden>
 
 <div id="datos">Recogiendo datos…</div>
 <p class="nota">Esta página no está enlazada desde ningún sitio y no la indexan los buscadores.</p>
 
 <script type="module">
 const escena = document.getElementById('escena');
-const foto = document.getElementById('foto');
 const datos = document.getElementById('datos');
 const RETRATO = '/assets/img/about-portrait.webp';
 
@@ -90,12 +89,13 @@ let colgado = null;
 const limpiar = () => {
   if (colgado) { colgado.destroy(); colgado = null; }
   escena.innerHTML = '';
+  const previa = document.getElementById('foto');
+  if (previa) previa.remove();
 };
 
 const montar = async (conFoto) => {
   limpiar();
   escena.hidden = false;
-  foto.hidden = true;
   if (!modulo) modulo = await import('/assets/js/lanyard.js');
   colgado = modulo.createLanyard(escena, Object.assign({}, base, conFoto
     ? { frontImage: RETRATO, cardColor: '#141414', strapColor: '#e8e8e8' }
@@ -105,11 +105,16 @@ const montar = async (conFoto) => {
   if (!colgado) escena.textContent = 'Este navegador no ha podido abrir WebGL.';
 };
 
+/* Built here rather than sitting empty in the document, so the page never
+   carries an <img> without a picture in it. */
 const soloFoto = () => {
   limpiar();
   escena.hidden = true;
-  foto.hidden = false;
+  const foto = document.createElement('img');
+  foto.id = 'foto';
+  foto.alt = 'El retrato tal cual, sin pasar por el 3D';
   foto.src = RETRATO + '?v=' + Date.now();
+  escena.insertAdjacentElement('afterend', foto);
 };
 
 const botones = [
