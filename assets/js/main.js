@@ -1234,7 +1234,7 @@
              rather than 1114, so they are scaled to match: the card and its
              drop stay exactly where they were on screen. */
           size: 0.491,
-          strapLength: 0.496
+          strapLength: 0.305
         }));
         if (hung) badge.classList.add('is-hung');
         else stage.remove();
