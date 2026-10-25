@@ -2330,7 +2330,7 @@ html[data-lang="es"] .touch__display { width: calc(740 * var(--u)); }
   .about__badge {
     flex: none;
     width: 100%;
-    height: calc(347 * var(--u));
+    height: calc(367 * var(--u));
   }
   .about__photo {
     width: 100%;

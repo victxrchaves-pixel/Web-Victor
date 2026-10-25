@@ -450,6 +450,26 @@ const drawFitted = (ctx, image, width, height, fit) => {
   ctx.drawImage(image, (width - w) / 2, (height - h) / 2, w, h);
 };
 
+/* True when the image lands on every pixel of the face, so that whatever the
+   canvas would have put underneath it could never be seen anyway. */
+const fillsFace = (image, width, height, fit) => {
+  if (!image || fit === 'contain') return false;
+  return Math.abs(width / height - image.width / image.height) < 0.01;
+};
+
+/* Point a texture either straight at the image or at the canvas it has to be
+   composed on, and tell three to send it again. Switching between the two
+   frees what the texture held before, since the source changes shape. */
+const dressFace = (texture, canvas, image, color, fit, width, height) => {
+  const source = fillsFace(image, width, height, fit) ? image : canvas;
+  if (source === canvas) paintFace(canvas, image, color, fit);
+  if (texture.image !== source) {
+    texture.dispose();
+    texture.image = source;
+  }
+  texture.needsUpdate = true;
+};
+
 const paintFace = (canvas, image, color, fit) => {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
@@ -913,10 +933,16 @@ export function createLanyard(container, options = {}) {
       frontTexture.dispose();
       backTexture.dispose();
     }
-    paintFace(frontCanvas, images.front, color, s.imageFit);
-    paintFace(backCanvas, images.back || images.front, color, s.imageFit);
-    frontTexture.needsUpdate = true;
-    backTexture.needsUpdate = true;
+    /* A picture reaches the card over three asynchronous hops: download,
+       decode, and a draw into this 2D canvas that the GPU then uploads. On
+       Safari that canvas lives on the GPU too, and the upload can happen
+       before the draw has landed - which is what paints the rows that are not
+       there yet as black stripes across the portrait. When the picture
+       already covers the whole face there is nothing for the canvas to add,
+       so it is left out of the chain and the decoded image becomes the
+       texture itself: two of the three hops simply stop existing. */
+    dressFace(frontTexture, frontCanvas, images.front, color, s.imageFit, width, height);
+    dressFace(backTexture, backCanvas, images.back || images.front, color, s.imageFit, width, height);
     start();
   };
 

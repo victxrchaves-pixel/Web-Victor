@@ -1221,7 +1221,7 @@
              that drop and grows downward instead; the room the column holds
              open grows with it, so the name keeps its distance. */
           size: 0.302,
-          strapLength: 0.115
+          strapLength: 0.175
         }));
         if (hung) badge.classList.add('is-hung');
         else stage.remove();
