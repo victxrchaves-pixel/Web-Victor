@@ -1636,10 +1636,14 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
      swing out of the frame; but flush with its top edge, because that is where
      the band is born. It comes out of the window's own border, not from
      somewhere above it. */
-  left: calc(-110 * var(--u));
-  right: calc(-110 * var(--u));
+  /* Out to the edges of the screen, not merely past the window's border. The
+     window is 1036 of the canvas's 1728 wide, so there are 346 units of screen
+     either side of it; 360 clears them both at any width, because the window
+     keeps that proportion as the canvas scales. */
+  left: calc(-360 * var(--u));
+  right: calc(-360 * var(--u));
   top: 0;
-  height: calc(100% + 170 * var(--u));
+  height: calc(100% + 240 * var(--u));
   pointer-events: none;
   z-index: 6;
 }

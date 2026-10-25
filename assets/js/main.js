@@ -1206,9 +1206,12 @@
           /* The sheet hears the pointer, because the drawing surface must not:
              it lies over the writing, and would swallow every click. */
           surface: about,
-          anchor: 0.775,
+          /* The band falls over the right-hand column. The stage is the window
+             plus 360 units of screen on each side, so the column's middle -
+             717 across the window, 239 wide - sits at this fraction of it. */
+          anchor: 0.681,
           size: 0.4,
-          strapLength: 0.3
+          strapLength: 0.12
         } : {
           anchor: 'center',
           size: 0.5,
