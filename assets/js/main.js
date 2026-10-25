@@ -1216,10 +1216,13 @@
         } : {
           /* Down the middle of the screen, from the very top of it. */
           anchor: 0.5,
-          /* A touch smaller than it was, so its foot lands inside the room
-             the column holds open rather than over the name. */
-          size: 0.285,
-          strapLength: 0.04
+          /* The band is cut off at the top of the screen, so what a reader
+             sees of it is just the drop to the card's head: lengthening it
+             and keeping the card the same size would push the foot back down
+             over the name. The card gives up 8% so the band can have that
+             drop, and the foot stays where the column's room ends. */
+          size: 0.263,
+          strapLength: 0.115
         }));
         if (hung) badge.classList.add('is-hung');
         else stage.remove();
