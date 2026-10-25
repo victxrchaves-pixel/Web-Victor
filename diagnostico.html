@@ -111,9 +111,11 @@ const soloFoto = () => {
   limpiar();
   escena.hidden = true;
   const foto = document.createElement('img');
-  foto.id = 'foto';
-  foto.alt = 'El retrato tal cual, sin pasar por el 3D';
+  /* The picture first, and the element reaches the document only once it has
+     one, so there is never an <img> on the page without a picture in it. */
   foto.src = RETRATO + '?v=' + Date.now();
+  foto.alt = 'El retrato tal cual, sin pasar por el 3D';
+  foto.id = 'foto';
   escena.insertAdjacentElement('afterend', foto);
 };
 

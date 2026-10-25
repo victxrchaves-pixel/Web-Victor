@@ -945,7 +945,19 @@ export function createLanyard(container, options = {}) {
        so it is left out of the chain and the decoded image becomes the
        texture itself: two of the three hops simply stop existing. */
     dressFace(frontTexture, frontCanvas, images.front, color, s.imageFit, width, height);
-    dressFace(backTexture, backCanvas, images.back || images.front, color, s.imageFit, width, height);
+    /* With no picture of its own the back carries the front's, and a second
+       upload of the same thing is a second copy of it in video memory - on a
+       phone, for a portrait this size, megabytes that buy nothing. The two
+       faces share one texture instead, and the back only gets its own when it
+       has something different to show. */
+    if (!images.back) {
+      backMaterial.map = frontTexture;
+      if (backTexture.image) { backTexture.dispose(); backTexture.image = null; }
+    } else {
+      backMaterial.map = backTexture;
+      dressFace(backTexture, backCanvas, images.back, color, s.imageFit, width, height);
+    }
+    backMaterial.needsUpdate = true;
     start();
   };
 
@@ -1316,6 +1328,28 @@ export function createLanyard(container, options = {}) {
   };
   document.addEventListener('visibilitychange', onVisibility);
 
+  /* A phone's browser kills WebGL contexts when it wants the memory back, and
+     this page asks for two of them on top of its video. Unhandled, the card is
+     left as whatever was on screen when it died - torn, or nothing at all, for
+     good. Caught, the loss becomes a pause: the default is what makes it
+     permanent, so it is refused, and on the way back everything the context
+     held is built and sent again. */
+  const canvasElement = renderer.domElement;
+  const onContextLost = event => {
+    event.preventDefault();
+    cancelAnimationFrame(raf);
+    raf = 0;
+  };
+  const onContextRestored = () => {
+    /* Nothing the old context held survives, so the record of what had been
+       sent to it is thrown away and everything is applied from scratch. */
+    applied = {};
+    apply();
+    start();
+  };
+  canvasElement.addEventListener('webglcontextlost', onContextLost);
+  canvasElement.addEventListener('webglcontextrestored', onContextRestored);
+
   resize();
 
   return {
@@ -1334,6 +1368,8 @@ export function createLanyard(container, options = {}) {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
+      canvasElement.removeEventListener('webglcontextlost', onContextLost);
+      canvasElement.removeEventListener('webglcontextrestored', onContextRestored);
       surface.removeEventListener('pointerdown', onPointerDown);
       surface.removeEventListener('pointermove', onPointerMove);
       surface.removeEventListener('pointerup', onPointerUp);
