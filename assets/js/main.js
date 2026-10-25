@@ -1216,7 +1216,9 @@
         } : {
           /* Down the middle of the screen, from the very top of it. */
           anchor: 0.5,
-          size: 0.3,
+          /* A touch smaller than it was, so its foot lands inside the room
+             the column holds open rather than over the name. */
+          size: 0.285,
           strapLength: 0.04
         }));
         if (hung) badge.classList.add('is-hung');
