@@ -294,13 +294,54 @@ html[data-input="pointer"] :focus-visible { outline: none; }
 .nav__cta-label { font-size: calc(var(--fs) * var(--u)); line-height: calc(var(--lh) * var(--u)); }
 .nav__cta-arrow { width: calc(24 * var(--u)); height: calc(24 * var(--u)); flex: none; color: currentColor; }
 .nav__cta::after {
-  content: ""; position: absolute; left: calc(25.484 * var(--u)); right: calc(45 * var(--u));
+  /* The rule runs the whole width of the button's content, arrow included,
+     rather than stopping where the word does. */
+  content: ""; position: absolute; left: calc(25.484 * var(--u)); right: calc(25.484 * var(--u));
   bottom: calc(12 * var(--u)); height: 1px; background: currentColor;
   transform: scaleX(0); transform-origin: left;
   transition: transform var(--dur-ui) var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .nav__cta:hover::after { transform: scaleX(1); }
+}
+
+/* ---------- Letters that turn over ----------
+   Each letter is the front face of a shallow box whose underside carries the
+   same letter again; hovering turns the box a quarter over, so the copy comes
+   up into the place the original leaves. The copy is drawn by the pseudo
+   element from data-ch rather than being a second node, which keeps the
+   element's textContent the word itself - anything reading these links still
+   reads them whole. The letters start one after another, left to right. */
+.swap {
+  display: inline-flex;
+  perspective: 600px;
+  white-space: pre;
+}
+.swap__ch {
+  display: inline-block;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 460ms var(--ease-out) var(--d, 0ms);
+}
+.swap__ch > span { display: block; transform: translateZ(0.5em); }
+.swap__ch::after {
+  content: attr(data-ch);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: rotateX(-90deg) translateZ(0.5em);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav__cta:hover .swap__ch,
+  .pill__links a:hover .swap__ch { transform: rotateX(90deg); }
+}
+/* Turning letters is decoration; where motion is unwelcome the word simply
+   stands still, with no second copy waiting underneath it. */
+@media (prefers-reduced-motion: reduce) {
+  .swap__ch { transition: none; }
+  .swap__ch::after { content: none; }
+  .nav__cta:hover .swap__ch,
+  .pill__links a:hover .swap__ch { transform: none; }
 }
 
 /* A booking button that has been pressed while its window is still coming.

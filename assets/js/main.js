@@ -426,6 +426,33 @@
 
   /* ---------- The pill label names the section you are in ---------- */
 
+  /* Cut a word into letters that can be turned over one at a time. The second
+     face of each letter is left to the stylesheet, which draws it from data-ch
+     - so the element still holds nothing but the word, and anything reading it
+     reads it whole. */
+  function cutIntoLetters(el) {
+    if (!el || el.querySelector('.swap__ch')) return;
+    var word = (el.textContent || '');
+    if (!word) return;
+    el.textContent = '';
+    el.classList.add('swap');
+    for (var i = 0; i < word.length; i++) {
+      var letter = word.charAt(i);
+      var box = document.createElement('span');
+      box.className = 'swap__ch';
+      box.setAttribute('data-ch', letter);
+      box.style.setProperty('--d', (i * 24) + 'ms');
+      var face = document.createElement('span');
+      face.textContent = letter;
+      box.appendChild(face);
+      el.appendChild(box);
+    }
+  }
+  Array.prototype.forEach.call(
+    document.querySelectorAll('.nav__cta-label, .pill__links a'),
+    cutIntoLetters
+  );
+
   var navLabel = document.getElementById('navLabel');
 
   if (navLabel) {
