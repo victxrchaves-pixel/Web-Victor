@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "diagnostico.html"
+        ],
+        "createdAt": "2026-10-25T18:19:10.957Z",
+        "reason": "Claude: el <img> nace hidden y sin src a proposito; el modo 3 de la pagina de diagnostico le asigna src al pulsarlo, asi que nunca se pinta como imagen rota"
+      }
+    ]
+  }
+}
