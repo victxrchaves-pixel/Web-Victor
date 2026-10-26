@@ -1201,6 +1201,12 @@
       }
       if (reduced) return;
       sentFor = true;
+      /* The photograph in the box is what shows if none of this arrives, and
+         until now it sat there in plain sight for as long as the module took
+         to load - a flat picture, then a card, which is a swap a reader should
+         not have to watch. It stands down the moment the card is sent for, and
+         comes back below if the card never comes. */
+      badge.classList.add('is-sent-for');
       /* Addressed from the root: this file is a classic script, so a relative
          specifier would be resolved against the page's address rather than
          this script's - and under /en/ that is a different folder. */
@@ -1263,8 +1269,13 @@
           size: 0.491,
           strapLength: 0.305
         }));
-        if (hung) badge.classList.add('is-hung');
-        else stage.remove();
+        if (hung) {
+          badge.classList.add('is-hung');
+        } else {
+          /* No card after all: the photograph is the answer again. */
+          badge.classList.remove('is-sent-for');
+          stage.remove();
+        }
 
         /* On the phone the badge travels with the page. Its stage hangs off
            the window, which does not scroll, so it would otherwise sit there
@@ -1283,7 +1294,8 @@
           }
         }
       }).catch(function () {
-        // Nothing to say: the photograph is already there.
+        // The module never arrived; the photograph takes the box back.
+        badge.classList.remove('is-sent-for');
       });
     };
 

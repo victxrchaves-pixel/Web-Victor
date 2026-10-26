@@ -1719,6 +1719,9 @@ html[data-lang="en"] .err [data-only="es"] { display: none; }
   height: 100%;
 }
 /* Hidden rather than removed: it goes on holding the box open. */
+/* Hidden from the moment the card is sent for, not only once it has arrived,
+   so nobody watches a flat photograph turn into a card. */
+.about__badge.is-sent-for .about__photo,
 .about__badge.is-hung .about__photo { visibility: hidden; }
 /* Pushed to the foot of the column, which is what opens the air above it. */
 .about__card { flex: none; margin-top: auto; }
