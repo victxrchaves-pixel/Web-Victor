@@ -310,8 +310,9 @@ html[data-input="pointer"] :focus-visible { outline: none; }
    same letter again; hovering turns the box a quarter over, so the copy comes
    up into the place the original leaves. The copy is drawn by the pseudo
    element from data-ch rather than being a second node, which keeps the
-   element's textContent the word itself - anything reading these links still
-   reads them whole. The letters start one after another, left to right. */
+   element's textContent the word itself - anything reading it still reads it
+   whole. The letters start one after another, left to right. Only the booking
+   button carries this; the menu's links answer with their colour alone. */
 .swap {
   display: inline-flex;
   perspective: 600px;
@@ -332,16 +333,14 @@ html[data-input="pointer"] :focus-visible { outline: none; }
   transform: rotateX(-90deg) translateZ(0.5em);
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav__cta:hover .swap__ch,
-  .pill__links a:hover .swap__ch { transform: rotateX(90deg); }
+  .nav__cta:hover .swap__ch { transform: rotateX(90deg); }
 }
 /* Turning letters is decoration; where motion is unwelcome the word simply
    stands still, with no second copy waiting underneath it. */
 @media (prefers-reduced-motion: reduce) {
   .swap__ch { transition: none; }
   .swap__ch::after { content: none; }
-  .nav__cta:hover .swap__ch,
-  .pill__links a:hover .swap__ch { transform: none; }
+  .nav__cta:hover .swap__ch { transform: none; }
 }
 
 /* A booking button that has been pressed while its window is still coming.

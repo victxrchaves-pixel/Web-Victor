@@ -449,7 +449,7 @@
     }
   }
   Array.prototype.forEach.call(
-    document.querySelectorAll('.nav__cta-label, .pill__links a'),
+    document.querySelectorAll('.nav__cta-label'),
     cutIntoLetters
   );
 
