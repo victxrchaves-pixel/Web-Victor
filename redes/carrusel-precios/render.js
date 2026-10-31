@@ -1,4 +1,4 @@
-// Exporta las 8 diapositivas de index.html a PNG de 1080 x 1350 en ./png
+// Exporta las 8 diapositivas de index.html a PNG de 1080 x 1920 en ./png
 // Uso: node redes/carrusel-precios/render.js
 const path = require('path');
 const fs = require('fs');
@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
   fs.mkdirSync(out, { recursive: true });
 
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
+  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
   await page.goto('file://' + path.join(dir, 'index.html') + '#export');
   await page.evaluate(() => document.fonts.ready);
   await page.waitForLoadState('networkidle');

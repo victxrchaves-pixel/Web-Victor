@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <title>Carrusel — precios</title>
 <!--
-  Carrusel de Instagram, 8 diapositivas de 1080 x 1350 (4:5).
-  El fondo es fondo.jpg, en esta misma carpeta. Si no está, cada diapositiva
+  Carrusel vertical, 8 diapositivas de 1080 x 1920 (9:16).
+  El fondo es fondo.webp, en esta misma carpeta. Si no está, cada diapositiva
   cae a un degradado oscuro, así que el texto se puede revisar igualmente.
   Cada diapositiva enfoca un detalle distinto de la misma foto con tres
-  variables: --zoom (1 = foto entera de ancho), --x y --y (punto de la foto
-  que queda centrado, en %).
+  atributos: data-zoom (1 = foto entera de ancho) y data-fx / data-fy (el
+  punto de la foto, de 0 a 1, que queda en la mitad de arriba, encima del
+  texto).
   Para exportar los PNG: node render.js
 -->
 <style>
@@ -22,7 +23,9 @@
   --dim: rgba(255, 255, 255, 0.62);
   --rule: rgba(255, 255, 255, 0.28);
   --live: #2bff00;
-  --pad: 80px;
+  /* Márgenes de seguridad: arriba y abajo los tapan la interfaz de
+     Instagram y TikTok, y a la derecha la columna de botones. */
+  --pad-top: 150px; --pad-side: 80px; --pad-right: 120px; --pad-bottom: 280px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,25 +34,25 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 
 .slide {
   position: relative;
-  width: 1080px; height: 1350px;
+  width: 1080px; height: 1920px;
   overflow: hidden;
   background: var(--bg);
   color: var(--fg);
   font-family: 'Geist', system-ui, sans-serif;
   display: flex; flex-direction: column;
-  padding: var(--pad);
-  --zoom: 1; --x: 50%; --y: 50%;
+  padding: var(--pad-top) var(--pad-right) var(--pad-bottom) var(--pad-side);
+  --zoom: 1; --bx: 0px; --by: 0px;
 }
 
 /* La foto */
 .slide::before {
   content: '';
   position: absolute; inset: -12px;
-  background-image: url('fondo.jpg'), radial-gradient(120% 90% at 70% 20%, #2a2a2a 0%, #111 70%);
+  background-image: url('fondo.webp'), radial-gradient(120% 90% at 70% 20%, #2a2a2a 0%, #111 70%);
   background-size: calc(var(--zoom) * 100%) auto, cover;
-  background-position: var(--x) var(--y), center;
+  background-position: var(--bx) var(--by), center;
   background-repeat: no-repeat;
-  filter: grayscale(1) brightness(0.62) blur(2px);
+  filter: grayscale(1) brightness(0.7) blur(1.5px);
   z-index: 0;
 }
 /* Velo para que el texto se lea siempre */
@@ -57,7 +60,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   content: '';
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(17,17,17,0.55) 0%, rgba(17,17,17,0.35) 30%, rgba(17,17,17,0.82) 62%, rgba(17,17,17,0.96) 100%);
+    linear-gradient(180deg, rgba(17,17,17,0.6) 0%, rgba(17,17,17,0.2) 14%, rgba(17,17,17,0.25) 36%, rgba(17,17,17,0.85) 56%, rgba(17,17,17,0.97) 100%);
   z-index: 0;
 }
 .slide > * { position: relative; z-index: 1; }
@@ -65,7 +68,12 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 /* La portada lleva la foto en color y más limpia */
 .slide--cover::before { filter: brightness(0.9) saturate(0.9); }
 .slide--cover::after {
-  background: linear-gradient(180deg, rgba(17,17,17,0.5) 0%, rgba(17,17,17,0) 22%, rgba(17,17,17,0) 38%, rgba(17,17,17,0.85) 64%, rgba(17,17,17,0.97) 100%);
+  background: linear-gradient(180deg, rgba(17,17,17,0.55) 0%, rgba(17,17,17,0) 14%, rgba(17,17,17,0) 40%, rgba(17,17,17,0.8) 60%, rgba(17,17,17,0.97) 82%);
+}
+
+/* El cierre lleva más texto y sube más: el velo empieza antes */
+.slide--end::after {
+  background: linear-gradient(180deg, rgba(17,17,17,0.6) 0%, rgba(17,17,17,0.3) 10%, rgba(17,17,17,0.82) 32%, rgba(17,17,17,0.97) 70%);
 }
 
 /* Barra superior */
@@ -158,7 +166,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </template>
 
 <!-- 01 · Portada: la foto entera -->
-<section class="slide slide--cover" style="--zoom:1; --x:50%; --y:30%">
+<section class="slide slide--cover" data-zoom="1.25" data-fx="0.6" data-fy="0.42">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>01</b> / 08</span></header>
   <div class="body">
     <h1 class="title">¿Cuánto cuesta<br>trabajar<br><span class="outline">conmigo?</span></h1>
@@ -171,7 +179,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 02 · Logotipo: la tablet -->
-<section class="slide" style="--zoom:2.2; --x:12%; --y:62%">
+<section class="slide" data-zoom="2.0" data-fx="0.16" data-fy="0.61">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>02</b> / 08</span></header>
   <div class="body">
     <p class="label">Servicio 01</p>
@@ -183,7 +191,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 03 · Identidad visual: tablet y lápiz -->
-<section class="slide" style="--zoom:1.7; --x:20%; --y:66%">
+<section class="slide" data-zoom="1.6" data-fx="0.2" data-fy="0.63">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>03</b> / 08</span></header>
   <div class="body">
     <p class="label">Servicio 02</p>
@@ -195,7 +203,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 04 · Landing: la pantalla de cerca -->
-<section class="slide" style="--zoom:2.3; --x:40%; --y:40%">
+<section class="slide" data-zoom="2.0" data-fx="0.42" data-fy="0.39">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>04</b> / 08</span></header>
   <div class="body">
     <p class="label">Servicio 03 · diseño + desarrollo</p>
@@ -207,7 +215,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 05 · Web corporativa: el monitor entero -->
-<section class="slide" style="--zoom:1.55; --x:38%; --y:42%">
+<section class="slide" data-zoom="1.45" data-fx="0.41" data-fy="0.41">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>05</b> / 08</span></header>
   <div class="body">
     <p class="label">Servicio 04 · hasta 5 páginas</p>
@@ -219,7 +227,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 06 · Branding + web: todo el escritorio -->
-<section class="slide" style="--zoom:1.2; --x:40%; --y:52%">
+<section class="slide" data-zoom="1.3" data-fx="0.3" data-fy="0.52">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>06</b> / 08</span></header>
   <div class="body">
     <p class="label">Servicio 05 · el pack completo</p>
@@ -231,7 +239,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 07 · IA: tú, mirando la pantalla -->
-<section class="slide" style="--zoom:1.8; --x:72%; --y:46%">
+<section class="slide" data-zoom="1.8" data-fx="0.76" data-fy="0.48">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>07</b> / 08</span></header>
   <div class="body">
     <p class="label">La pregunta de siempre</p>
@@ -243,7 +251,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </section>
 
 <!-- 08 · Cierre: la foto entera otra vez -->
-<section class="slide" style="--zoom:1; --x:50%; --y:55%">
+<section class="slide slide--end" data-zoom="1.35" data-fx="0.78" data-fy="0.36">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>08</b> / 08</span></header>
   <div class="body">
     <p class="quote">No cobro por hacer que algo se vea bonito. <em>Cobro por construir una marca que tenga sentido.</em></p>
@@ -257,6 +265,17 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 <script>
   const mark = document.getElementById('mark').innerHTML;
   document.querySelectorAll('[data-mark]').forEach(el => el.insertAdjacentHTML('afterbegin', mark));
+  // Coloca el punto elegido de la foto en la mitad de arriba de la diapositiva
+  // (el texto vive abajo). La foto se pinta en ::before, que sobresale 12px.
+  const PHOTO = 1672 / 941, BOX_W = 1104, BOX_H = 1944, AIM_X = 0.5, AIM_Y = 0.3;
+  document.querySelectorAll('.slide').forEach(s => {
+    const z = +s.dataset.zoom || 1, fx = +s.dataset.fx || 0.5, fy = +s.dataset.fy || 0.5;
+    const w = BOX_W * z, h = w * PHOTO;
+    const clamp = (v, min) => Math.min(0, Math.max(min, v));
+    s.style.setProperty('--zoom', z);
+    s.style.setProperty('--bx', clamp(AIM_X * BOX_W - fx * w, BOX_W - w) + 'px');
+    s.style.setProperty('--by', clamp(AIM_Y * BOX_H - fy * h, BOX_H - h) + 'px');
+  });
   if (location.hash === '#export') document.body.classList.add('export');
 </script>
 </body>
