@@ -6,7 +6,7 @@ titulares en contorno y el verde #2bff00 solo como acento.
 
 | | Diapositiva | Fondo (detalle de tu foto) |
 | --- | --- | --- |
-| 01 | Portada: «¿Cuánto cuesta trabajar conmigo?» | Tú y el monitor, en color |
+| 01 | Portada: «Esto es lo que cobro como diseñador freelance» | Tú y el monitor, en color |
 | 02 | Diseño de logotipo · desde 350 € | La tablet |
 | 03 | Identidad visual completa · desde 900 € | Tablet y lápiz |
 | 04 | Diseño web / landing page · desde 750 € | La pantalla, de cerca |
@@ -39,7 +39,7 @@ salen en `png/`.
 ## Texto para la publicación
 
 ```
-¿Cuánto cuesta trabajar conmigo? Aquí lo tienes, sin rodeos 👇
+Esto es lo que cobro como diseñador freelance, sin rodeos 👇
 
 Logotipo, identidad visual, landing page, web corporativa o todo junto.
 Son precios de partida: cada proyecto se presupuesta según lo que necesita.

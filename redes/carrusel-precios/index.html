@@ -68,7 +68,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 /* La portada lleva la foto en color y más limpia */
 .slide--cover::before { filter: brightness(0.9) saturate(0.9); }
 .slide--cover::after {
-  background: linear-gradient(180deg, rgba(17,17,17,0.55) 0%, rgba(17,17,17,0) 14%, rgba(17,17,17,0) 40%, rgba(17,17,17,0.8) 60%, rgba(17,17,17,0.97) 82%);
+  background: linear-gradient(180deg, rgba(17,17,17,0.75) 0%, rgba(17,17,17,0.45) 9%, rgba(17,17,17,0) 16%, rgba(17,17,17,0) 30%, rgba(17,17,17,0.82) 44%, rgba(17,17,17,0.97) 70%);
 }
 
 /* El cierre lleva más texto y sube más: el velo empieza antes */
@@ -100,16 +100,19 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   font-size: 104px; line-height: 0.9; letter-spacing: -0.02em;
 }
 .title--m { font-size: 82px; line-height: 0.94; }
-.outline { color: transparent; -webkit-text-stroke: 2px var(--fg); }
+/* El contorno se dibuja con un filtro y no con text-stroke: Geist es variable
+   y sus letras tienen trazos que se solapan, y text-stroke los enseña todos. */
+.outline { color: var(--fg); filter: url(#outline); }
+.outline--thick { filter: url(#outline-thick); }
 
 .price { margin-top: 56px; display: flex; align-items: baseline; gap: 24px; }
 .price small {
   font-family: 'Geist Mono', monospace; font-size: 26px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim);
 }
-.price strong em { font-style: normal; color: var(--fg); -webkit-text-stroke: 0; font-size: 0.5em; margin-left: 0.12em; letter-spacing: 0; }
+.price strong em { font-style: normal; font-size: 0.5em; margin-left: 0.12em; letter-spacing: 0; }
 .price strong {
   font-weight: 700; font-size: 176px; line-height: 0.82; letter-spacing: -0.04em;
-  color: transparent; -webkit-text-stroke: 2.5px var(--fg);
+  color: var(--fg);
 }
 
 .text, .sub, .quote { text-wrap: pretty; }
@@ -150,7 +153,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 .foot .next { color: var(--fg); }
 
 /* Portada */
-.slide--cover .title { font-size: 128px; line-height: 0.88; }
+.slide--cover .title { font-size: 116px; line-height: 0.98; }
 .slide--cover .sub { margin-top: 36px; font-size: 38px; line-height: 1.25; color: rgba(255,255,255,0.86); max-width: 760px; }
 .services {
   margin-top: 44px; display: flex; flex-wrap: wrap; gap: 12px;
@@ -161,15 +164,20 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="outline"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="d"/><feComposite in="d" in2="SourceAlpha" operator="out" result="o"/><feFlood flood-color="#fff"/><feComposite in2="o" operator="in"/></filter>
+  <filter id="outline-thick"><feMorphology in="SourceAlpha" operator="dilate" radius="2.5" result="d"/><feComposite in="d" in2="SourceAlpha" operator="out" result="o"/><feFlood flood-color="#fff"/><feComposite in2="o" operator="in"/></filter>
+</svg>
+
 <template id="mark">
   <svg viewBox="0 0 21 21.84" aria-hidden="true"><path d="M8.83375 11.7429L10.6918 12.7591L1.98363 18.0962L0 14.7327L9.0255 9.90701V11.9395L0 7.10734L1.98363 3.80282L10.6918 9.07432L8.83375 10.1562L8.57588 0H12.4175L12.1596 10.1562L10.3678 9.07432L19.0759 3.80282L21 7.10734L12.034 11.933V9.90045L21 14.7261L19.0759 18.0896L10.3678 12.7591L12.1596 11.7429L12.4175 21.84H8.57588L8.83375 11.7429Z" fill="#F4F4F4"/></svg>
 </template>
 
 <!-- 01 · Portada: la foto entera -->
-<section class="slide slide--cover" data-zoom="1.25" data-fx="0.6" data-fy="0.42">
+<section class="slide slide--cover" data-zoom="1.4" data-fx="0.62" data-fy="0.46">
   <header class="top"><span class="brand" data-mark>Victor Chaves</span><span class="count"><b>01</b> / 08</span></header>
   <div class="body">
-    <h1 class="title">¿Cuánto cuesta<br>trabajar<br><span class="outline">conmigo?</span></h1>
+    <h1 class="title">Esto es lo<br>que cobro<br>como diseñador <span class="outline">freelance</span></h1>
     <p class="sub">Mis precios de branding y diseño web, sin rodeos.</p>
     <ul class="services">
       <li>Logotipo</li><li>Identidad</li><li>Landing</li><li>Web</li><li>Branding + web</li>
@@ -184,7 +192,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   <div class="body">
     <p class="label">Servicio 01</p>
     <h2 class="title">Diseño de<br>logotipo</h2>
-    <div class="price"><small>Desde</small><strong>350<em>€</em></strong></div>
+    <div class="price"><small>Desde</small><strong><span class="outline outline--thick">350</span><em>€</em></strong></div>
     <p class="text">Para marcas que necesitan una identidad gráfica inicial, con un logotipo bien construido y sus aplicaciones esenciales.</p>
   </div>
   <footer class="foot"><span>Precio orientativo · sin IVA</span><span class="next">→</span></footer>
@@ -196,7 +204,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   <div class="body">
     <p class="label">Servicio 02</p>
     <h2 class="title">Identidad<br>visual completa</h2>
-    <div class="price"><small>Desde</small><strong>900<em>€</em></strong></div>
+    <div class="price"><small>Desde</small><strong><span class="outline outline--thick">900</span><em>€</em></strong></div>
     <p class="text">Un sistema visual coherente: logotipo, colores, tipografías, recursos gráficos y guía de uso.</p>
   </div>
   <footer class="foot"><span>Precio orientativo · sin IVA</span><span class="next">→</span></footer>
@@ -208,7 +216,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   <div class="body">
     <p class="label">Servicio 03 · diseño + desarrollo</p>
     <h2 class="title">Diseño web /<br>landing page</h2>
-    <div class="price"><small>Desde</small><strong>750<em>€</em></strong></div>
+    <div class="price"><small>Desde</small><strong><span class="outline outline--thick">750</span><em>€</em></strong></div>
     <p class="text">Una página diseñada para presentar tu negocio, comunicar tu propuesta y facilitar que tus visitantes contacten contigo.</p>
   </div>
   <footer class="foot"><span>Precio orientativo · sin IVA</span><span class="next">→</span></footer>
@@ -220,7 +228,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   <div class="body">
     <p class="label">Servicio 04 · hasta 5 páginas</p>
     <h2 class="title">Web<br>corporativa</h2>
-    <div class="price"><small>Desde</small><strong>1.500<em>€</em></strong></div>
+    <div class="price"><small>Desde</small><strong><span class="outline outline--thick">1.500</span><em>€</em></strong></div>
     <p class="text">Una experiencia digital completa, con estructura, diseño responsive y las páginas que necesita tu negocio.</p>
   </div>
   <footer class="foot"><span>Precio orientativo · sin IVA</span><span class="next">→</span></footer>
@@ -232,7 +240,7 @@ body.export { padding: 0; gap: 0; background: var(--bg); }
   <div class="body">
     <p class="label">Servicio 05 · el pack completo</p>
     <h2 class="title">Branding<br><span class="outline">+</span> web</h2>
-    <div class="price"><small>Desde</small><strong>2.200<em>€</em></strong></div>
+    <div class="price"><small>Desde</small><strong><span class="outline outline--thick">2.200</span><em>€</em></strong></div>
     <p class="text">Para proyectos que quieren construir su marca y su presencia digital bajo una misma dirección creativa.</p>
   </div>
   <footer class="foot"><span>Precio orientativo · sin IVA</span><span class="next">→</span></footer>
