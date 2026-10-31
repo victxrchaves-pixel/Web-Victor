@@ -2,6 +2,19 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-31T15:50:10.809Z",
+        "reason": "PRODUCT.md Brand Commitments: the Figma file makes Geist the binding brand face"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "createdAt": "2026-10-31T15:50:10.876Z",
+        "reason": "PRODUCT.md Brand Commitments: the Figma file makes Geist Mono the binding brand face"
+      }
+    ]
   }
 }
